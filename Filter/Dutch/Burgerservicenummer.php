@@ -28,55 +28,35 @@
  *
  *
  * @package    MUtil
- * @subpackage Model
+ * @subpackage Filter
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 201e Erasmus MC
  * @license    New BSD License
- * @version    $id: NullCleanupTranslator.php 203 2012-01-01t 12:51:32Z matijs $
+ * @version    $id: Burgerservicenummer.php 203 2012-01-01t 12:51:32Z matijs $
  */
 
 /**
- *
+ * Check the value and make sure there are enough zero's
  *
  * @package    MUtil
- * @subpackage Model
+ * @subpackage Filter
  * @copyright  Copyright (c) 2013 Erasmus MC
  * @license    New BSD License
  * @since      Class available since MUtil version 1.3
  */
-class MUtil_Model_Translator_StraightTranslator extends MUtil_Model_ModelTranslatorAbstract
+class MUtil_Filter_Dutch_Burgerservicenummer extends Zend_Filter_Digits
 {
     /**
+     * Returns the result of filtering $value
      *
-     * @param string $description A description that enables users to choose the transformer they need.
+     * @param  mixed $value
+     * @throws Zend_Filter_Exception If filtering $value is impossible
+     * @return mixed
      */
-    public function __construct($description = 'Straight import')
+    public function filter($value)
     {
-        parent::__construct($description);
-    }
+        $value = parent::filter($value);
 
-    /**
-     * Get information on the field translations
-     *
-     * @return array of fields sourceName => targetName
-     * @throws MUtil_Model_ModelException
-     */
-    public function getFieldsTranslations()
-    {
-        if (! $this->_targetModel instanceof MUtil_Model_ModelAbstract) {
-            throw new MUtil_Model_ModelException(sprintf('Called %s without a set target model.', __FUNCTION__));
-        }
-
-        $fieldList   = array();
-
-        foreach ($this->_targetModel->getCol('label') as $name => $label) {
-            if (! ($this->_targetModel->has($name, 'column_expression') ||
-                    $this->_targetModel->is($name, 'elementClass', 'Exhibitor'))) {
-
-                $fieldList[$name] = $name;
-            }
-        }
-
-        return $fieldList;
+        return str_pad($value, 9, '0', STR_PAD_LEFT);
     }
 }
