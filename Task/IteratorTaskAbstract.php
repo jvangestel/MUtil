@@ -32,16 +32,11 @@
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2013 Erasmus MC
  * @license    New BSD License
- * @version    $Id: TaskAbstract.php$
+ * @version    $Id: IteratorTaskAbstract.php$
  */
 
 /**
- * Basic implementation of MUtil_Task_TaskInterface, the interface for a Task object.
- * The MUtil_Registry_TargetInterface allows the automatic loading of global objects.
  *
- * Task objects split large jobs into a number of serializeable small jobs that are
- * stored in the session or elsewhere and that can be executed one job at a time
- * split over multiple runs.
  *
  * @package    MUtil
  * @subpackage Task
@@ -49,13 +44,25 @@
  * @license    New BSD License
  * @since      Class available since MUtil version 1.3
  */
-abstract class MUtil_Task_TaskAbstract extends MUtil_Translate_TranslateableAbstract implements MUtil_Task_TaskInterface
+abstract class MUtil_Task_IteratorTaskAbstract extends MUtil_Task_TaskAbstract
 {
     /**
      *
-     * @var MUtil_Task_TaskBatch
+     * @var Iterator
      */
-    protected $_batch;
+    protected $iterator;
+
+    /**
+     * Should be called after answering the request to allow the Target
+     * to check if all required registry values have been set correctly.
+     *
+     * @return boolean False if required values are missing.
+     */
+    public function checkRegistryRequestsAnswers()
+    {
+        return ($this->iterator instanceof Iterator) &&
+            parent::checkRegistryRequestsAnswers();
+    }
 
     /**
      * Should handle execution of the task, taking as much (optional) parameters as needed
@@ -63,24 +70,19 @@ abstract class MUtil_Task_TaskAbstract extends MUtil_Translate_TranslateableAbst
      * The parameters should be optional and failing to provide them should be handled by
      * the task
      */
-    // public function execute();
+    public function execute()
+    {
+        $this->executeIteration($this->iterator->key(), $this->iterator->current(), func_get_args());
+    }
 
     /**
-     * Returns the batch this task belongs to
+     * Execute a single iteration of the task.
      *
-     * @return MUtil_Task_TaskBatch
+     * @param scalar $key The current iterator key
+     * @param mixed $current The current iterator content
+     * @param array $params The parameters to the execute function
      */
-    public function getBatch()
-    {
-        if (! $this->_batch instanceof MUtil_Task_TaskBatch) {
-            throw new MUtil_Batch_BatchException(sprintf(
-                    "Batch not set during execution of task class %s!!",
-                    __CLASS__
-                    ));
-        }
-
-        return $this->_batch;
-    }
+    abstract public function executeIteration($key, $current, array $params);
 
     /**
      * Return true when the task has finished.
@@ -89,21 +91,7 @@ abstract class MUtil_Task_TaskAbstract extends MUtil_Translate_TranslateableAbst
      */
     public function isFinished()
     {
-        return true;
-    }
-
-    /**
-     * Sets the batch this task belongs to
-     *
-     * This method will be called from the Gems_Task_TaskRunnerBatch upon execution of the
-     * task. It allows the task to communicate with the batch queue.
-     *
-     * @param MUtil_Task_TaskBatch $batch
-     * @return MUtil_Task_TaskInterface (continuation pattern)
-     */
-    public function setBatch(MUtil_Task_TaskBatch $batch)
-    {
-        $this->_batch = $batch;
-        return $this;
+        $this->iterator->next();
+        return ! $this->iterator->valid();
     }
 }
