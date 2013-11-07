@@ -45,7 +45,7 @@
  * @license    New BSD License
  * @since      Class available since MUtil version 1.2
  */
-class MUTil_Controller_Response_Cli extends Zend_Controller_Response_Cli
+class MUtil_Controller_Response_Cli extends Zend_Controller_Response_Cli
 {
     /**
      * Send all headers
