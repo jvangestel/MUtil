@@ -1,9 +1,8 @@
 <?php
-
 /**
- * Copyright (c) 2011, Erasmus MC
+ * Copyright (c) 2014, Erasmus MC
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *    * Redistributions of source code must retain the above copyright
@@ -14,7 +13,7 @@
  *    * Neither the name of Erasmus MC nor the
  *      names of its contributors may be used to endorse or promote products
  *      derived from this software without specific prior written permission.
- *      
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,33 +25,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @version    $Id$
+ *
  * @package    MUtil
- * @subpackage Form_Element
- * @copyright  Copyright (c) 2011 Erasmus MC
+ * @subpackage View
+ * @author     Jasper van Gestel<jappie@dse.nl>
+ * @copyright  Copyright (c) 2014 Erasmus MC
  * @license    New BSD License
+ * @version    $Id: FormRadio.php 1748 2014-02-19 18:09:41Z matijsdejong $
  */
 
 /**
+ * QUAD fix for readonly having no effect on radio button
+ *
  * @package    MUtil
- * @subpackage Form_Element
- * @copyright  Copyright (c) 2011 Erasmus MC
+ * @subpackage View
+ * @copyright  Copyright (c) 2014 Erasmus MC
  * @license    New BSD License
  */
-class MUtil_Form_Element_Exhibitor extends Zend_Form_Element_Xhtml implements MUtil_Form_Element_NoFocusInterface
+class MUtil_View_Helper_FormErrors extends Zend_View_Helper_FormErrors
 {
-    public $helper = 'exhibitor';
-
-    /**
-     * Exhibitor is never required
-     *
-     * @param  bool $flag Default value is true
-     * @return Zend_Form_Element
-     */
-    public function setRequired($flag = true)
+    public function formErrors($errors, array $options = null)
     {
-        return $this;
+        if (empty($options['class'])) {
+            $options['class'] = 'errors alert alert-danger';
+        }
+
+        $html = parent::formErrors($errors, $options);
+
+        return $html;
     }
-
-
 }

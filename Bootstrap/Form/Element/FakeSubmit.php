@@ -3,7 +3,7 @@
 /**
  * Copyright (c) 2011, Erasmus MC
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *    * Redistributions of source code must retain the above copyright
@@ -14,7 +14,7 @@
  *    * Neither the name of Erasmus MC nor the
  *      names of its contributors may be used to endorse or promote products
  *      derived from this software without specific prior written permission.
- *      
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,7 +26,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @version    $Id$
+ * @version    $Id: FakeSubmit.php 1280 2013-06-20 16:36:42Z matijsdejong $
  * @package    MUtil
  * @subpackage Form_Element
  * @copyright  Copyright (c) 2011 Erasmus MC
@@ -34,25 +34,74 @@
  */
 
 /**
+ * A button element acting as a Submit button, but possibly placed in the
+ * form before the "real" submit button.
+ *
+ * This ensures that pressing "Enter" will activate the real submit button.
+ *
  * @package    MUtil
  * @subpackage Form_Element
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
+ * @since      Class available since version 1.5.6
  */
-class MUtil_Form_Element_Exhibitor extends Zend_Form_Element_Xhtml implements MUtil_Form_Element_NoFocusInterface
+class MUtil_Bootstrap_Form_Element_FakeSubmit extends MUtil_Bootstrap_Form_Element_Button
 {
-    public $helper = 'exhibitor';
-
     /**
-     * Exhibitor is never required
-     *
-     * @param  bool $flag Default value is true
-     * @return Zend_Form_Element
+     * Use fakeSubmit view helper by default
+     * @var string
      */
-    public function setRequired($flag = true)
+    public $helper = 'fakeSubmit';
+
+    public $target;
+    public $targetValue;
+    public $targetValueIsElement;
+
+    public function getTarget()
     {
+        return $this->target;
+    }
+
+    public function getTargetValue()
+    {
+        if (! $this->targetValue) {
+            $this->targetValue = $this->getLabel();
+        }
+
+        return $this->targetValue;
+    }
+
+    public function getTargetValueIsElement()
+    {
+        return $this->targetValueIsElement;
+    }
+
+    public function setTarget($targetName, $value = null, $valueIsOfElement = null)
+    {
+        $this->target = $targetName;
+
+        if (null !== $value) {
+            $this->setTargetValue($value, $valueIsOfElement);
+        }
+
         return $this;
     }
 
+    public function setTargetValue($value, $valueIsOfElement = null)
+    {
+        $this->targetValue = $value;
 
+        if (null !== $valueIsOfElement) {
+            $this->setTargetValueIsElement($valueIsOfElement);
+        }
+
+        return $this;
+    }
+
+    public function setTargetValueIsElement($valueIsOfElement = false)
+    {
+        $this->targetValueIsElement = $valueIsOfElement;
+
+        return $this;
+    }
 }

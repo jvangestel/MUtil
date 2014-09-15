@@ -1,9 +1,10 @@
 <?php
 
+
 /**
- * Copyright (c) 2011, Erasmus MC
+ * Copyright (c) 2014, Erasmus MC
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *    * Redistributions of source code must retain the above copyright
@@ -14,7 +15,7 @@
  *    * Neither the name of Erasmus MC nor the
  *      names of its contributors may be used to endorse or promote products
  *      derived from this software without specific prior written permission.
- *      
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,33 +27,37 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @version    $Id$
  * @package    MUtil
  * @subpackage Form_Element
- * @copyright  Copyright (c) 2011 Erasmus MC
+ * @copyright  Copyright (c) 2014 Erasmus MC
  * @license    New BSD License
+ * @version    $Id: Table.php Jasper van Gestel $
  */
 
 /**
+ * Show a table containing a subform repeated for the number of rows set for
+ * this item when rendered.
+ *
  * @package    MUtil
  * @subpackage Form_Element
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
+ * @since      Class available since version 1.6.5
  */
-class MUtil_Form_Element_Exhibitor extends Zend_Form_Element_Xhtml implements MUtil_Form_Element_NoFocusInterface
+class MUtil_Bootstrap_Form_Element_Hidden extends Zend_Form_Element_Hidden
 {
-    public $helper = 'exhibitor';
-
-    /**
-     * Exhibitor is never required
+	/**
+     * Load default decorators
      *
-     * @param  bool $flag Default value is true
      * @return Zend_Form_Element
      */
-    public function setRequired($flag = true)
+    public function loadDefaultDecorators()
     {
+        if ($this->loadDefaultDecoratorsIsDisabled()) {
+            return $this;
+        }
+
+        $this->clearDecorators();
         return $this;
     }
-
-
 }
