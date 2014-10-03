@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) 2014, Erasmus MC
+ * Copyright (c) 2011, Erasmus MC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,60 +27,78 @@
  *
  *
  * @package    MUtil
- * @subpackage Bootstrap
- * @author     Matijs de Jong <mjong@magnafacta.nl>
- * @copyright  Copyright (c) 2014 Erasmus MC
+ * @subpackage JQuery
+ * @author     Jasper van Gestel <jappie@dse.nl>
+ * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @version    $Id: Bootstrap .php 1748 2014-02-19 18:09:41Z matijsdejong $
+ * @version    $Id: Container.php 1775 2014-02-27 12:53:30Z matijsdejong $
  */
 
 /**
  *
  * @package    MUtil
- * @subpackage Bootstrap
- * @copyright  Copyright (c) 2014 Erasmus MC
+ * @subpackage JQuery
+ * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @since      Class available since version 1.5
+ * @since      Class available since version 1.6.5
  */
-class MUtil_Bootstrap_View_Helper_Bootstrap extends Zend_View_Helper_Abstract
+
+class MUtil_JQuery_View_Helper_JQuery_Container extends ZendX_JQuery_View_Helper_JQuery_Container
 {
     /**
-     * @var MUtil_Bootstrap_View_Helper_Bootstrapper
-     */
-    private $_bootstrapper;
-
-   /**
-     * Initialize helper
+     * Render jQuery stylesheets
      *
-     * Retrieve bootstrapper from registry or create new container and store in
-     * registry.
-     *
-     * @return void
+     * @return string
      */
-    public function __construct()
+    public function renderStylesheets()
     {
-        $registry = Zend_Registry::getInstance();
-        if (!isset($registry[__CLASS__])) {
-            $container = new MUtil_Bootstrap_View_Helper_Bootstrapper();
-            $registry[__CLASS__] = $container;
+        if (!$this->isEnabled()) {
+            return '';
         }
-        $this->_bootstrapper = $registry[__CLASS__];
-    }
 
-    public function bootstrap()
-    {
-        return $this->_bootstrapper;
+        return $this->_renderStylesheets();
     }
 
     /**
-     * Set view to this class and the bootstrapper
+     * Renders all javascript file related stuff of the jQuery enviroment.
      *
-     * @param  Zend_View_Interface $view
-     * @return void
+     * @return string
      */
-    public function setView(Zend_View_Interface $view)
+    public function renderScriptTags()
     {
-        $this->view = $view;
-        $this->_bootstrapper->setView($view);
+        if (!$this->isEnabled()) {
+            return '';
+        }
+
+        return $this->_renderScriptTags();
+    }
+
+    /**
+     * Renders all javascript code related stuff of the jQuery enviroment. 
+     *
+     * @return string
+     */
+    public function renderExtras()
+    {
+        if (!$this->isEnabled()) {
+            return '';
+        }
+
+        return $this->_renderExtras();
+    }
+
+    /**
+     * String representation of jQuery javascript files and code
+     * @return string
+     */
+    public function renderJavascript()
+    {
+        if (!$this->isEnabled()) {
+            return '';
+        }
+
+        $html  = $this->_renderScriptTags() . PHP_EOL
+               . $this->_renderExtras();
+        return $html;
     }
 }
