@@ -12,12 +12,11 @@
          verbose="true"
          strict="true">
     <testsuite>
-        <directory>classes</directory>
+        <directory>MUtil</directory>
     </testsuite>
     <filter>
         <whitelist>
-            <directory suffix=".php">../library/classes/Gems</directory>
-            <directory suffix=".php">../library/classes/MUtil</directory>
+            <directory suffix=".php">../src/MUtil</directory>
         </whitelist>
     </filter>
     <!--
