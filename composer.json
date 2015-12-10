@@ -30,8 +30,8 @@
         }
     ],
     "autoload": {
-        "psr-4": {
-            "MagnaFacta\\MUtil\\": ""
+        "psr-0": {
+            "MUtil\\": ""
         }
     },
     "minimum-stability": "stable",
