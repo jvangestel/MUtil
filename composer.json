@@ -35,7 +35,7 @@
         },
         "psr-4": {
             "MUtil\\": "src/MUtil"
-        }        
+        }
     },
     "include-path": [
         "src/"
