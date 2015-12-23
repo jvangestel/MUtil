@@ -13,7 +13,7 @@ install: composer install --dev
 script: phpunit --configuration tests/phpunit.xml
 
 after_script:
-  - bin/test-reporter
+  - vendor/bin/test-reporter
 addons:
     code_climate:
         repo_token: 976417e6cf9bbe35142f2891a47bf42a93f0722b0390ff7dc790385c5a6c194f
