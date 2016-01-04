@@ -382,18 +382,7 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
             self::DATE_OPTIONS, self::DISPLAY_OPTIONS, self::JQUERY_OPTIONS, self::TEXT_OPTIONS);
 
         // Allow centrally set options
-        $type = __FUNCTION__;
-        if (isset($options['dateFormat'])) {
-            list($dateFormat, $separator, $timeFormat) = \MUtil_Date_Format::splitDateTimeFormat($options['dateFormat']);
-
-            if ($timeFormat) {
-                if ($dateFormat) {
-                    $type = 'datetime';
-                } else {
-                    $type = 'time';
-                }
-            }
-        }
+        $type = \MUtil_Date_Format::getDateTimeType(isset($options['dateFormat']) ? $options['dateFormat'] : null);
         self::applyFixedOptions($type, $options);
 
         if (isset($options['dateFormat'])) {

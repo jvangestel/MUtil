@@ -50,6 +50,63 @@ class MUtil_Date_Format
      * Return the time part of a format
      *
      * @param string $format
+     * @return string date, dateTime, time
+     */
+    public static function getDateTimeType($format = null)
+    {
+        if (null === $format) {
+            return 'date';
+        }
+
+        $fullFormats = array(
+            \Zend_Date::DATES             => 'date',
+            \Zend_Date::DATE_FULL         => 'date',
+            \Zend_Date::DATE_LONG         => 'date',
+            \Zend_Date::DATE_MEDIUM       => 'date',
+            \Zend_Date::DATE_SHORT        => 'date',
+            \Zend_Date::TIMES             => 'time',
+            \Zend_Date::TIME_FULL         => 'time',
+            \Zend_Date::TIME_LONG         => 'time',
+            \Zend_Date::TIME_MEDIUM       => 'time',
+            \Zend_Date::TIME_SHORT        => 'time',
+            \Zend_Date::DATETIME          => 'datetime',
+            \Zend_Date::DATETIME_FULL     => 'datetime',
+            \Zend_Date::DATETIME_LONG     => 'datetime',
+            \Zend_Date::DATETIME_MEDIUM   => 'datetime',
+            \Zend_Date::DATETIME_SHORT    => 'datetime',
+            \Zend_Date::ATOM              => 'datetime',
+            \Zend_Date::COOKIE            => 'datetime',
+            \Zend_Date::ISO_8601          => 'datetime',
+            \Zend_Date::RFC_822           => 'datetime',
+            \Zend_Date::RFC_850           => 'datetime',
+            \Zend_Date::RFC_1036          => 'datetime',
+            \Zend_Date::RFC_1123          => 'datetime',
+            \Zend_Date::RFC_2822          => 'datetime',
+            \Zend_Date::RFC_3339          => 'datetime',
+            \Zend_Date::RSS               => 'datetime',
+            \Zend_Date::W3C               => 'datetime',
+            );
+        if (isset($fullFormats[$format])) {
+            return $fullFormats[$format];
+        }
+
+        list($dateFormat, $separator, $timeFormat) = self::splitDateTimeFormat($format);
+
+        if ($timeFormat) {
+            if ($dateFormat) {
+                return 'datetime';
+            } else {
+                return 'time';
+            }
+        } else {
+            return 'date';
+        }
+    }
+
+    /**
+     * Return the time part of a format
+     *
+     * @param string $format
      * @return string
      */
     public static function getTimeFormat($format = null)
