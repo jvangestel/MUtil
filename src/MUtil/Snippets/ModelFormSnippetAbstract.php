@@ -517,7 +517,6 @@ abstract class MUtil_Snippets_ModelFormSnippetAbstract extends \MUtil_Snippets_M
         }
     }
 
-
     /**
      * Hook that allows actions when the form is submitted, but it was not the submit button that was checked
      *

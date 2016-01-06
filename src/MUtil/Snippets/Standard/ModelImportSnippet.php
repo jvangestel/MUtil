@@ -857,6 +857,10 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
                     $i           = 0;
                     $optionDescr = '';
                     $separator   = $this->_(', ');
+
+                    if (is_callable($options)) {
+                        $options = call_user_func($options);
+                    }
                     foreach($options as $key => $value) {
                         $optionDescr .= $separator . $key;
                         $i++;
