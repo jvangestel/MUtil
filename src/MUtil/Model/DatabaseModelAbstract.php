@@ -785,6 +785,10 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
         if (! isset($formats[$name][$isPost])) {
             // Stored the used formats (as they are usually used often within a model)
             if ($isPost) {
+                // Add possible custom format
+                $formats[$name][$isPost][] = $this->_getKeyValue($name, 'dateFormat');
+                
+                // Add default format as a fallback
                 $type = \MUtil_Date_Format::getDateTimeType($this->_getKeyValue($name, 'dateFormat'));
                 $formats[$name][$isPost][] = \MUtil_Model_Bridge_FormBridge::getFixedOption($type, 'dateFormat');
             }
