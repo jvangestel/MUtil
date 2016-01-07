@@ -197,6 +197,21 @@ class RaObject extends \ArrayObject implements \MUtil_Registry_TargetInterface
     }
 
     /**
+     * Get the offset or the default if it does not exist
+     * 
+     * @param scalar $index
+     * @param mixed $default
+     * @return mixed
+     */
+    public function offsetDefault($index, $default = null)
+    {
+        if ($this->offsetExists($index)) {
+            return $this->offsetGet($index);
+        }
+        return $default;
+    }
+
+    /**
      * Copy from \Zend_Translate_Adapter
      *
      * Translates the given string using plural notations
