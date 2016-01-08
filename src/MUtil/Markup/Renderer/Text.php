@@ -355,6 +355,9 @@ class MUtil_Markup_Renderer_Text extends \Zend_Markup_Renderer_RendererAbstract
         if (! isset($tag['replace'])) {
             $tag['replace'] = '';
         }
+        if (! isset($tag['start'])) {
+            return $this->_render($token);
+        }
         return parent::_executeReplace($token, $tag);
     }
 
