@@ -113,6 +113,8 @@ class MUtil_Lazy_ArrayAccessor extends \MUtil_Lazy_LazyAbstract
             }
         } elseif (isset($array[$offset])) {
             $value = $array[$offset];
+        } else {
+            $value = null;
         }
 
         while ($value instanceof \MUtil_Lazy_LazyInterface) {
