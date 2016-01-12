@@ -346,7 +346,7 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
                 exit;
             }
 
-            $element = $bridge->getForm()->createElement('html', $batch->getId());
+            $element = $form->createElement('html', $batch->getId());
 
             if ($batch->isFinished()) {
                 $this->nextDisabled = $batch->getCounter('import_errors');

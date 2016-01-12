@@ -374,6 +374,17 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
     abstract protected function addStepElementsFor(\MUtil_Model_Bridge_FormBridgeInterface $bridge, \MUtil_Model_ModelAbstract $model, $step);
 
     /**
+     * Overrule this function for any activities you want to take place
+     * after the form has successfully been validated, but before any
+     * buttons are processed.
+     *
+     * @param int $step The current step
+     */
+    protected function afterFormValidationFor($step)
+    {
+    }
+
+    /**
      * Perform some actions on the form, right before it is displayed but already populated
      *
      * Here we add the table display to the form.
@@ -508,8 +519,7 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
 
             } else {
                 if ($this->validateForm()) {
-                    // Repopulation is needed after validation (WHY!!)
-                    //  $this->populateForm();
+                    $this->afterFormValidationFor($this->currentStep);
 
                     if ($this->_nextButton && $this->_nextButton->isChecked()) {
                         $this->loadFormFor($this->currentStep + 1);

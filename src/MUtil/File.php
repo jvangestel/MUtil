@@ -89,6 +89,7 @@ class MUtil_File
 
         return $filename;
     }
+    
     /**
      * Ensure the directory does really exist or throw an exception othewise
      *
