@@ -150,6 +150,13 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
     protected $nextLabel = null;
 
     /**
+     * The original step, before any clicked button was checked
+     *
+     * @var int
+     */
+    protected $originalStep = 1;
+
+    /**
      * The form Id used for the previous button
      *
      * If empty button is not added
@@ -320,10 +327,8 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
 
         // And add them to the bridge
         foreach($elements as $name) {
-            // Do not use $bridge->addHidden as that adds validators and filters.
-            $element = new \Zend_Form_Element_Hidden($name);
-
-            $bridge->addElement($element);
+            // Use $bridge->addHidden as that adds validators and filters.
+            $bridge->addHidden($name);
         }
     }
 
@@ -461,6 +466,45 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
     }
 
     /**
+     * True when the user clicked the finished button
+     *
+     * @return boolean
+     */
+    public function isFinishedClicked()
+    {
+        if ($this->_finishButton) {
+            return $this->_finishButton->isChecked();
+        }
+        return $this->request->getParam($this->finishButtonId);
+    }
+
+    /**
+     * True when the user clicked the next button
+     *
+     * @return boolean
+     */
+    public function isNextClicked()
+    {
+        if ($this->_nextButton) {
+            return $this->_nextButton->isChecked();
+        }
+        return $this->request->getParam($this->nextButtonId);
+    }
+
+    /**
+     * True when the user clicked the previous button
+     *
+     * @return boolean
+     */
+    public function isPreviousClicked()
+    {
+        if ($this->_previousButton) {
+            return $this->_previousButton->isChecked();
+        }
+        return $this->request->getParam($this->previousButtonId);
+    }
+
+    /**
      * Makes sure there is a form.
      *
      * @param int $step The current step
@@ -491,6 +535,15 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
     }
 
     /**
+     * True when we are on the orginal step where the user posted the data
+     * @return boolean
+     */
+    public function onStartStep()
+    {
+        return $this->currentStep === $this->originalStep;
+    }
+
+    /**
      * Step by step form processing
      *
      * Returns false when $this->afterSaveRouteUrl is set during the
@@ -505,6 +558,7 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
         if (isset($this->formData[$this->stepFieldName])) {
             $this->currentStep = $this->formData[$this->stepFieldName];
         }
+        $this->originalStep = $this->currentStep;
 
         // Make sure there is a $this->_form
         $this->loadFormFor($this->currentStep);
@@ -514,14 +568,14 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
             if ($this->_cancelButton && $this->_cancelButton->isChecked()) {
                 $this->setAfterSaveRoute();
 
-            } elseif ($this->_previousButton && $this->_previousButton->isChecked()) {
+            } elseif ($this->isPreviousClicked()) {
                 $this->loadFormFor($this->currentStep - 1);
 
             } else {
                 if ($this->validateForm()) {
                     $this->afterFormValidationFor($this->currentStep);
 
-                    if ($this->_nextButton && $this->_nextButton->isChecked()) {
+                    if ($this->isNextClicked()) {
                         $this->loadFormFor($this->currentStep + 1);
 
                     } else  {
