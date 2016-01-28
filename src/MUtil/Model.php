@@ -245,22 +245,9 @@ class MUtil_Model
      */
     public static function getLoader($prefix)
     {
-        if (! isset(self::$_loaders[$prefix])) {            
+        if (! isset(self::$_loaders[$prefix])) {
             $loader = new \MUtil_Loader_SourcePluginLoader();
-            
-            // If there is a pluginloader in the registry, use namespaces from there
-            $registry = \Zend_Registry::getInstance();
-            if ($registry->offsetExists('pluginloader')) {
-                $global_loader = $registry->get('pluginloader');
-                if ($global_loader instanceof MUtil_Loader_PluginLoader) {
-                    $paths = $global_loader->getPaths();
-                    foreach ($paths as $namespace => $dirs)
-                    {
-                        self::addNameSpace(rtrim($namespace, '_'));
-                    }
-                }
-            } 
-            
+
             foreach (self::$_nameSpaces as $nameSpace) {
                 $loader->addPrefixPath(
                         $nameSpace . '_Model_' . ucfirst($prefix),
