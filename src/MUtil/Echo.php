@@ -55,13 +55,16 @@ class MUtil_Echo
      *
      * @return void
      */
-    public static function backtrace()
+    public static function backtrace($start = 0)
     {
         $trace = debug_backtrace(false);
 
         $content = "\n<h8><b>Print backtrace</b></h8>\n<br/>\n";
         foreach ($trace as $key => $line) {
-            if (0 === $key) {
+			if ($start > $key) {
+				continue;
+			}
+            if ($start === $key) {
                 // First line is different
                 $content .= '<i>Starting backtrace at</i>: ';
             } else {
