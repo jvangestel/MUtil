@@ -145,6 +145,7 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
 
             $this->addPrefixPath('MUtil_Bootstrap_Form_Element', 'MUtil/Bootstrap/Form/Element/', \Zend_Form::ELEMENT);
             $this->_no_bootstrap = false;
+            $this->_defaultDisplayGroupClass = 'MUtil_Bootstrap_Form_DisplayGroup';
         }
 
         return $this;
