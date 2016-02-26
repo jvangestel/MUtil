@@ -165,6 +165,12 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     public $extraPushPaddingKb = 0;
 
     /**
+     * Manual set of the finish url. Setting an empty string will disable the finish redirect
+     * @var string
+     */
+    public $finishUrl;
+
+    /**
      * The number of bytes to pad for the first push communication in Kilobytes. If zero
      * $extraPushPaddingKb is used.
      *
@@ -568,7 +574,11 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
         //$jquery = $view->jQuery();
         //$jquery->enable();
 
-        $urlFinish = $view->url(array($this->progressParameterName => $this->progressParameterReportValue));
+        if (isset($this->finishUrl)) {
+            $urlFinish = $this->finishUrl;
+        } else {
+            $urlFinish = $view->url(array($this->progressParameterName => $this->progressParameterReportValue));
+        }
         $urlRun    = $view->url(array($this->progressParameterName => $this->progressParameterRunValue));
 
         $panel = new \MUtil_Html_ProgressPanel($args);

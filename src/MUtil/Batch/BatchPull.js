@@ -149,11 +149,11 @@ function FUNCTION_PREFIX_Start() {
     "use strict";
 
     jQuery("{PANEL_ID}").pullProgressPanel({
-        "finishUrl": "{URL_FINISH}",
-        "formId":    "{FORM_ID}",
-        "panelId":   "{PANEL_ID}",
-        "runUrl":    "{URL_START_RUN}",
-        "targetId":  "{TEXT_ID}"
+        "finishUrl":        "{URL_FINISH}",
+        "formId":           "{FORM_ID}",
+        "panelId":          "{PANEL_ID}",
+        "runUrl":           "{URL_START_RUN}",
+        "targetId":         "{TEXT_ID}"
     });
 }
 
