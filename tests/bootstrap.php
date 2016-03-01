@@ -38,4 +38,6 @@ date_default_timezone_set('Europe/Amsterdam');
 // Set up autoload.
 if (file_exists(dirname(__FILE__) . '/../vendor/autoload.php')) {
     require_once dirname(__FILE__) . '/../vendor/autoload.php';
+} elseif (dirname(__FILE__) . '/../../../autoload.php') {
+    require_once dirname(__FILE__) . '/../../../autoload.php';
 }

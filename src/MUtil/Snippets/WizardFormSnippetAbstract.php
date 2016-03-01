@@ -424,7 +424,7 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
     {
         $model    = $this->getModel();
         $baseform = $this->createForm();
-        if ((MUtil_Bootstrap::enabled() !== true) && $baseform instanceof \MUtil_Form) {
+        if ((\MUtil_Bootstrap::enabled() !== true) && $baseform instanceof \MUtil_Form) {
             $table = new \MUtil_Html_TableElement();
             $table->setAsFormLayout($baseform, true, true);
 

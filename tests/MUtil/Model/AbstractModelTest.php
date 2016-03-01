@@ -44,7 +44,7 @@
  * @license    New BSD License
  * @since      Class available since version 1.6.2
  */
-abstract class MUtil_Model_AbstractModelTest extends Zend_Test_PHPUnit_DatabaseTestCase
+abstract class MUtil_Model_AbstractModelTest extends \Zend_Test_PHPUnit_DatabaseTestCase
 {
     /**
      *
