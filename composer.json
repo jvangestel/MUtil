@@ -45,7 +45,8 @@
         "php": ">=5.3.9",
         "ext-mcrypt": "*",
         "zendframework/zendframework1": "^1.12",
-        "zendframework/zf1-extras": "^1.12"
+        "zendframework/zf1-extras": "^1.12",
+        "oyejorge/less.php": "~1.7.0.9"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",

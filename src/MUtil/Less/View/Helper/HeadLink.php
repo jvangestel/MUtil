@@ -35,8 +35,6 @@
  * @version    $Id: HeadLink.php 1748 2014-02-19 18:09:41Z matijsdejong $
  */
 
-require_once __DIR__ . '/lessc.inc.php';
-
 /**
  * Make sure each .less css script is compiled to .css
  *
