@@ -269,19 +269,19 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
     /**
      * Filters the list of values and returns only those that should be used for this table.
      *
-     * @param string $table_name The current table
+     * @param string $tableName The current table
      * @param array $data All the data, including those for other tables
      * @param boolean $isNew True when creating
      * @return array An array containting the values that should be saved for this table.
      */
-    protected function _filterDataFor($table_name, array $data, $isNew)
+    protected function _filterDataFor($tableName, array $data, $isNew)
     {
         $tableCols = array();
 
         // First check the data
         foreach ($this->getCol('table') as $name => $table) {
             // Is current table?
-            if ($table === $table_name) {
+            if ($table === $tableName) {
 
                 if (array_key_exists($name, $data)) {
                     if ($data[$name] && (! is_array($data[$name])) && ($len = $this->get($name, 'maxlength'))) {
@@ -298,21 +298,21 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
         }
         $data = $this->_filterDataForSave($data, $isNew);
 
-        // \MUtil_Echo::track(array_intersect_key($data, $tableCols));
+        \MUtil_Echo::track($tableCols, array_keys($data), array_intersect_key($data, $tableCols));
         return array_intersect_key($data, $tableCols);
     }
 
     /**
      *
-     * @param string $table_name  Does not test for existence
+     * @param string $tableName  Does not test for existence
      * @return array Numeric array containing the key field names.
      */
-    protected function _getKeysFor($table_name)
+    protected function _getKeysFor($tableName)
     {
         $keys = array();
 
         foreach ($this->getItemNames() as $name) {
-            if ($this->is($name, 'table', $table_name) && $this->get($name, 'key')) {
+            if ($this->is($name, 'table', $tableName) && $this->get($name, 'key')) {
                 $keys[] = $name;
             }
         }
@@ -484,12 +484,13 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
         // \MUtil_Echo::r($newValues, $tableName);
         foreach ($primaryKeys as $key) {
             if (array_key_exists($key, $newValues) && (0 == strlen($newValues[$key]))) {
-                // Never include null key values
-                unset($newValues[$key]);
-                if (\MUtil_Model::$verbose) {
-                    \MUtil_Echo::r('Null key value: ' . $key, 'INSERT!!');
+                // Never include null key values, except when we have a save transformer
+                if (! $this->has($key, self::SAVE_TRANSFORMER)) {
+                    unset($newValues[$key]);
+                    if (\MUtil_Model::$verbose) {
+                        \MUtil_Echo::r('Null key value: ' . $key, 'INSERT!!');
+                    }
                 }
-
                 // Now we know we are not updating
                 $update = false;
 
@@ -787,7 +788,7 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
             if ($isPost) {
                 // Add possible custom format
                 $formats[$name][$isPost][] = $this->_getKeyValue($name, 'dateFormat');
-                
+
                 // Add default format as a fallback
                 $type = \MUtil_Date_Format::getDateTimeType($this->_getKeyValue($name, 'dateFormat'));
                 $formats[$name][$isPost][] = \MUtil_Model_Bridge_FormBridge::getFixedOption($type, 'dateFormat');

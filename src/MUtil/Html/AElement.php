@@ -118,7 +118,14 @@ class MUtil_Html_AElement extends \MUtil_Html_HtmlElement
     public static function a($href, $arg_array = null)
     {
         $args = \MUtil_Ra::args(func_get_args(), array('href' => 'MUtil_Html_HrefArrayAttribute'));
-        return new self($args);
+
+        if (isset($args['href'])) {
+            $href = $args['href'];
+            unset($args['href']);
+        } else {
+            $href = null;
+        }
+        return new self($href, $args);
     }
 
     /**
