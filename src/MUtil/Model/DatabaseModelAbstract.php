@@ -298,7 +298,7 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
         }
         $data = $this->_filterDataForSave($data, $isNew);
 
-        \MUtil_Echo::track($tableCols, array_keys($data), array_intersect_key($data, $tableCols));
+        // \MUtil_Echo::track($tableCols, array_keys($data), array_intersect_key($data, $tableCols));
         return array_intersect_key($data, $tableCols);
     }
 
