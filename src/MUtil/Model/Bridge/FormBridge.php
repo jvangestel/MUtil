@@ -892,6 +892,39 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
         return $this->_addToForm($name, 'Textarea', $options);
     }
 
+    public function addToggleCheckboxes($name, $arrayOrKey1 = null, $value1 = null, $key2 = null, $value2 = null)
+    {
+        $options = $this->_mergeOptions(
+                $name,
+                \MUtil_Ra::pairs(func_get_args(), 1),
+                self::DISPLAY_OPTIONS,
+                array('selector', 'selectorName')
+                );
+
+        if (! isset($options['label'])) {
+            if (isset($options['selectorName']) && $this->model->has($options['selectorName'], 'label')) {
+                $options['label'] = sprintf('Toggle %s', $this->model->get($options['selectorName'], 'label'));
+            } else {
+                $options['label'] = 'Toggle';
+            }
+        }
+        if (isset($options['selectorName'])) {
+            $options['selector'] = sprintf('input[name^=%s]', $options['selectorName']);
+            unset($options['selectorName']);
+        }
+        $this->form->activateJQuery();
+
+        if (\MUtil_Bootstrap::enabled() || (!class_exists('Gems_JQuery_Form_Element_ToggleCheckboxes'))) {
+            $element = new \MUtil_Bootstrap_Form_Element_ToggleCheckboxes($name, $options);
+        } else {
+            $element = new \Gems_JQuery_Form_Element_ToggleCheckboxes($name, $options);
+        }
+
+        $this->form->addElement($element);
+
+        return $element;
+    }
+
     /**
      *
      * @param sting $elementName
