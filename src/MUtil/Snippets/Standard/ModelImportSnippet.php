@@ -306,7 +306,7 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
 
             $element = $bridge->getForm()->createElement('html', 'importdisplay');
 
-            $repeater = \MUtil_Lazy::repeat(new LimitIterator($this->sourceModel->loadIterator(), 0, 20));
+            $repeater = \MUtil_Lazy::repeat(new \LimitIterator($this->sourceModel->loadIterator(), 0, 20));
             $table    = new \MUtil_Html_TableElement($repeater, array('class' => $this->formatBoxClass));
 
             foreach ($this->sourceModel->getItemsOrdered() as $name) {
@@ -405,16 +405,7 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
                 $this->nextDisabled = $batch->getCounter('import_errors');
                 $batch->autoStart   = false;
 
-                $imported = $batch->getCounter('imported');
-                $changed  = $batch->getCounter('changed');
-
-                $text = sprintf($this->plural('%d row imported.', '%d rows imported.', $imported), $imported) . ' ' .
-                        sprintf($this->plural('%d row changed.', '%d rows changed.', $changed), $changed);
-
-                $this->addMessage($batch->getMessages(true));
-                $this->addMessage($text);
-
-                $element->pInfo($text);
+                $text = $this->afterImport($batch, $element);
 
             } else {
                 $iter = $batch->getSessionVariable('iterator');
@@ -475,6 +466,29 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
                 break;
 
         }
+    }
+
+    /**
+     * Hook for after save
+     *
+     * @param \MUtil_Task_TaskBatch $batch that was just executed
+     * @param \MUtil_Form_Element_Html $element Tetx element for display of messages
+     * @return string a message about what has changed (and used in the form)
+     */
+    public function afterImport(\MUtil_Task_TaskBatch $batch, \MUtil_Form_Element_Html $element)
+    {
+        $imported = $batch->getCounter('imported');
+        $changed  = $batch->getCounter('changed');
+
+        $text = sprintf($this->plural('%d row imported.', '%d rows imported.', $imported), $imported) . ' ' .
+                sprintf($this->plural('%d row changed.', '%d rows changed.', $changed), $changed);
+
+        $this->addMessage($batch->getMessages(true));
+        $this->addMessage($text);
+
+        $element->pInfo($text);
+
+        return $text;
     }
 
     /**

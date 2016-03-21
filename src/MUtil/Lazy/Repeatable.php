@@ -144,7 +144,9 @@ class MUtil_Lazy_Repeatable implements \MUtil_Lazy_RepeatableInterface
             }
         } else {
             if (null === $this->_currentItem) {
-                $this->_repeater->rewind();
+                if (! $this->_repeater->valid()) {
+                    $this->_repeater->rewind();
+                }
             } else {
                 $this->_repeater->next();
             }
@@ -201,6 +203,11 @@ class MUtil_Lazy_Repeatable implements \MUtil_Lazy_RepeatableInterface
             return (boolean) count($this->_repeater);
 
         } else {
+            if ($this->_repeater->valid()) {
+                return true;
+            }
+            // Some Interators require a rewind before they are valid
+            $this->_repeater->rewind();
             return $this->_repeater->valid();
         }
     }
