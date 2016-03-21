@@ -118,6 +118,14 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
     public $keyCopier = self::KEY_COPIER;
 
     /**
+     * Should the paginator prefetch all data? E.g. when multiple data loads occur on the same page
+     * or model dependencies trigger other queries.
+     *
+     * @var boolean
+     */
+    public $prefetchIterator = false;
+
+    /**
      * Get a select statement using a filter and sort
      *
      * @param array $filter Filter array, num keys contain fixed expresions, text keys are equal or one of filters
