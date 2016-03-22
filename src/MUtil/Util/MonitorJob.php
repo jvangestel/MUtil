@@ -196,21 +196,23 @@ This messages was send automatically.";
      */
     private function _sentMail($subject, $message)
     {
-        $mail = new \MUtil_Mail();
+        // Send a seperate mail to each recipient, otherwise they might do nothing
         foreach ($this->to as $to) {
+            $mail = new \MUtil_Mail();
             $mail->addTo($to);
-        }
-        if ($this->from) {
-            $mail->setFrom($this->from);
-        } else {
-            $mail->setFromToDefaultFrom();
-        }
 
-        $replacements = $this->getMailVariables();
+            if ($this->from) {
+                $mail->setFrom($this->from);
+            } else {
+                $mail->setFromToDefaultFrom();
+            }
 
-        $mail->setSubject(strtr($subject, $replacements));
-        $mail->setBodyBBCode(strtr($message, $replacements));
-        $mail->send();
+            $replacements = $this->getMailVariables();
+
+            $mail->setSubject(strtr($subject, $replacements));
+            $mail->setBodyBBCode(strtr($message, $replacements));
+            $mail->send();
+        }
     }
 
     /**
@@ -241,7 +243,6 @@ This messages was send automatically.";
         $output   = array();
         $monitors = self::_getMonitors();
 
-
         foreach ($monitors as $name => $data) {
             $job = new self($name, $data);
 
@@ -256,10 +257,14 @@ This messages was send automatically.";
         if ($output) {
             self::_setMonitors($monitors);
 
+            // \MUtil_Echo::track($output);
             return $output;
         }
 
-        return array(sprintf("No jobs where triggered out of %s.", count($monitors)));
+        $message = sprintf("No jobs where triggered out of %s.", count($monitors));
+
+        // \MUtil_Echo::track($message);
+        return array($message);
     }
 
     /**
