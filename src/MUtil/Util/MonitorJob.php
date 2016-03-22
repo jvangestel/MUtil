@@ -344,6 +344,21 @@ This messages was send automatically.";
     }
 
     /**
+     * Send another mail to the monitors
+     *
+     * @see getMailVariables()
+     * @param string $subject
+     * @param string $bbMessage BB message string
+     * @return boolean True when object has changed
+     */
+    public function sendOtherMail($subject, $bbMessage)
+    {
+        $this->_sentMail($subject, $bbMessage);
+
+        return true;
+    }
+
+    /**
      * Send the mail for an overdue job
      *
      * @return boolean True when object has changed
@@ -394,22 +409,26 @@ This messages was send automatically.";
     public function setPeriod($period)
     {
         if (strlen($period)) {
-            switch (strtolower(substr($period, -1))) {
-                case 'd':
-                    $this->period = intval(substr($period, 0, -1)) * 86400;
-                    break;
+            if ('never' == $period) {
+                $this->period = -1;
+            } else {
+                switch (strtolower(substr($period, -1))) {
+                    case 'd':
+                        $this->period = intval(substr($period, 0, -1)) * 86400;
+                        break;
 
-                case 'h':
-                    $this->period = intval(substr($period, 0, -1)) * 3600;
-                    break;
+                    case 'h':
+                        $this->period = intval(substr($period, 0, -1)) * 3600;
+                        break;
 
-                case 'm':
-                    $this->period = intval(substr($period, 0, -1)) * 60;
-                    break;
+                    case 'm':
+                        $this->period = intval(substr($period, 0, -1)) * 60;
+                        break;
 
-                default:
-                    $this->period = intval($period);
-                    break;
+                    default:
+                        $this->period = intval($period);
+                        break;
+                }
             }
         }
 
@@ -449,22 +468,26 @@ This messages was send automatically.";
     /**
      * Start monitoring
      *
-     * @return \MUtil\Util\MonitorJob
+     * @return boolean True when job started
      */
     public function start()
     {
-        self::startJob($this);
-
-        return $this;
+        return self::startJob($this);
     }
 
     /**
      * Start monitoring
      *
      * @param MonitorJob $job
+     * @return boolean True when job started
      */
     public static function startJob(MonitorJob $job)
     {
+        // Period has to be a positive integer
+        if ($job->period < 0) {
+            return false;
+        }
+
         $monitors = self::_getMonitors();
 
         $time = time();
@@ -476,6 +499,8 @@ This messages was send automatically.";
         $monitors[$job->name] = $job->getArrayCopy();
 
         self::_setMonitors($monitors);
+
+        return true;
     }
 
     /**
