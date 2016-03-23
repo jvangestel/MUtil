@@ -31,7 +31,6 @@
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @version    $Id$
  */
 
 /**
@@ -106,7 +105,8 @@ class MUtil_Acl extends \Zend_Acl
      * @param array $parents
      * @return array With identical keys and values roleId => roleId
      */
-    public function getRoleAndParents($role, $parents = array()) {
+    public function getRoleAndParents($role, $parents = array())
+    {
         $results = $parents;
         $result = $this->_getRoleRegistry()->getParents($role);
         foreach($result as $roleId => $selRole) {
