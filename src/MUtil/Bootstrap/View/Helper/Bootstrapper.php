@@ -206,7 +206,7 @@ class MUtil_Bootstrap_View_Helper_Bootstrapper
         if (\MUtil_Bootstrap::$fontawesome === true) {
             $fontawesomeStylesheet = $this->_getFontAwesomeStylesheet();
 
-            $style .= '<link rel="stylesheet" href="'.$fontawesomeStylesheet.'" type="text/css" media="screen"' . $closingBracket . PHP_EOL;
+            $style .= '<link rel="stylesheet" href="'.$fontawesomeStylesheet.'" type="text/css"' . $closingBracket . PHP_EOL;
         }
 
         return $style;
