@@ -144,7 +144,7 @@ class MUtil_Html_LabelElement extends \MUtil_Html_HtmlElement
                     }
                     parent::__set('class', $class); // Bypass existing property for drawing
 
-                    if ($id = $value->id) {
+                    if ($id = $value->getId()) {
                         parent::__set('for', $id); // Always overrule
                     } else {
                         parent::__unset('for');
