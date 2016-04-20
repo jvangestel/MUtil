@@ -237,24 +237,34 @@ class MUtil_Model_Type_ConcatenatedRow
      */
     public function textFilter($filter, $name, $sqlField, \MUtil_Model_DatabaseModelAbstract $model)
     {
-        if ($options = $model->get($name, 'multiOptions')) {
+        $options = $model->get($name, 'multiOptions');
+        if ($options) {
             $adapter = $model->getAdapter();
             $wheres = array();
             foreach ($options as $key => $value) {
                 // \MUtil_Echo::track($key, $value, $filter, stripos($value, $filter));
-                if (stripos($value, $filter) !== false) {
-                    if (null === $key) {
-                        $wheres[] = $sqlField . ' IS NULL';
-                    } else {
-                        $quoted   = $adapter->quote($key);
-                        $wheres[] = $sqlField . " LIKE '%" . $this->seperatorChar . $quoted . $this->seperatorChar . "%'";
+                if (stripos($value, $filter) === false) {
+                    continue;
+                }
+                if (null === $key) {
+                    $wheres[] = $sqlField . ' IS NULL';
+                } else {
+                    $wheres[] = $adapter->quoteInto(
+                            $sqlField . " LIKE ?",
+                            '%' . $this->seperatorChar . $key . $this->seperatorChar . '%'
+                            );
 
-                        if (! $this->valuePad) {
-                            // Add other options
-                            $wheres[] = $sqlField . " LIKE '" . $quoted . $this->seperatorChar . "%'";
-                            $wheres[] = $sqlField . " LIKE '%" . $this->seperatorChar . $quoted . "'";
-                            $wheres[] = $sqlField . " = " . $quoted;
-                        }
+                    if (! $this->valuePad) {
+                        // Add other options
+                        $wheres[] = $adapter->quoteInto(
+                                $sqlField . " LIKE ?",
+                                $key . $this->seperatorChar . '%'
+                                );
+                        $wheres[] = $adapter->quoteInto(
+                                $sqlField . " LIKE ?",
+                                '%' . $this->seperatorChar . $key
+                                );
+                        $wheres[] = $adapter->quoteInto($sqlField . " = ?", $key);
                     }
                 }
             }

@@ -182,8 +182,14 @@ abstract class DependencyAbstract extends \MUtil_Translate_TranslateableAbstract
     {
         if ($this->applyOnChange) {
             foreach ($this->getDependsOn() as $name) {
-                if (! $model->has($name, 'onchange')) {
-                    $model->set($name, 'onchange', $this->onChangeJs);
+                if ($model->is($name, 'elementClass', 'Checkbox')) {
+                    if (! $model->has($name, 'onclick')) {
+                        $model->set($name, 'onclick', $this->onChangeJs);
+                    }
+                } else {
+                    if (! $model->has($name, 'onchange')) {
+                        $model->set($name, 'onchange', $this->onChangeJs);
+                    }
                 }
             }
         }
