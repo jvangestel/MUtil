@@ -87,7 +87,7 @@ class JsonData
      * @param \MUtil_Model_ModelAbstract $model
      * @param string $name The field to set the seperator character
      * @param boolean $detailed When true show detailed information
-     * @return \MUtil_Model_Type_ConcatenatedRow (continuation pattern)
+     * @return \MUtil\Model\Type\JsonData (continuation pattern)
      */
     public function apply(\MUtil_Model_ModelAbstract $model, $name, $detailed)
     {
