@@ -76,6 +76,11 @@ class SumTotalTransformer extends \MUtil_Model_ModelTransformerAbstract
                 }
             }
         }
+        if (isset($this->_summarizeOn[$keyField]['values'])) {
+            foreach ($this->_summarizeOn[$keyField]['values'] as $targetField) {
+                $currentValues[$targetField] = $keyValue;
+            }
+        }
         if (isset($this->_summarizeOn[$keyField]['calls'])) {
             foreach ($this->_summarizeOn[$keyField]['calls'] as $targetField => $function) {
                 $value = isset($currentValues[$targetField]) ? $currentValues[$targetField] : null;
@@ -127,6 +132,8 @@ class SumTotalTransformer extends \MUtil_Model_ModelTransformerAbstract
                 $fixed['calls'][$fixedName] = $value;
             } elseif (is_array($value)) {
                 $fixed['arrays'][$fixedName] = $value;
+            } elseif (true === $value) {
+                $fixed['values'][$fixedName] = $fixedName;
             } else {
                 $fixed['string'][$fixedName] = $value;
             }
