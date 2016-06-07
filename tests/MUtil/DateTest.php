@@ -128,6 +128,39 @@ class MUtil_DateTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('1 decade ago', $this->object->diffReadable($testDate, $this->translate));
     }
 
+
+    public function providerTestDiffDays()
+    {
+      return array(
+        array('2016-06-06 00:00:00', '2016-06-06 12:34:56', 0),
+        array('2016-06-06 10:00:00', '2016-06-07 01:34:56', -1),
+        array('2016-06-05 00:00:00', '2016-06-06 12:34:56', -1),
+        array('2016-06-06 02:00:00', '2016-06-06 12:34:56', 0),
+        array('2016-06-06 01:00:00', '2016-06-06 12:34:56', 0),
+        array('2014-06-06 01:00:00', '2015-06-06 12:34:56', -365),
+        array('2016-05-06 00:00:00', '2016-06-06 12:34:56', -31),
+        array('2016-07-06 00:00:00', '2016-06-06 12:34:56', 30),
+        array('2016-06-07 00:00:00', '2016-06-06 12:34:56', 1),
+        array('2016-06-06 12:34:57', '2016-06-06 12:34:56', 0),
+      );
+    }
+
+
+    /**
+     * @param string $firstDate
+     * @param string $secondDate 
+     * @param int $expectedDiff
+     *
+     * @dataProvider providerTestDiffDays
+     */
+    public function testDiffDays($firstDate, $secondDate, $expectedDiff)
+    {
+        $date = new MUtil_Date($firstDate);
+        $otherDate = new MUtil_Date($secondDate);
+        $diff = $date->diffDays($otherDate);
+        $this->assertEquals($expectedDiff, $diff);
+    }
+
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
