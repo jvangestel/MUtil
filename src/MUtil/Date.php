@@ -56,7 +56,7 @@ class MUtil_Date extends \Zend_Date
     public static $zendToPhpFormats = array(
         'yyyy-MM-dd HH:mm:ss' => 'Y-m-d H:i:s',
         'yyyy-MM-dd'          => 'Y-m-d',
-        'c'                   => \DateTime::ISO8601,
+        'c'                   => 'Y-m-d\TH:i:sp',
         'dd-MM-yyyy'          => 'd-m-Y',
         'dd-MM-yyyy HH:mm'    => 'd-m-Y H:i',
         'dd-MM-yyyy HH:mm:ss' => 'd-m-Y H:i:s',

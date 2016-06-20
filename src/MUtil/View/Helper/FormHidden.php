@@ -69,6 +69,9 @@ class MUtil_View_Helper_FormHidden extends \Zend_View_Helper_FormElement
                 $attribs = array('id' => $id);
             }
         }
+        if ($value instanceof \Zend_Date) {
+            return $this->_hidden($name, $value->toString('yyyy-MM-dd HH:mm:ss'), $attribs);
+        }
         if (! is_array($value)) {
             return $this->_hidden($name, $value, $attribs);
         }
