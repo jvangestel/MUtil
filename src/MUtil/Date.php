@@ -116,20 +116,25 @@ class MUtil_Date extends \Zend_Date
      * POSITIVE when $date is YOUNGER than $this
      * Negative when $date is older than $this
      *
+     * This function ignores the Timezone and is only concerned with
+     * the actual display date of the date: 2 timestamps in different
+     * timezones can be the same GMT second, but can still occur on
+     * different days.
+     *
      * @param \Zend_Date $date
      * @param \Zend_Locale $locale optional (not used)
      * @return type
      */
     public function diffDays(\Zend_Date $date = null, $locale = null)
     {
-        $val1 = (int) ($this->getUnixTimestamp() / self::DAY_SECONDS);
+        $val1 = (int) (($this->getUnixTimestamp() - $this->getGmtOffset()) / self::DAY_SECONDS);
 
         if (null === $date) {
             // We must use date objects as unix timestamps do not take
             // account of leap seconds.
             $val2 = (int) (time() / self::DAY_SECONDS);
         } else {
-            $val2 = (int) ($date->getUnixTimestamp() / self::DAY_SECONDS);
+            $val2 = (int) (($date->getUnixTimestamp() - $date->getGmtOffset()) / self::DAY_SECONDS);
         }
 
         return $val1 - $val2;
