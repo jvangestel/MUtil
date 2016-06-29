@@ -28,6 +28,8 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         // date_default_timezone_set('GMT');
         // date_default_timezone_set('America/Los_Angeles');
 
+        \Zend_Locale::setDefault('nl');
+
         $this->object = new \MUtil_Date();
         $english = array(
             '%s ago' => '%s ago',
