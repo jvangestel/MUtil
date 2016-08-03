@@ -75,7 +75,8 @@ class MUtil_Bootstrap_View_Helper_Bootstrapper
 
     protected function _getBootstrapCdnPath()
     {
-        return \MUtil_Bootstrap::CDN_BASE;
+        $protocol = Zend_Controller_Front::getInstance()->getRequest()->isSecure() ? 'https:' : 'http:';
+        return $protocol . \MUtil_Bootstrap::CDN_BASE;
     }
 
     /**
@@ -99,7 +100,8 @@ class MUtil_Bootstrap_View_Helper_Bootstrapper
 
     protected function _getFontAwesomeCdnPath()
     {
-        return \MUtil_Bootstrap::CDN_FONTAWESOME_BASE;
+        $protocol = Zend_Controller_Front::getInstance()->getRequest()->isSecure() ? 'https:' : 'http:';
+        return $protocol . \MUtil_Bootstrap::CDN_FONTAWESOME_BASE;
     }
 
     /**
