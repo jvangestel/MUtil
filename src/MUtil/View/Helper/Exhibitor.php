@@ -143,7 +143,7 @@ class MUtil_View_Helper_Exhibitor extends \Zend_View_Helper_FormElement
             return $result;
         } else {
             if ($value instanceof \Zend_Date) {
-                $value = $value->toString(\Zend_Date::ISO_8601);
+                $value = $value->toString('yyyy-MM-dd HH:mm:ss');                
             }
             return $this->_hidden($name, $value) . $result;
         }
