@@ -495,9 +495,15 @@ abstract class MUtil_Model_ModelAbstract extends \MUtil_Registry_TargetAbstract
         if ($old = $this->getFilter()) {
             foreach ($value as $key => $filter) {
                 if (is_integer($key)) {
-                    // Integer key filters are just added as is,
-                    // unless they already exist
-                    if (!in_array($filter, $old)) {
+                    /* 
+                     * Integer key filters are just added as is, unless they already exist
+                     * 
+                     * We use strict checking since values and keys compared might lead to
+                     * false positives. See links for expanation:
+                     *     http://php.net/manual/en/function.in-array.php#106319
+                     *     http://php.net/manual/en/function.in-array.php#114171
+                     */
+                    if (!in_array($filter, $old, true)) {
                         $old[] = $filter;
                     }
                 } else {
