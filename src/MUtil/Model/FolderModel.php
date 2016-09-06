@@ -116,7 +116,7 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
                     \RecursiveIteratorIterator::CATCH_GET_CHILD
                     );
         } else {
-            $dirIter = new \DirectoryIterator($this->dir, \FilesystemIterator::CURRENT_AS_FILEINFO);
+            $dirIter = new \FilesystemIterator($this->dir, \FilesystemIterator::CURRENT_AS_FILEINFO);
         }
 
         $modelIter = new \MUtil_Model_Iterator_FolderModelIterator($dirIter, $this->dir, $this->mask);
