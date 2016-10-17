@@ -42,7 +42,7 @@ class MUtil_Controller_Response_Cli extends \Zend_Controller_Response_Cli
      */
     public function sendResponse()
     {
-        $this->_body .= "\n";
+        $this->_body[] = "\n";
         $this->outputBody();
     }
 }
