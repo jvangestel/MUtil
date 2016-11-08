@@ -85,32 +85,32 @@ abstract class MUtil_Model_ModelTranslatorAbstract extends \MUtil_Translate_Tran
     protected $_targetModel;
 
     /**
-     * Date import format
+     * Date import formats
      *
-     * @var string
+     * @var array
      */
-    public $dateFormat = 'YYYY-MM-DD';
+    public $dateFormats = array('yyyy-MM-dd');
 
    /**
-    * Optional locale for date interpreations
+    * Optional locale for date interpretations
     *
     * @var \Zend_Locale or string to create locale
     */
     public $dateLocale;
 
     /**
-     * Datetime import format
+     * Datetime import formats
      *
-     * @var string
+     * @var array
      */
-    public $datetimeFormat = \Zend_Date::ISO_8601;
+    public $datetimeFormats = array(\Zend_Date::ISO_8601);
 
     /**
-     * Time import format
+     * Time import formats
      *
-     * @var string
+     * @var array
      */
-    public $timeFormat = \Zend_Date::TIMES;
+    public $timeFormats = array(\Zend_Date::TIMES);
 
     /**
      * The string value used for NULL values
@@ -319,21 +319,21 @@ abstract class MUtil_Model_ModelTranslatorAbstract extends \MUtil_Translate_Tran
 
         if ($this->_targetModel instanceof \MUtil_Model_ModelAbstract) {
             if ($this->_targetModel->is($key, 'type', \MUtil_Model::TYPE_DATE)) {
-                $format = $this->dateFormat;
+                $formats = $this->dateFormats;
             } elseif ($this->_targetModel->is($key, 'type', \MUtil_Model::TYPE_DATETIME)) {
-                $format = $this->datetimeFormat;
+                $formats = $this->datetimeFormats;
             } elseif ($this->_targetModel->is($key, 'type', \MUtil_Model::TYPE_TIME)) {
-                $format = $this->timeFormat;
+                $formats = $this->timeFormats;
             } else {
-                $format = false;
+                $formats = false;
             }
 
             if ($this->dateLocale && is_string($this->dateLocale)) {
                 $this->dateLocale = new \Zend_Locale($this->dateLocale);
             }
 
-            if ($format && \Zend_Date::isDate($value, $format, $this->dateLocale)) {
-                $value = new \MUtil_Date($value, $format, $this->dateLocale);
+            if ($formats) {
+                $value = \MUtil_Date::ifDate(trim($value), $formats);
                 return;
             }
 
