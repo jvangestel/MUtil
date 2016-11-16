@@ -79,6 +79,11 @@ class MUtil_Date extends \Zend_Date
             $this->setTimezone($date->getTimezone()->getName());
             $this->setUnixTimestamp($date->getTimestamp());
             $notset = false;
+        } elseif ($date instanceof \Zend_Date) {
+            $this->setLocale($this->getLocale());
+            $this->setTimezone($date->getTimezone());
+            $this->setUnixTimestamp($date->getUnixTimestamp());
+            $notset = false;
         }
         if ($notset) {
             parent::__construct($date, $part, $locale);
@@ -328,11 +333,8 @@ class MUtil_Date extends \Zend_Date
         } elseif ((null === $date) || ('' === $date)) {
             return null;
 
-        } elseif ($date instanceof \DateTime) {
+        } elseif (($date instanceof \DateTime) || ($date instanceof \Zend_Date)) {
             return new self($date);
-
-        } elseif ($date instanceof \Zend_Date) {
-            return $date;
 
         } else {
             foreach ((array) $formats as $format) {
