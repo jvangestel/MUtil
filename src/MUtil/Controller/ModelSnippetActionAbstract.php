@@ -666,6 +666,8 @@ abstract class MUtil_Controller_ModelSnippetActionAbstract extends \MUtil_Contro
             $sessionData = array();
         }
 
+        $defaults = $this->getSearchDefaults();
+
         if ($useRequest) {
             $data = $this->request->getParams();
 
@@ -686,15 +688,19 @@ abstract class MUtil_Controller_ModelSnippetActionAbstract extends \MUtil_Contro
             // Always remove
             unset($data[\MUtil_Model::AUTOSEARCH_RESET]);
 
-            // Store cleaned values in session (we do not store the defaults as they may change
+            // Store cleaned values in session (we do not store the defaults now as they may change
             // depending on the request and this way the filter data responds to that).
-            $searchSession->$sessionId = array_filter($data, function($i) { return is_array($i) || strlen($i); });
+            // On the other hand we do store empty values in the session when they are in the defaults
+            // array. The reason is that otherwise a non-empty default can later overrule an empty
+            // value.
+            $searchSession->$sessionId = array_filter($data, function($i, $k) use ($defaults) {
+                return is_array($i) || strlen($i) || array_key_exists($k, $defaults);
+            }, ARRAY_FILTER_USE_BOTH);
         } else {
             $data = $sessionData;
         }
 
         // Add defaults to data without cleanup
-        $defaults = $this->getSearchDefaults();
         if ($defaults) {
             $data = $data + $defaults;
         }
