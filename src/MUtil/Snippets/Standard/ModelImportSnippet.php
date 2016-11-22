@@ -10,7 +10,7 @@
  */
 
 /**
- * generic import wizard.
+ * Generic import wizard.
  *
  * Set the targetModel (directly or through $this->model) and the
  * importTranslators and it should work.
@@ -1059,7 +1059,7 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
     }
 
     /**
-     * Set what to do when the form is 'finished'.
+     * Set what to do when the form is 'finished' or 'cancelled'.
      *
      * @return \MUtil_Snippets_Standard_ModelImportSnippet
      */
