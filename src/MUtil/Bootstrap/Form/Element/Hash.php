@@ -17,7 +17,7 @@
  * @license    New BSD License
  * @since      Class available since version 1.8.2 Nov 23, 2016 4:34:13 PM
  */
-class MUtil_Bootstrap_Form_Element_Hash extends \Zend_Form_Element_hash
+class MUtil_Bootstrap_Form_Element_Hash extends \Zend_Form_Element_Hash
 {
 	/**
      * Load default decorators
