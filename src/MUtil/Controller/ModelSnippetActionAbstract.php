@@ -719,9 +719,12 @@ abstract class MUtil_Controller_ModelSnippetActionAbstract extends \MUtil_Contro
             // On the other hand we do store empty values in the session when they are in the defaults
             // array. The reason is that otherwise a non-empty default can later overrule an empty
             // value.
-            $searchSession->$sessionId = array_filter($data, function($i, $k) use ($defaults) {
-                return is_array($i) || strlen($i) || array_key_exists($k, $defaults);
-            }, ARRAY_FILTER_USE_BOTH);
+            $searchSession->$sessionId = array();
+            foreach ($data as $k => $v) {
+                if (is_array($v) || strlen($v) || array_key_exists($k, $defaults)) {
+                    $searchSession->$sessionId[$k] = $v;
+                }
+            }
         } else {
             $data = $sessionData;
         }
