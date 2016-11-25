@@ -89,7 +89,7 @@ class MUtil_File
 
         return $filename;
     }
-    
+
     /**
      * Ensure the directory does really exist or throw an exception othewise
      *
@@ -103,6 +103,11 @@ class MUtil_File
         // Clean up directory name
         $dir = self::cleanupSlashes($dir);
 
+        // Cacade ensure
+        $parent = dirname($dir);
+        if (strlen($parent) > 1 && (! is_dir($parent))) {
+            self::ensureDir($parent);
+        }
         if (! is_dir($dir)) {
             if (! @mkdir($dir, $mode, true)) {
                 throw new \Zend_Exception(sprintf(
