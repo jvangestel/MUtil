@@ -61,13 +61,13 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
         self::AUTO_OPTIONS       => array('elementClass', 'multiOptions'),
         self::CHECK_OPTIONS      => array('checkedValue', 'uncheckedValue'),
         self::DATE_OPTIONS       => array('dateFormat', 'storageFormat'),
-        self::DISPLAY_OPTIONS    => array('accesskey', 'autoInsertNotEmptyValidator', 'class', 'disabled', 'description', 'escape', 'escapeDescription', 'label', 'onclick', 'readonly', 'required', 'tabindex', 'value', 'showLabels', 'labelplacement'),
+        self::DISPLAY_OPTIONS    => array('accesskey', 'autoInsertNotEmptyValidator', 'class', 'disabled', 'disableTranslator', 'description', 'escape', 'escapeDescription', 'label', 'onclick', 'readonly', 'required', 'tabindex', 'value', 'showLabels', 'labelplacement'),
         self::EXHIBIT_OPTIONS    => array('formatFunction', 'itemDisplay'),
         self::FAKESUBMIT_OPTIONS => array('label', 'tabindex', 'disabled'),
         self::FILE_OPTIONS       => array('accept', 'count', 'destination', 'extension', 'filename', 'valueDisabled'),
         self::GROUP_OPTIONS      => array('elements', 'legend', 'separator'),
         self::JQUERY_OPTIONS     => array('jQueryParams'),
-        self::MULTI_OPTIONS      => array('disable', 'multiOptions', 'onchange', 'separator', 'size', 'disableTranslator'),
+        self::MULTI_OPTIONS      => array('disable', 'multiOptions', 'onchange', 'separator', 'size'),
         self::PASSWORD_OPTIONS   => array('renderPassword', 'repeatLabel'),
         self::SUBFORM_OPTIONS    => array('class', 'escape', 'form', 'tabindex'),
         self::TAB_OPTIONS        => array('value'),
@@ -642,7 +642,7 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
 
         $options = $this->_mergeOptions($name, $options,
             self::DISPLAY_OPTIONS, self::MULTI_OPTIONS);
-
+        
         return $this->_addToForm($name, 'MultiCheckbox', $options);
     }
 
