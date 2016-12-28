@@ -185,7 +185,7 @@ abstract class MUtil_Model_Iterator_FileIteratorAbstract implements \Iterator, \
             $this->_openFile();
         }
 
-        if ((! $this->_file instanceof \SplFileObject) || $this->_file->eof()) {
+        if (! ($this->_file instanceof \SplFileObject && $this->_file->valid())) {
             return false;
         }
 
@@ -249,7 +249,9 @@ abstract class MUtil_Model_Iterator_FileIteratorAbstract implements \Iterator, \
 
         if ($this->_file) {
             $this->_key = $this->_key + 1;
-            if (! $this->_file->eof()) {
+            if ($this->_file->eof()) {
+                $this->_filepos = false;
+            } else {
                 $this->_filepos = $this->_file->ftell();
                 $this->_file->next();
             }
@@ -331,6 +333,6 @@ abstract class MUtil_Model_Iterator_FileIteratorAbstract implements \Iterator, \
             $this->_openFile();
         }
 
-        return $this->_file && (! $this->_file->eof());
+        return $this->_file && (false !== $this->_filepos);
     }
 }
