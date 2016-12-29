@@ -101,7 +101,7 @@ class MUtil_Task_TaskBatch extends \MUtil_Batch_BatchAbstract
      */
     public function addTaskLoaderPrefixDirectories(array $dirs)
     {
-        $this->taskLoaderDirs = $dirs + $this->taskLoaderDirs;
+        $this->taskLoaderDirs = $this->taskLoaderDirs + $dirs;
         return $this;
     }
 
