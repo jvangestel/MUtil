@@ -142,7 +142,9 @@ abstract class MUtil_Model_Iterator_FileIteratorAbstract implements \Iterator, \
             }
 
             // Restore old file position if any
-            if (null !== $this->_filepos) {
+            if (null === $this->_filepos) {
+                $this->_filepos = $this->_file->ftell();
+            } else {
                 $this->_file->fseek($this->_filepos, SEEK_SET);
             }
 

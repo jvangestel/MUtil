@@ -133,6 +133,12 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     private $_lastMessage = null;
 
     /**
+     *
+     * @var array of callables for logging addMessage messages
+     */
+    private $_loggers = array();
+
+    /**
      * Stack to keep existing id's.
      *
      * @var array
@@ -399,11 +405,24 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
             $previous = $e->getPrevious();
             while ($previous) {
                 $messages[] = '  Previous exception: ' . $previous->getMessage();
+                $previous = $previous->getPrevious();
             }
             $messages[] = $e->getTraceAsString();
 
             $this->log->log(implode("\n", $messages), \Zend_Log::ERR);
         }
+        return $this;
+    }
+
+    /**
+     *
+     * @param callable $function Function to call with text message
+     * @return $this
+     */
+    public function addLogFunction($function)
+    {
+        $this->_loggers[] = $function;
+
         return $this;
     }
 
@@ -417,6 +436,10 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     {
         $this->_session->messages[] = $text;
         $this->_lastMessage = $text;
+
+        foreach ($this->_loggers as $function) {
+            call_user_func($function, $text);
+        }
 
         return $this;
     }
@@ -847,7 +870,7 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     public function reset()
     {
         $this->_session->unsetAll();
-        
+
         $this->_session->count      = 0;
         $this->_session->counters   = array();
         $this->_session->exceptions = array();
@@ -856,6 +879,32 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
         $this->_session->processed  = 0;
 
         $this->stack->reset();
+
+        return $this;
+    }
+
+    /**
+     * Reset a named counter
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function resetCounter($name)
+    {
+        unset($this->_session->counters[$name]);
+
+        return $this;
+    }
+
+    /**
+     * Reset a message on the message stack with a specific id.
+     *
+     * @param scalar $id
+     * @return \MUtil_Batch_BatchAbstract (continuation pattern)
+     */
+    public function resetMessage($id)
+    {
+        unset($this->_session->messages[$id]);
 
         return $this;
     }

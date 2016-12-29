@@ -157,13 +157,16 @@ class MUtil_Task_TaskBatch extends \MUtil_Batch_BatchAbstract
 
         $taskObject = $this->getTaskLoader()->createClass($task);
         if ($taskObject instanceof \MUtil_Registry_TargetInterface) {
+            // First set batch
+            if ($taskObject instanceof \MUtil_Task_TaskInterface) {
+                $taskObject->setBatch($this);
+            }
             if (!$this->getSource()->applySource($taskObject)) {
                 throw new \MUtil_Batch_BatchException(sprintf('ERROR: Parameters failed to load for task %s.', $task));
             }
         }
 
         if ($taskObject instanceof \MUtil_Task_TaskInterface) {
-            $taskObject->setBatch($this);
             call_user_func_array(array($taskObject, 'execute'), $params);
 
             return $taskObject->isFinished();
