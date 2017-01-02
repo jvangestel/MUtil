@@ -3,7 +3,7 @@
 /**
  *
  * @package    MUtil
- * @subpackage Model\ridge
+ * @subpackage Model\Bridge
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2014 Erasmus MC
  * @license    New BSD License
@@ -15,7 +15,7 @@
  * @subpackage Model\Bridge
  * @copyright  Copyright (c) 2014 Erasmus MC
  * @license    New BSD License
- * @since      Class available since 2014 
+ * @since      Class available since 2014
  */
 class MUtil_Model_Bridge_DisplayBridge extends \MUtil_Model_Bridge_BridgeAbstract
 {
