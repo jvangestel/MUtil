@@ -370,13 +370,6 @@ abstract class MUtil_Controller_Action extends \Zend_Controller_Action
         return $this->translate;
     }
 
-    /*
-    public function getViewSource()
-    {
-        $file_name = $this->view->viewRenderer->getScriptAction();
-        return $this->view->getScriptPath($file_name ? $file_name . '.phtml' : null);
-    } // */
-
     /**
      * Initialize translate and html objects
      *
