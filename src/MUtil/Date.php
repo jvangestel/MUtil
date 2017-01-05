@@ -31,7 +31,7 @@ class MUtil_Date extends \Zend_Date
     public static $zendToPhpFormats = array(
         'yyyy-MM-dd HH:mm:ss' => 'Y-m-d H:i:s',
         'yyyy-MM-dd'          => 'Y-m-d',
-        'c'                   => 'Y-m-d\TH:i:sP',
+        'c'                   => 'Y-m-d\TH:i:s', // Do NOT specify a timezone character: PHP always the timezone 
         'dd-MM-yyyy'          => 'd-m-Y',
         'dd-MM-yyyy HH:mm'    => 'd-m-Y H:i',
         'dd-MM-yyyy HH:mm:ss' => 'd-m-Y H:i:s',

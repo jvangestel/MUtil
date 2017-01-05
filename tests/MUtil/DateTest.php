@@ -237,7 +237,7 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedDiffDays, $diff);
         $this->assertEquals($expectedDiffSeconds, $date->diffSeconds($otherDate));
     }
-    
+
     public function testIsEarlier()
     {
         $now = new Mutil_Date();
@@ -245,12 +245,12 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $yesterday = $yesterday->subDay(1);
         $tomorrow =  clone $now;
         $tomorrow = $tomorrow->addDay(1);
-               
+
         $this->assertEquals(false, $now->isEarlier($now), 'does not pickup equal');
         $this->assertEquals(false, $now->isEarlier($yesterday), 'does not pickup earlier');
         $this->assertEquals(true, $now->isEarlier($tomorrow), 'does not pickup later');
     }
-    
+
     public function testIsEarlierorEqual()
     {
         $now = new Mutil_Date();
@@ -258,12 +258,12 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $yesterday = $yesterday->subDay(1);
         $tomorrow =  clone $now;
         $tomorrow = $tomorrow->addDay(1);
-        
+
         $this->assertEquals(true, $now->isEarlierOrEqual($now), 'does not pickup equal');
         $this->assertEquals(false, $now->isEarlierOrEqual($yesterday), 'does not pickup earlier');
         $this->assertEquals(true, $now->isEarlierOrEqual($tomorrow), 'does not pickup later');
     }
-    
+
     public function testIsLater()
     {
         $now = new Mutil_Date();
@@ -271,12 +271,12 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $yesterday = $yesterday->subDay(1);
         $tomorrow =  clone $now;
         $tomorrow = $tomorrow->addDay(1);
-        
+
         $this->assertEquals(false, $now->isLater($now), 'does not pickup equal');
         $this->assertEquals(true, $now->isLater($yesterday), 'does not pickup earlier');
         $this->assertEquals(false, $now->isLater($tomorrow), 'does not pickup later');
     }
-    
+
     public function testIsLaterorEqual()
     {
         $now = new Mutil_Date();
@@ -284,7 +284,7 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $yesterday = $yesterday->subDay(1);
         $tomorrow =  clone $now;
         $tomorrow = $tomorrow->addDay(1);
-        
+
         $this->assertEquals(true, $now->isLaterOrEqual($now), 'does not pickup equal');
         $this->assertEquals(true, $now->isLaterOrEqual($yesterday), 'does not pickup earlier');
         $this->assertEquals(false, $now->isLaterOrEqual($tomorrow), 'does not pickup later');
