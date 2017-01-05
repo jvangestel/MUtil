@@ -1,7 +1,5 @@
 <?php
 
-require_once 'PHPUnit/Framework/TestCase.php';
-
 /**
  * Unit test for class MUtil_Html
  *
