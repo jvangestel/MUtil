@@ -32,7 +32,7 @@
 abstract class MUtil_Controller_Action extends \Zend_Controller_Action
 {
     /**
-     * A ssession based message store.
+     * A session based message store.
      *
      * Standard the flash messenger for storing messages
      *
