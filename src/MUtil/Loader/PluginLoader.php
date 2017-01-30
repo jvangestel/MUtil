@@ -75,7 +75,9 @@ class MUtil_Loader_PluginLoader extends \Zend_Loader_PluginLoader
 
         $changed = false;
         foreach ((array) $paths as $path) {
-            $path   = rtrim($path, '/\\') . '/';
+            if ($path) {
+                $path = rtrim($path, '/\\') . '/';
+            }
 
             // \MUtil_Echo::track(self::getAbsolutePaths($path));
             foreach (self::getAbsolutePaths($path) as $sub) {
@@ -234,6 +236,7 @@ class MUtil_Loader_PluginLoader extends \Zend_Loader_PluginLoader
                     $includePaths[] = $real . DIRECTORY_SEPARATOR;
                 }
             }
+            // \MUtil_Echo::track($includePaths);
         }
 
         // Check path name
@@ -313,7 +316,7 @@ class MUtil_Loader_PluginLoader extends \Zend_Loader_PluginLoader
         } else {
             $registry = $this->_prefixToPaths;
         }
-        // \MUtil_Echo::track($registry);
+        // \MUtil_Echo::track($name, $registry);
 
         $found     = false;
         $classFile = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
