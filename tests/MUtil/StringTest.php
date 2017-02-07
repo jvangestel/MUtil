@@ -1,43 +1,17 @@
 <?php
 
 /**
- * Copyright (c) 2011, Erasmus MC
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    * Redistributions of source code must retain the above copyright
- *      notice, this list of conditions and the following disclaimer.
- *    * Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *    * Neither the name of Erasmus MC nor the
- *      names of its contributors may be used to endorse or promote products
- *      derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  * @package    MUtil
  * @subpackage String
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @version    $Id$
  */
 
 
 /**
- * Unit test for class MUtil_String
+ * Unit test for class \MUtil_String
  *
  * @package    MUtil
  * @subpackage String
@@ -45,14 +19,14 @@
  * @license    New BSD License
  * @since      Class available since version 1.5.7
  */
-class MUtil_StringTest extends PHPUnit_Framework_TestCase
+class MUtil_StringTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Return empty string if charFilters hit on first character
      */
     public function testBeforeCharsReturnNone()
     {
-        $result = MUtil_String::beforeChars('abcdef', 'rara');
+        $result = \MUtil_String::beforeChars('abcdef', 'rara');
         $this->assertEquals($result, '');
     }
 
@@ -61,7 +35,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testBeforeCharsReturnPart()
     {
-        $result = MUtil_String::beforeChars('abcdef', 'god');
+        $result = \MUtil_String::beforeChars('abcdef', 'god');
         $this->assertEquals($result, 'abc');
     }
 
@@ -70,7 +44,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testBeforeCharsReturnAll()
     {
-        $result = MUtil_String::beforeChars('abcdef', 'xyz');
+        $result = \MUtil_String::beforeChars('abcdef', 'xyz');
         $this->assertEquals($result, 'abcdef');
     }
 
@@ -79,7 +53,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testContainsIndeed()
     {
-        $result = MUtil_String::contains('abcdefg', 'def');
+        $result = \MUtil_String::contains('abcdefg', 'def');
         $this->assertEquals($result, true);
     }
 
@@ -88,7 +62,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testContainsIndeedStart()
     {
-        $result = MUtil_String::contains('abcdef', 'abc');
+        $result = \MUtil_String::contains('abcdef', 'abc');
         $this->assertEquals($result, true);
     }
 
@@ -97,7 +71,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testContainsNot()
     {
-        $result = MUtil_String::contains('abcdef', 'xyz');
+        $result = \MUtil_String::contains('abcdef', 'xyz');
         $this->assertEquals($result, false);
     }
 
@@ -106,7 +80,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithCaseFalse()
     {
-        $result = MUtil_String::endsWith('abcdef', 'deF');
+        $result = \MUtil_String::endsWith('abcdef', 'deF');
         $this->assertEquals($result, false);
     }
 
@@ -115,7 +89,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithFalse()
     {
-        $result = MUtil_String::endsWith('abcdef', 'xdef');
+        $result = \MUtil_String::endsWith('abcdef', 'xdef');
         $this->assertEquals($result, false);
     }
 
@@ -124,7 +98,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithNeedleEmpty()
     {
-        $result = MUtil_String::endsWith('abcdef', '');
+        $result = \MUtil_String::endsWith('abcdef', '');
         $this->assertEquals($result, true);
     }
 
@@ -133,7 +107,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithNeedleLonger()
     {
-        $result = MUtil_String::endsWith('abc', 'abcdef');
+        $result = \MUtil_String::endsWith('abc', 'abcdef');
         $this->assertEquals($result, false);
     }
 
@@ -142,7 +116,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithNumber()
     {
-        $result = MUtil_String::endsWith('abc10', 10);
+        $result = \MUtil_String::endsWith('abc10', 10);
         $this->assertEquals($result, true);
     }
 
@@ -151,7 +125,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithNoCaseTrue()
     {
-        $result = MUtil_String::endsWith('abCdef', 'Def', true);
+        $result = \MUtil_String::endsWith('abCdef', 'Def', true);
         $this->assertEquals($result, true);
     }
 
@@ -160,7 +134,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testEndsWithTrue()
     {
-        $result = MUtil_String::endsWith('abcdef', 'def');
+        $result = \MUtil_String::endsWith('abcdef', 'def');
         $this->assertEquals($result, true);
     }
 
@@ -169,7 +143,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64False()
     {
-        $result = MUtil_String::isBase64('YW55IGNhcm5hbCBwbGVhc3=y');
+        $result = \MUtil_String::isBase64('YW55IGNhcm5hbCBwbGVhc3=y');
         $this->assertEquals($result, false);
     }
 
@@ -178,7 +152,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64FalseLength()
     {
-        $result = MUtil_String::isBase64('a=b&c=d');
+        $result = \MUtil_String::isBase64('a=b&c=d');
         $this->assertEquals($result, false);
     }
 
@@ -187,7 +161,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64Is1()
     {
-        $result = MUtil_String::isBase64('YW55IGN+cm5hbCBwbGVhc3U=');
+        $result = \MUtil_String::isBase64('YW55IGN+cm5hbCBwbGVhc3U=');
         $this->assertEquals($result, true);
     }
 
@@ -196,7 +170,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64Is2()
     {
-        $result = MUtil_String::isBase64('YW55IGNh/m5hbCBwbGVhcw==');
+        $result = \MUtil_String::isBase64('YW55IGNh/m5hbCBwbGVhcw==');
         $this->assertEquals($result, true);
     }
 
@@ -205,7 +179,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64Is3()
     {
-        $result = MUtil_String::isBase64('YW55IGNhcm5hbCBwbGVhc===');
+        $result = \MUtil_String::isBase64('YW55IGNhcm5hbCBwbGVhc===');
         $this->assertEquals($result, false);
     }
 
@@ -214,7 +188,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64NoIs()
     {
-        $result = MUtil_String::isBase64('YW55IGNhcm5hbCBwbGVhc3Vy');
+        $result = \MUtil_String::isBase64('YW55IGNhcm5hbCBwbGVhc3Vy');
         $this->assertEquals($result, true);
     }
 
@@ -223,7 +197,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64Plus()
     {
-        $result = MUtil_String::isBase64('YW55I+Nhcm5+bCBwbGVhc3Vy');
+        $result = \MUtil_String::isBase64('YW55I+Nhcm5+bCBwbGVhc3Vy');
         $this->assertEquals($result, true);
     }
 
@@ -232,7 +206,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64Slash()
     {
-        $result = MUtil_String::isBase64('YW55I/Nhcm5/bCBwbGVhc3Vy');
+        $result = \MUtil_String::isBase64('YW55I/Nhcm5/bCBwbGVhc3Vy');
         $this->assertEquals($result, true);
     }
 
@@ -241,7 +215,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBase64SlashPlus()
     {
-        $result = MUtil_String::isBase64('YW55I+Nhcm5+bC/w/GVhc3Vy');
+        $result = \MUtil_String::isBase64('YW55I+Nhcm5+bC/w/GVhc3Vy');
         $this->assertEquals($result, true);
     }
 
@@ -251,7 +225,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackDefault()
     {
-        $result = MUtil_String::splitOnCharCallback('abcDef', 'ctype_upper');
+        $result = \MUtil_String::splitOnCharCallback('abcDef', 'ctype_upper');
         $test[0] = 'abc';
         $test[1] = 'Def';
         $this->assertEquals($result, $test);
@@ -262,7 +236,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackDoubleD()
     {
-        $result = MUtil_String::splitOnCharCallback('abcDDef', 'ctype_upper');
+        $result = \MUtil_String::splitOnCharCallback('abcDDef', 'ctype_upper');
         $test[0] = 'abc';
         $test[1] = 'D';
         $test[2] = 'Def';
@@ -274,7 +248,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackEmptyString()
     {
-        $result = MUtil_String::splitOnCharCallback('', 'ctype_upper');
+        $result = \MUtil_String::splitOnCharCallback('', 'ctype_upper');
         $this->assertEquals($result, array());
     }
 
@@ -283,7 +257,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackNoDelimeter()
     {
-        $result = MUtil_String::splitOnCharCallback('abcDef', 'ctype_upper', true);
+        $result = \MUtil_String::splitOnCharCallback('abcDef', 'ctype_upper', true);
         $test[0] = 'abc';
         $test[1] = 'ef';
         $this->assertEquals($result, $test);
@@ -294,7 +268,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackNosplit()
     {
-        $result = MUtil_String::splitOnCharCallback('abcdef', 'ctype_upper');
+        $result = \MUtil_String::splitOnCharCallback('abcdef', 'ctype_upper');
         $test[0] = 'abcdef';
         $this->assertEquals($result, $test);
     }
@@ -304,7 +278,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackNoDelimiterDoubleD()
     {
-        $result = MUtil_String::splitOnCharCallback('abcDDef', 'ctype_upper', true);
+        $result = \MUtil_String::splitOnCharCallback('abcDDef', 'ctype_upper', true);
         $test[0] = 'abc';
         $test[2] = 'ef';
         $this->assertEquals($result, $test);
@@ -315,7 +289,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testSplitOnCharCallbackNumeric()
     {
-        $result = MUtil_String::splitOnCharCallback('ab1cD2ef', 'is_numeric');
+        $result = \MUtil_String::splitOnCharCallback('ab1cD2ef', 'is_numeric');
         $test[0] = 'ab';
         $test[1] = '1cD';
         $test[2] = '2ef';
@@ -327,7 +301,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithCaseFalse()
     {
-        $result = MUtil_String::startsWith('abcdef', 'abC');
+        $result = \MUtil_String::startsWith('abcdef', 'abC');
         $this->assertEquals($result, false);
     }
 
@@ -336,7 +310,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithFalse()
     {
-        $result = MUtil_String::startsWith('abcdef', 'abcx');
+        $result = \MUtil_String::startsWith('abcdef', 'abcx');
         $this->assertEquals($result, false);
     }
 
@@ -345,7 +319,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithNeedleEmpty()
     {
-        $result = MUtil_String::startsWith('abcdef', '');
+        $result = \MUtil_String::startsWith('abcdef', '');
         $this->assertEquals($result, true);
     }
 
@@ -354,7 +328,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithNeedleLonger()
     {
-        $result = MUtil_String::startsWith('abc', 'abcdef');
+        $result = \MUtil_String::startsWith('abc', 'abcdef');
         $this->assertEquals($result, false);
     }
 
@@ -363,7 +337,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithNumber()
     {
-        $result = MUtil_String::startsWith('10abc', 10);
+        $result = \MUtil_String::startsWith('10abc', 10);
         $this->assertEquals($result, true);
     }
 
@@ -372,7 +346,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithNoCaseTrue()
     {
-        $result = MUtil_String::startsWith('abCdef', 'abC', true);
+        $result = \MUtil_String::startsWith('abCdef', 'abC', true);
         $this->assertEquals($result, true);
     }
 
@@ -381,7 +355,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStartsWithTrue()
     {
-        $result = MUtil_String::startsWith('abcdef', 'abc');
+        $result = \MUtil_String::startsWith('abcdef', 'abc');
         $this->assertEquals($result, true);
     }
 
@@ -390,7 +364,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStripStringLeftRemovepartFilter()
     {
-        $result = MUtil_String::stripStringLeft('abcdef', 'abcx');
+        $result = \MUtil_String::stripStringLeft('abcdef', 'abcx');
         $this->assertEquals($result, 'def');
     }
 
@@ -399,7 +373,7 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStripStringLeftRemoveWholeFilter()
     {
-        $result = MUtil_String::stripStringLeft('abcdef', 'abc');
+        $result = \MUtil_String::stripStringLeft('abcdef', 'abc');
         $this->assertEquals($result, 'def');
     }
 
@@ -408,7 +382,38 @@ class MUtil_StringTest extends PHPUnit_Framework_TestCase
      */
     public function testStripStringLeftNothing()
     {
-        $result = MUtil_String::stripStringLeft('abcdef', 'xabc');
+        $result = \MUtil_String::stripStringLeft('abcdef', 'xabc');
         $this->assertEquals($result, 'abcdef');
+    }
+
+    public function providerTestStripToHost()
+    {
+        return array(
+            array('https://www.host.com/erwrtej/gfeg', 'www.host.com'),
+            array('http://www.host.com/erwrtej/gfeg', 'www.host.com'),
+            array('http://www.host.com/', 'www.host.com'),
+            array('http://www.host.com', 'www.host.com'),
+            array('ftp://www.host.com/', 'www.host.com'),
+            array('ftp://www.host.com:32/', 'www.host.com:32'),
+            array('://www.host.com/', 'www.host.com'),
+            array('www.host.com/dfgjkdf/dffd', 'www.host.com'),
+            array('www.host.com/', 'www.host.com'),
+            array('www.host.com', 'www.host.com'),
+            array('http:///', ''),
+            array(null, null),
+            );
+    }
+
+    /**
+     *
+     * @param type $input
+     * @param type $output
+     *
+     * @dataProvider providerTestStripToHost
+     */
+    public function testStripToHostTest($input, $output)
+    {
+        $result = \MUtil_String::stripToHost($input);
+        $this->assertEquals($result, $output);
     }
 }
