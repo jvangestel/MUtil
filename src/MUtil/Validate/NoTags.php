@@ -41,4 +41,20 @@ class MUtil_Validate_NoTags extends \MUtil_Validate_Regexclude
         $this->_messageTemplates[parent::MATCH] = "No letters, ':' or '\\' are allowed directly after a '<' or '&' character.";
     }
 
+    /**
+     * Defined by \Zend_Validate_Interface
+     *
+     * Returns true if and only if $value matches against the pattern option
+     *
+     * @param  string $value
+     * @return boolean
+     */
+    public function isValid($value)
+    {
+        if ((null === $value) || ('' == $value) || is_object($value)) {
+            return true;
+        }
+
+        return parent::isValid($value);
+    }
 }
