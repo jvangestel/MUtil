@@ -23,7 +23,7 @@ use MUtil\Form\Element\Hidden as BaseHidden;
  * @license    New BSD License
  * @since      Class available since version 1.6.5
  */
-class MUtil_Bootstrap_Form_Element_Hidden extends BaseHidden
+class Hidden extends BaseHidden
 {
 	/**
      * Load default decorators
