@@ -51,7 +51,7 @@ class MUtil_Validate_NoTags extends \MUtil_Validate_Regexclude
      */
     public function isValid($value)
     {
-        if ((null === $value) || ('' == $value) || is_object($value)) {
+        if ((null === $value) || ('' == $value) || (is_array($value) && empty($value)) || is_object($value)) {
             return true;
         }
 
