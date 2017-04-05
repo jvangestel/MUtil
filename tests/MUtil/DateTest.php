@@ -85,6 +85,32 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $this->translate->setLocale('en');
     }
 
+    public function providerTestDateWithoutTime()
+    {
+        return [
+            ['2017-05-13 00:00:00', 'yyyy-MM-dd HH:mm:ss', '2017-05-13 00:00:00'],
+            ['2017-05-13 00:00', 'yyyy-MM-dd HH:mm', '2017-05-13 00:00:00'],
+            ['2017-05-13', 'yyyy-MM-dd', '2017-05-13 00:00:00'],
+            ['13-05-2017', 'dd-MM-yyyy', '2017-05-13 00:00:00'],
+            ['13-05-2017 00:00', 'dd-MM-yyyy HH:mm', '2017-05-13 00:00:00'],
+        ];
+    }
+
+    /**
+     * Test to check if the time is set to 00:00:00 when a date is supplied without time
+     *
+     * @param $dateString string time e.g. '2017-05-13'
+     * @param $dateFormat string Zend format the date is stored in. e.g. 'yyyy-MM-dd'
+     * @param $expectedResult string expected string time when converted to yyyy-MM-dd HH:mm:ss
+     *
+     * @dataProvider providerTestDateWithoutTime
+     */
+    public function testDateWithoutTime($dateString, $dateFormat, $expectedResult)
+    {
+        $this->object = new \MUtil_Date($dateString, $dateFormat);
+        $this->assertEquals($this->object->toString('yyyy-MM-dd HH:mm:ss'), $expectedResult);
+    }
+
     public function testDiffReadableBeforeAndAfter() {
         $this->object = new \MUtil_Date('2010-05-13 12:00:00');
         $testDate = new \MUtil_Date('2010-05-13 12:00:10');
