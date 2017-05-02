@@ -5,7 +5,7 @@
  * @package    MUtil
  * @subpackage WizardFormSnippetAbstract
  * @author     Matijs de Jong <mjong@magnafacta.nl>
- * @copyright  Copyright (c) 201e Erasmus MC
+ * @copyright  Copyright (c) 2015 Erasmus MC
  * @license    New BSD License
  */
 
@@ -206,8 +206,8 @@ abstract class MUtil_Snippets_WizardFormSnippetAbstract extends \MUtil_Snippets_
         $this->addPreviousButton();
         $this->addNextButton();
 
-        $element = new \MUtil_Form_Element_Exhibitor('button_spacer');
-        $element->setValue('&nbsp;');
+        $element = new \MUtil_Form_Element_Html('button_spacer');
+        $element->raw('&nbsp;');
         $element->setDecorators(array('ViewHelper'));
 
         $this->_form->addElement($element);

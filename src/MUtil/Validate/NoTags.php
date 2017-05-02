@@ -55,6 +55,16 @@ class MUtil_Validate_NoTags extends \MUtil_Validate_Regexclude
             return true;
         }
 
+        if (is_array($value)) {
+            $result = true;
+
+            foreach ($value as $v) {
+                $result = $this->isValid($v) && $result;
+            }
+            
+            return $result;
+        }
+
         return parent::isValid($value);
     }
 }
