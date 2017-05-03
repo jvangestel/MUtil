@@ -36,6 +36,7 @@ class MUtil_View_Helper_Exhibitor extends \Zend_View_Helper_FormElement
      */
     public function exhibitor($name, $value = null, $attribs = null)
     {
+        $escape = true;
         $result = $value;
 
         if (isset($attribs['default'])) {
@@ -104,6 +105,7 @@ class MUtil_View_Helper_Exhibitor extends \Zend_View_Helper_FormElement
         }
 
         if ($result instanceof \MUtil_Html_HtmlInterface) {
+            $escape = false;    // Html should not be escaped!
             $result = $result->render($this->view);
         }
 
@@ -112,14 +114,18 @@ class MUtil_View_Helper_Exhibitor extends \Zend_View_Helper_FormElement
             $callback = $attribs['callback'];
             $result = $callback($result);
         } */
+        
+        if ($escape) {
+            $result = $this->view->escape($result);
+        }
 
         if (isset($attribs['nohidden']) && $attribs['nohidden'] || is_array($value)) {
-            return $this->view->escape($result);
+            return $result;
         } else {
             if ($value instanceof \Zend_Date) {
                 $value = $value->toString('yyyy-MM-dd HH:mm:ss');
             }
-            return $this->_hidden($name, $value) . $this->view->escape($result);
+            return $this->_hidden($name, $value) . $result;
         }
     }
 }
