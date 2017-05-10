@@ -114,7 +114,7 @@ class MUtil_View_Helper_Exhibitor extends \Zend_View_Helper_FormElement
             $callback = $attribs['callback'];
             $result = $callback($result);
         } */
-        
+
         if ($escape) {
             $result = $this->view->escape($result);
         }

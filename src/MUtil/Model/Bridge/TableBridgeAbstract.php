@@ -40,7 +40,7 @@ abstract class MUtil_Model_Bridge_TableBridgeAbstract extends \MUtil_Model_Bridg
     protected $table;
 
     /**
-     * Cascades call's to the underlying table
+     * Cascades calls to the underlying table
      *
      * @param string $name
      * @param array $arguments
