@@ -125,7 +125,7 @@ abstract class MUtil_Controller_ModelSnippetActionAbstract extends \MUtil_Contro
      * - unless the key is an integer in which case the code is executed but the return value
      * is not stored.
      *
-     * @var array Mixed key => value array for snippet initialization
+     * @var array Mixed key => value array for snippet initialisation
      */
     protected $autofilterParameters = array('columns' => 'getBrowseColumns');
 
