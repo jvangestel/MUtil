@@ -122,13 +122,13 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      *
      * @var boolean
      */
-    private $_messageLogWhenAdding;
+    private $_messageLogWhenAdding = false;
 
     /**
      *
      * @var boolean
      */
-    private $_messageLogWhenSetting;
+    private $_messageLogWhenSetting = false;
 
     /**
      * Stack to keep existing id's.
@@ -192,6 +192,20 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      * @var string
      */
     protected $method = self::PULL;
+
+    /**
+     * Date format for logging messages
+     *
+     * @var string
+     */
+    protected $messageLogDateFormat = 'Y-m-d H:i:s';
+
+    /**
+     * Message log format string for date string and message string
+     *
+     * @var string
+     */
+    protected $messageLogFormatString = '[%s]: %s';
 
     /**
      * The minimal time used between send progress reports.
@@ -429,7 +443,7 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
         $this->_session->messages[] = $text;
         $this->_lastMessage = $text;
 
-        if ($this->_messageLogWhenAdding) {
+        if ($this->_messageLogWhenAdding && $this->_messageLogFile) {
             $this->logMessage($text);
         }
 
@@ -865,10 +879,12 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      */
     public function logMessage($text = null)
     {
-        if ($text) {
-            $text = sprintf("[%s]: %s", gmdate('Y-m-d H:i:s'), $text);
+        if ($this->_messageLogFile) {
+            if ($text) {
+                $text = sprintf($this->messageLogFormatString, gmdate($this->messageLogDateFormat), $text);
+            }
+            file_put_contents($this->_messageLogFile, $text . PHP_EOL, FILE_APPEND);
         }
-        file_put_contents($this->_messageLogFile, $text . PHP_EOL, FILE_APPEND);
 
         return $this;
     }
@@ -1049,7 +1065,7 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
         $this->_session->messages[$id] = $text;
         $this->_lastMessage = $text;
 
-        if ($this->_messageLogWhenSetting) {
+        if ($this->_messageLogWhenSetting && $this->_messageLogFile) {
             $this->logMessage($text);
         }
 
@@ -1065,9 +1081,9 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      */
     public function setMessageLogFile($filename, $logSet = true, $logAdd = true)
     {
-        $this->_messageLogFile = $filename;
-        $this->_messageLogWhenSetting = $logSet;
-        $this->_messageLogWhenAdding = $logAdd;
+        $this->_messageLogFile        = $filename;
+        $this->_messageLogWhenSetting = $logSet && $filename;
+        $this->_messageLogWhenAdding  = $logAdd && $filename;
 
         return $this;
     }
