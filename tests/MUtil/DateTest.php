@@ -93,6 +93,11 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
             ['2017-05-13', 'yyyy-MM-dd', '2017-05-13 00:00:00'],
             ['13-05-2017', 'dd-MM-yyyy', '2017-05-13 00:00:00'],
             ['13-05-2017 00:00', 'dd-MM-yyyy HH:mm', '2017-05-13 00:00:00'],
+            ['01-01-1903', 'dd-MM-yyyy', '1903-01-01 00:00:00'],
+            ['01-01-1902', 'dd-MM-yyyy', '1902-01-01 00:00:00'],
+            ['01-01-1901', 'dd-MM-yyyy', '1901-01-01 00:00:00'],
+            ['01-01-1900', 'dd-MM-yyyy', '1900-01-01 00:00:00'],
+            ['01-01-1899', 'dd-MM-yyyy', '1899-01-01 00:00:00'],
         ];
     }
 
@@ -111,7 +116,8 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->object->toString('yyyy-MM-dd HH:mm:ss'), $expectedResult);
     }
 
-    public function testDiffReadableBeforeAndAfter() {
+    public function testDiffReadableBeforeAndAfter()
+    {
         $this->object = new \MUtil_Date('2010-05-13 12:00:00');
         $testDate = new \MUtil_Date('2010-05-13 12:00:10');
         $this->assertEquals('10 seconds ago', $this->object->diffReadable($testDate, $this->translate));
@@ -121,7 +127,8 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('0 seconds to go', $this->object->diffReadable($testDate, $this->translate));
     }
 
-    public function testDiffReadableBeforeAndAfterLocalised() {
+    public function testDiffReadableBeforeAndAfterLocalised()
+    {
         $this->translate->setLocale('nl');
         $this->object = new \MUtil_Date('2010-05-13 12:00:00');
         $testDate = new \MUtil_Date('2010-05-13 12:00:10');
@@ -132,7 +139,8 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('over 0 seconden', $this->object->diffReadable($testDate, $this->translate));
     }
 
-    public function testDiffReadableSingularPlural() {
+    public function testDiffReadableSingularPlural()
+    {
         $this->object = new \MUtil_Date('2010-05-13 12:00:00');
         $testDate = new \MUtil_Date('2010-05-13 12:01:00');
         $this->assertEquals('1 minute ago', $this->object->diffReadable($testDate, $this->translate));
@@ -140,7 +148,8 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2 minutes ago', $this->object->diffReadable($testDate, $this->translate));
     }
 
-    public function testDiffReadablePeriods() {
+    public function testDiffReadablePeriods()
+    {
         $this->object = new \MUtil_Date('2010-05-13 12:00:00');
         $testDate = new \MUtil_Date('2010-05-13 12:00:01');
         $this->assertEquals('1 second ago', $this->object->diffReadable($testDate, $this->translate));
@@ -197,6 +206,7 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
             array('2016-07-06 00:00:00', '2016-06-06 12:34:56', 30),
             array('2016-06-07 00:00:00', '2016-06-06 12:34:56', 1),
             array('2016-06-06 12:34:57', '2016-06-06 12:34:56', 0),
+            array('1902-01-01 12:34:57', '1901-01-01 12:34:56', 365),
         );
     }
 
@@ -241,6 +251,11 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
             array('2016-06-06T08:00:00+04:00', 'c', '2016-06-06T08:00:00+00:00', 'c', 0, -14400),
             array('2016-06-06T04:00:00+04:00', 'c', '2016-06-06T08:00:00+00:00', 'c', 0, -28800),
             array('2016-06-06T00:00:00-04:00', 'c', '2016-06-06T04:00:00+00:00', 'c', 0, 0),
+            // Old date tests for 1901 border
+            array('1907-01-01T22:00:00+02:00', 'c', '1905-01-01T22:00:00+02:00', 'c', 730, 63072000),
+            array('1902-01-01T22:00:00+02:00', 'c', '1900-01-01T22:00:00+02:00', 'c', 730, 63072000),
+            array('1901-01-01T22:00:00+02:00', 'c', '1899-01-01T22:00:00+02:00', 'c', 730, 63072000),
+            array('1900-01-01T22:00:00+02:00', 'c', '1898-01-01T22:00:00+02:00', 'c', 730, 63072000),
         );
     }
 

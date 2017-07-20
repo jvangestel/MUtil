@@ -30,14 +30,14 @@ class MUtil_Date extends \Zend_Date
      */
     public static $zendToPhpFormats = array(
         'yyyy-MM-dd HH:mm:ss' => 'Y-m-d H:i:s',
-        'yyyy-MM-dd'          => '!Y-m-d',
-        'c'                   => 'Y-m-d\TH:i:s', // Do NOT specify a timezone character: PHP always the timezone 
-        'dd-MM-yyyy'          => '!d-m-Y',
-        'dd-MM-yyyy HH:mm'    => 'd-m-Y H:i',
+        'yyyy-MM-dd'          => 'Y-m-d|',
+        'c'                   => 'Y-m-d\TH:i:s', // Do NOT specify a timezone character: PHP always the timezone
+        'dd-MM-yyyy'          => 'd-m-Y|',
+        'dd-MM-yyyy HH:mm'    => 'd-m-Y H:i|',
         'dd-MM-yyyy HH:mm:ss' => 'd-m-Y H:i:s',
-        'HH:mm:ss'            => 'H:i:s',
-        'HH:mm'               => 'H:i',
-        'WW'                  => 'H:i:s',
+        'HH:mm:ss'            => 'H:i:s|',
+        'HH:mm'               => 'H:i|',
+        'WW'                  => 'H:i:s|',
     );
 
     /**
@@ -77,8 +77,17 @@ class MUtil_Date extends \Zend_Date
         if ($date instanceof \DateTime) {
             $this->setLocale();
             $this->setTimezone($date->getTimezone()->getName());
-            $this->setUnixTimestamp($date->getTimestamp());
-            $notset = false;
+            try {
+                $this->setUnixTimestamp($date->getTimestamp());
+                $notset = false;
+            } catch (\Zend_Date_Exception $zde) {
+                // Rare case for dates before 1902
+                $date = $date->format('Y-m-d H:i:sP');
+                $part = 'yyyy-MM-dd HH:mm:ssz';
+
+                // This solution did not work in the tests, it added 00:40:28 to the date
+                // $this->setUnixTimestamp($date->format('U'));                
+            }
         } elseif ($date instanceof \Zend_Date) {
             $this->setLocale($this->getLocale());
             $this->setTimezone($date->getTimezone());
