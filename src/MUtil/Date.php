@@ -82,11 +82,11 @@ class MUtil_Date extends \Zend_Date
                 $notset = false;
             } catch (\Zend_Date_Exception $zde) {
                 // Rare case for dates before 1902
-                $date = $date->format('Y-m-d H:i:sP');
-                $part = 'yyyy-MM-dd HH:mm:ssz';
 
+                $date = $date->format('Y-m-d H:i:sP');
+                $part = \Zend_Date::ISO_8601;
                 // This solution did not work in the tests, it added 00:40:28 to the date
-                // $this->setUnixTimestamp($date->format('U'));                
+                // $this->setUnixTimestamp($date->format('U'));
             }
         } elseif ($date instanceof \Zend_Date) {
             $this->setLocale($this->getLocale());
