@@ -99,10 +99,11 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
             ['01-01-1940', 'dd-MM-yyyy', '1940-01-01 00:00:00'],
             ['01-01-1903', 'dd-MM-yyyy', '1903-01-01 00:00:00'],
             ['01-01-1902', 'dd-MM-yyyy', '1902-01-01 00:00:00'],
-            // OK: Anyone wanting to get the timezone working on pre 1902 dates: be my guest
-            ['01-01-1901+00:00', 'dd-MM-yyyy', '1901-01-01 00:00:00'],
-            ['01-01-1900+00:00', 'dd-MM-yyyy', '1900-01-01 00:00:00'],
-            ['01-01-1899+00:00', 'dd-MM-yyyy', '1899-01-01 00:00:00'],
+            // Test unix epoch
+            ['14-12-1901', 'dd-MM-yyyy', '1901-12-14 00:00:00'],            
+            ['13-12-1901', 'dd-MM-yyyy', '1901-12-13 00:00:00'], // Fail on 32 bit
+            ['19-01-2038', 'dd-MM-yyyy', '2038-01-19 00:00:00'],
+            ['20-01-2038', 'dd-MM-yyyy', '2038-01-20 00:00:00'], // Fail on 32 bit
         ];
     }
 

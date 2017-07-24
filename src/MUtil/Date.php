@@ -77,16 +77,13 @@ class MUtil_Date extends \Zend_Date
         if ($date instanceof \DateTime) {
             $this->setLocale();
             $this->setTimezone($date->getTimezone()->getName());
-            try {
-                $this->setUnixTimestamp($date->getTimestamp());
+            $timestamp = $date->getTimestamp();
+            
+            if ($timestamp !== false) {                 // Prevent 32 bit errors, @see \Zend_Date_DateObject:mktime             
+                $this->setUnixTimestamp($timestamp);
                 $notset = false;
-            } catch (\Zend_Date_Exception $zde) {
-                // Rare case for dates before 1902
-
-                $date = $date->format('Y-m-d H:i:sP');
-                $part = \Zend_Date::ISO_8601;
-                // This solution did not work in the tests, it added 00:40:28 to the date
-                // $this->setUnixTimestamp($date->format('U'));
+            } else {
+                $date = $date->format(self::$zendToPhpFormats[$part]);
             }
         } elseif ($date instanceof \Zend_Date) {
             $this->setLocale($this->getLocale());
