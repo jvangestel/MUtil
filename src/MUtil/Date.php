@@ -79,7 +79,7 @@ class MUtil_Date extends \Zend_Date
             $this->setTimezone($date->getTimezone()->getName());
             $timestamp = $date->getTimestamp();
             
-            if ($timestamp !== false && intval($timestamp) === $timestamp) {                 // Prevent 32 bit errors, @see \Zend_Date_DateObject:mktime             
+            if ($timestamp !== false) {                 // Prevent 32 bit errors, @see \Zend_Date_DateObject:mktime             
                 $this->setUnixTimestamp($timestamp);
                 $notset = false;
             } else {
