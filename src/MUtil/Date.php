@@ -30,14 +30,14 @@ class MUtil_Date extends \Zend_Date
      */
     public static $zendToPhpFormats = array(
         'yyyy-MM-dd HH:mm:ss' => 'Y-m-d H:i:s',
-        'yyyy-MM-dd'          => '!Y-m-d',
-        'c'                   => 'Y-m-d\TH:i:s', // Do NOT specify a timezone character: PHP always the timezone 
-        'dd-MM-yyyy'          => '!d-m-Y',
-        'dd-MM-yyyy HH:mm'    => 'd-m-Y H:i',
+        'yyyy-MM-dd'          => 'Y-m-d|',
+        'c'                   => 'Y-m-d\TH:i:s', // Do NOT specify a timezone character: PHP always the timezone
+        'dd-MM-yyyy'          => 'd-m-Y|',
+        'dd-MM-yyyy HH:mm'    => 'd-m-Y H:i|',
         'dd-MM-yyyy HH:mm:ss' => 'd-m-Y H:i:s',
-        'HH:mm:ss'            => 'H:i:s',
-        'HH:mm'               => 'H:i',
-        'WW'                  => 'H:i:s',
+        'HH:mm:ss'            => 'H:i:s|',
+        'HH:mm'               => 'H:i|',
+        'WW'                  => 'H:i:s|',
     );
 
     /**
@@ -77,8 +77,14 @@ class MUtil_Date extends \Zend_Date
         if ($date instanceof \DateTime) {
             $this->setLocale();
             $this->setTimezone($date->getTimezone()->getName());
-            $this->setUnixTimestamp($date->getTimestamp());
-            $notset = false;
+            $timestamp = $date->getTimestamp();
+            
+            if ($timestamp !== false) {                 // Prevent 32 bit errors, @see \Zend_Date_DateObject:mktime             
+                $this->setUnixTimestamp($timestamp);
+                $notset = false;
+            } else {
+                $date = $date->format(self::$zendToPhpFormats[$part]);
+            }
         } elseif ($date instanceof \Zend_Date) {
             $this->setLocale($this->getLocale());
             $this->setTimezone($date->getTimezone());

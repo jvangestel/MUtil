@@ -1,38 +1,12 @@
 <?php
 
 /**
- * Copyright (c) 2012, Erasmus MC
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    * Redistributions of source code must retain the above copyright
- *      notice, this list of conditions and the following disclaimer.
- *    * Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *    * Neither the name of Erasmus MC nor the
- *      names of its contributors may be used to endorse or promote products
- *      derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  * @package    MUtil
  * @subpackage Batch
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2012 Erasmus MC
  * @license    New BSD License
- * @version    $Id$
  */
 
 /**
@@ -139,6 +113,24 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     private $_loggers = array();
 
     /**
+     *
+     * @var string
+     */
+    private $_messageLogFile;
+
+    /**
+     *
+     * @var boolean
+     */
+    private $_messageLogWhenAdding = false;
+
+    /**
+     *
+     * @var boolean
+     */
+    private $_messageLogWhenSetting = false;
+
+    /**
      * Stack to keep existing id's.
      *
      * @var array
@@ -200,6 +192,20 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      * @var string
      */
     protected $method = self::PULL;
+
+    /**
+     * Date format for logging messages
+     *
+     * @var string
+     */
+    protected $messageLogDateFormat = 'Y-m-d H:i:s';
+
+    /**
+     * Message log format string for date string and message string
+     *
+     * @var string
+     */
+    protected $messageLogFormatString = '[%s]: %s';
 
     /**
      * The minimal time used between send progress reports.
@@ -436,6 +442,10 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     {
         $this->_session->messages[] = $text;
         $this->_lastMessage = $text;
+
+        if ($this->_messageLogWhenAdding && $this->_messageLogFile) {
+            $this->logMessage($text);
+        }
 
         foreach ($this->_loggers as $function) {
             call_user_func($function, $text);
@@ -863,6 +873,23 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     }
 
     /**
+     *
+     * @param string $text Line to log
+     * @return $this
+     */
+    public function logMessage($text = null)
+    {
+        if ($this->_messageLogFile) {
+            if ($text) {
+                $text = sprintf($this->messageLogFormatString, gmdate($this->messageLogDateFormat), $text);
+            }
+            file_put_contents($this->_messageLogFile, $text . PHP_EOL, FILE_APPEND);
+        }
+
+        return $this;
+    }
+
+    /**
      * Reset and empty the session storage
      *
      * @return \MUtil_Batch_BatchAbstract (continuation pattern)
@@ -1037,6 +1064,26 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     {
         $this->_session->messages[$id] = $text;
         $this->_lastMessage = $text;
+
+        if ($this->_messageLogWhenSetting && $this->_messageLogFile) {
+            $this->logMessage($text);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $filename Filename to log to
+     * @param boolean $logSet Log setMessage calls
+     * @param boolean $logAdd Log addMessage calls
+     * @return $this
+     */
+    public function setMessageLogFile($filename, $logSet = true, $logAdd = true)
+    {
+        $this->_messageLogFile        = $filename;
+        $this->_messageLogWhenSetting = $logSet && $filename;
+        $this->_messageLogWhenAdding  = $logAdd && $filename;
 
         return $this;
     }

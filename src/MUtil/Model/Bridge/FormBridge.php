@@ -62,7 +62,7 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
         self::CHECK_OPTIONS      => array('checkedValue', 'uncheckedValue'),
         self::DATE_OPTIONS       => array('dateFormat', 'storageFormat'),
         self::DISPLAY_OPTIONS    => array('accesskey', 'autoInsertNoTagsValidator', 'autoInsertNotEmptyValidator', 'class', 'disabled', 'disableTranslator', 'description', 'escape', 'escapeDescription', 'label', 'onclick', 'readonly', 'required', 'tabindex', 'value', 'showLabels', 'labelplacement'),
-        self::EXHIBIT_OPTIONS    => array('formatFunction', 'itemDisplay'),
+        self::EXHIBIT_OPTIONS    => array('formatFunction', 'itemDisplay', 'nohidden'),
         self::FAKESUBMIT_OPTIONS => array('label', 'tabindex', 'disabled'),
         self::FILE_OPTIONS       => array('accept', 'count', 'destination', 'extension', 'filename', 'valueDisabled'),
         self::GROUP_OPTIONS      => array('elements', 'legend', 'separator'),
