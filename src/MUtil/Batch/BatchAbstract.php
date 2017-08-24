@@ -1306,4 +1306,15 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
 
         $this->addMessage($message);
     }
+    
+    /**
+     * Unload a batch
+     * 
+     * Normally we don't need this, but in unit test we need to be able to run a batch after is was finished
+     * 
+     * @param string $id
+     */
+    public static function unload($id) {
+        unset(self::$_idStack[$id]);
+    }
 }
