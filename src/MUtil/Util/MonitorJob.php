@@ -194,7 +194,7 @@ This messages was send automatically.";
      * @param string $subject
      * @param string $message BB Code message
      */
-    private function _sentMail($subject, $message)
+    private function _sendMail($subject, $message)
     {
         // Send a seperate mail to each recipient, otherwise they might do nothing
         foreach ($this->to as $to) {
@@ -291,6 +291,26 @@ This messages was send automatically.";
     {
         return get_object_vars($this);
     }
+    
+    /**
+     * Retrieve a MonitorJob by name
+     * 
+     * @param string $jobName
+     * @return \self
+     */
+    public static function getJob($jobName)
+    {
+        $monitors = self::_getMonitors();
+        $data     = array();
+
+        if (array_key_exists($jobName, $monitors)) {
+            $data = $monitors[$jobName];
+        }
+        
+        $job = new self($jobName, $data);
+        
+        return $job;
+    }
 
     /**
      * Create an array containing all saveable variables
@@ -353,7 +373,7 @@ This messages was send automatically.";
      */
     public function sendOtherMail($subject, $bbMessage)
     {
-        $this->_sentMail($subject, $bbMessage);
+        $this->_sendMail($subject, $bbMessage);
 
         return true;
     }
@@ -365,7 +385,7 @@ This messages was send automatically.";
      */
     public function sendOverdueMail()
     {
-        $this->_sentMail($this->subject, $this->message);
+        $this->_sendMail($this->subject, $this->message);
 
         $this->checkTime = time() + $this->period;
         $this->mailCount++;
