@@ -44,7 +44,7 @@ class TextFileIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testReadAllLines()
     {
-        $filename = str_replace('.php', '.txt', $this->getTemplateFileName());
+        $filename = str_replace('.php', '.txt', __FILE__);
         $iterator = $this->getIterator($filename);
         foreach ($iterator as $line) {
             $actual[] = $line;

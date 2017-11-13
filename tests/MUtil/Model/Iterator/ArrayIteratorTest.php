@@ -71,7 +71,7 @@ class ArrayIteratorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($expected, $actual);
             $this->markTestSkipped("Current PHP version " . phpversion() . " handles serializing ArrayIterator correct\n");
         } catch (\PHPUnit_Framework_ExpectationFailedException $exc) {
-            $this->markTestSkipped("Current PHP version " . phpversion() . " hdoes not handle serializing ArrayIterator correct\n");
+            $this->markTestSkipped("Current PHP version " . phpversion() . " does not handle serializing ArrayIterator correct\n");
         }        
     }
 
