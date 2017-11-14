@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @package    MUtil
@@ -311,6 +310,7 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      */
     private function _checkReport()
     {
+        // @TODO Might be confusing if one of the first steps adds more steps, make this optional?
         if (1 === $this->_session->processed) {
             return true;
         }
@@ -369,30 +369,7 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     {
         $this->getProgressBar()->update($this->getProgressPercentage(), $this->getLastMessage());
     }
-
-    /**
-     * Add an execution step to the command stack.
-     *
-     * @param string $method Name of a method of this object
-     * @param mixed $param1 Optional scalar or array with scalars, as many parameters as needed allowed
-     * @param mixed $param2 ...
-     * @return \MUtil_Task_TaskBatch (continuation pattern)
-     */
-    protected function addStep($method, $param1 = null)
-    {
-        if (! method_exists($this, $method)) {
-            throw new \MUtil_Batch_BatchException("Invalid batch method: '$method'.");
-        }
-
-        $params = array_slice(func_get_args(), 1);
-
-        if ($this->stack->addStep($method, $params)) {
-            $this->_session->count = $this->_session->count + 1;
-        }
-
-        return $this;
-    }
-
+    
     /**
      * Add to exception store
      * @param \Exception $e
@@ -431,6 +408,43 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
 
         return $this;
     }
+
+    /**
+     * Add an execution step to the command stack.
+     *
+     * @param string $method Name of a method of this object
+     * @param mixed $param1 Optional scalar or array with scalars, as many parameters as needed allowed
+     * @param mixed $param2 ...
+     * @return \MUtil_Task_TaskBatch (continuation pattern)
+     */
+    protected function addStep($method, $param1 = null)
+    {
+        if (! method_exists($this, $method)) {
+            throw new \MUtil_Batch_BatchException("Invalid batch method: '$method'.");
+        }
+
+        $params = array_slice(func_get_args(), 1);
+
+        if ($this->stack->addStep($method, $params)) {
+            $this->_session->count = $this->_session->count + 1;
+        }
+
+        return $this;
+    }
+    
+    /**
+     * Allow to add steps to the counter
+     * 
+     * This should only be used by iterable tasks that execute in more then 1 step
+     * 
+     * @param int $number
+     */
+    public function addStepCount($number)
+    {
+        if ($number > 0) {
+            $this->_session->count = $this->_session->count + $number;
+        }
+    }    
 
     /**
      * Add a message to the message stack.
@@ -1275,8 +1289,6 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
 
                 if (call_user_func_array(array($this, $method), $params)) {
                     $this->stack->gotoNext();
-                } else {
-                    $this->_session->count = $this->_session->count + 1;
                 }
                 $this->_session->processed = $this->_session->processed + 1;
 

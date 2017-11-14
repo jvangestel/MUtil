@@ -72,6 +72,13 @@ abstract class MUtil_Task_IteratorTaskAbstract extends \MUtil_Task_TaskAbstract
      */
     public function execute()
     {
+        if ($this->getBatch()->getCounter('iterstarted') === 0) {
+            $this->getBatch()->addToCounter('iterstarted');
+            if ($this->iterator instanceof \Countable) {
+                // Add the count - 1 as this task already added 1 for this run
+                $this->getBatch()->addStepCount(count($this->iterator) -1);
+            }
+        }
         $this->executeIteration($this->iterator->key(), $this->iterator->current(), func_get_args());
     }
 
@@ -92,6 +99,16 @@ abstract class MUtil_Task_IteratorTaskAbstract extends \MUtil_Task_TaskAbstract
     public function isFinished()
     {
         $this->iterator->next();
-        return ! $this->iterator->valid();
+        $result = ! $this->iterator->valid();
+        
+        if ($result === true) {
+            $this->getBatch()->resetCounter('iterstarted');
+        } else {
+            if (! ($this->iterator instanceof \Countable)) {
+                // Add 1 to the counter to keep existing behaviour
+                $this->getBatch()->addStepCount(1);
+            }
+        }
+        return $result;
     }
 }
