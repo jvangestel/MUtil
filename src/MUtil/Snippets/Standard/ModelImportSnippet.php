@@ -808,11 +808,11 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
                         break;
 
                     case \MUtil_Model::TYPE_DATETIME:
-                        $type = $this->_('Datetime value using ISO 8601: yyyy-mm-ddThh:mm::ss[+-hh:mm]');
+                        $type = $this->_('Datetime value using ISO 8601: yyyy-mm-ddThh:mm:ss[+-hh:mm]');
                         break;
 
                     case \MUtil_Model::TYPE_TIME:
-                        $type = $this->_('Time value using ISO 8601: hh:mm::ss[+-hh:mm]');
+                        $type = $this->_('Time value using ISO 8601: hh:mm:ss[+-hh:mm]');
                         break;
 
                     default:
