@@ -44,8 +44,13 @@
  * @license    New BSD License
  * @since      Class available since MUtil version 1.3
  */
-class MUtil_Model_Iterator_TextFileIterator implements \Iterator, \Serializable
+class MUtil_Model_Iterator_TextFileIterator implements \Countable, \Iterator, \Serializable
 {
+    /**
+     * @var int
+     */
+    protected $_count = null;
+    
     /**
      *
      * @var array
@@ -165,6 +170,34 @@ class MUtil_Model_Iterator_TextFileIterator implements \Iterator, \Serializable
         } catch (\Exception $e) {
             $this->_file = false;
         }
+    }
+    
+    /**
+     * Return the number of records in the file
+     * 
+     * @return int
+     */
+    public function count()
+    {
+        if ($this->_count === null) {
+            // Save position like in serialize
+            $key = $this->key() - 1;
+            $filepos = $this->_filepos;
+            
+            $this->rewind();
+            $this->_count = 0;
+            foreach($this as $row)
+            {
+                $this->_count++;                
+            }
+            
+            // Now restore position
+            $this->_key = $key;
+            $this->_filepos = $filepos;
+            $this->_openFile();         
+        }
+        
+        return $this->_count;        
     }
 
     /**

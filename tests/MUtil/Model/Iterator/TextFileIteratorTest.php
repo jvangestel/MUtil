@@ -41,6 +41,15 @@ class TextFileIteratorTest extends \PHPUnit_Framework_TestCase
 
         return $iterator;
     }
+    
+    public function testCount()
+    {
+        $filename = str_replace('.php', '.txt', __FILE__);
+        $iterator = $this->getIterator($filename);
+        
+        $count = $iterator->count();
+        $this->assertEquals(3, $count);
+    }
 
     public function testReadAllLines()
     {
