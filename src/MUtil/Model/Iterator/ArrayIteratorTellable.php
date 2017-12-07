@@ -63,7 +63,7 @@ class ArrayIteratorTellable extends \ArrayIterator implements TellableInterface
             $this->seek(abs($this->position));
             // And move to end
             $this->next();
-        } else {
+        } elseif ($this->position > 0) {
             $this->seek($this->position);
         }
 

@@ -134,5 +134,28 @@ class ArrayIteratorTest extends \PHPUnit_Framework_TestCase
         $actual = $newIterator->current();
         $this->assertEquals($expected, $actual);
     }
+    
+    /**
+     * Empty iterator resulted in error when unserializing
+     * with error Seek position 0 is out of range
+     */
+    public function testEmpty()
+    {
+        $iterator = $this->getIterator(array());
+        
+        // This should work just fine
+        foreach($iterator as $row) {            
+        }
+        
+        $frozen = serialize($iterator);
+        // This is where the error occured
+        $new = unserialize($frozen);
+        
+        // Just to prove we can loop
+        foreach($new as $row) {            
+        }
+        
+        $this->assertEquals(0, count($new));        
+    }
 
 }
