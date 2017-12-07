@@ -78,8 +78,8 @@ class MUtil_Date extends \Zend_Date
             $this->setLocale();
             $this->setTimezone($date->getTimezone()->getName());
             $timestamp = $date->getTimestamp();
-            
-            if ($timestamp !== false) {                 // Prevent 32 bit errors, @see \Zend_Date_DateObject:mktime             
+
+            if ($timestamp !== false) {                 // Prevent 32 bit errors, @see \Zend_Date_DateObject:mktime
                 $this->setUnixTimestamp($timestamp);
                 $notset = false;
             } else {
@@ -299,6 +299,27 @@ class MUtil_Date extends \Zend_Date
         }
 
         return $date->toString($outFormat, null, $localeOut);
+    }
+
+    /**
+     *
+     * @return \DateTime
+     */
+    public function getDateTime()
+    {
+        $date = new \DateTime('@' . $this->getTimestamp());
+        $date->setTimezone($this->getDateTimeZone());
+
+        return $date;
+    }
+
+    /**
+     *
+     * @return \DateTimeZone
+     */
+    public function getDateTimeZone()
+    {
+        return new \DateTimeZone($this->getTimezone());
     }
 
     /**
