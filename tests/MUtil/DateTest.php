@@ -120,9 +120,9 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
             array('1902-01-01T22:00:00', 'c', '1902-01-01T22:00:00', null, 0),
             array('1901-01-01T22:00:00+01:00', 'c', '1901-01-01T22:00:00', '+01:00', 0),
             array('1900-01-01T22:00:00+00:00', 'c', '1900-01-01 22:00:00', '+00:00', 0),
-            array('1900-01-01T22:00:00+01:00', 'c', '1900-01-01T22:00:00', '+01:00', -1),
+            array('1900-01-01T22:00:00+01:00', 'c', '1900-01-01T22:00:00', '+01:00', 0),
             array('1899-01-01T22:00:00+02:00', 'c', '1899-01-01T22:00:00', '+02:00', 0),
-            array('1898-01-01T22:00:00+01:00', 'c', '1898-01-01T22:00:00', '+01:00', -1),
+            array('1898-01-01T22:00:00+01:00', 'c', '1898-01-01T22:00:00', '+01:00', 0),
         );
     }
 
@@ -145,15 +145,13 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
         }
 
         if ($pDate->format('Y') > 1901) {
-            $this->assertEquals($mDate->getTimestamp(), $pDate->getTimestamp());
+            $this->assertEquals($mDate->getDateTime()->getTimestamp(), $pDate->getTimestamp());
         } else {
-            $this->assertEquals($mDate->toString('c'), $pDate->format('c'));
+            $this->assertEquals($mDate->getDateTime()->format('c'), $pDate->format('c'));
         }
         if ($timeZoneDiff) {
             $this->assertNotEquals($mDate->getDateTime()->getOffset(), $pDate->getOffset());
-            if ($timeZoneDiff > 0) {
-                $this->assertEquals($timeZoneDiff, abs($mDate->getDateTime()->getOffset() - $pDate->getOffset()));
-            }
+            $this->assertEquals($timeZoneDiff, abs($mDate->getDateTime()->getOffset() - $pDate->getOffset()));
         } else {
             $this->assertEquals($mDate->getDateTime()->getOffset(), $pDate->getOffset());
         }
