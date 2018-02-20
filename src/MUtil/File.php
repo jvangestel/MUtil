@@ -195,4 +195,25 @@ class MUtil_File
         // The check for uri's (frp, http, https
         return preg_match('#^[a-zA-Z]+://#', $path);
     }
+
+    /**
+     * Returns true when running on Windows machine
+     *
+     * @return boolean
+     */
+    public static function isOnWindows()
+    {
+        return (DIRECTORY_SEPARATOR == '\\');
+    }
+
+    /**
+     * Removes the c: part from the filename 
+     *
+     * @param string $path
+     * @return string
+     */
+    public static function removeWindowsDriveLetter($path)
+    {
+        return preg_replace('/^([a-zA-Z]:)/', '', $path);
+    }
 }
