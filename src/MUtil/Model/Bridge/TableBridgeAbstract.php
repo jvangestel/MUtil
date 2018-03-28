@@ -18,20 +18,7 @@
  * @since      Class available since version 1.0
  */
 abstract class MUtil_Model_Bridge_TableBridgeAbstract extends \MUtil_Model_Bridge_BridgeAbstract
-//    implements \MUtil_Model_Bridge_BridgeInterface
 {
-    /**
-     *
-     * @var \MUtil_Model_ModelAbstract
-     * /
-    protected $model;
-
-    /**
-     *
-     * @var type
-     * /
-    protected $repeater;
-
     /**
      * The actual table
      *
