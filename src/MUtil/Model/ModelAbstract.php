@@ -869,7 +869,7 @@ abstract class MUtil_Model_ModelAbstract extends \MUtil_Registry_TargetAbstract
         $args = func_get_args();
         $args = \MUtil_Ra::args($args, 1);
 
-        if ($this->_model_used) {
+        if ($this->_model_used && (! isset($this->_model_used[$name]))) {
             $this->_model_used[$name] = $name;
         }
 
