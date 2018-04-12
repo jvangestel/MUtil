@@ -83,6 +83,9 @@ class MUtil_Date extends \Zend_Date
                 $this->setUnixTimestamp($timestamp);
                 $notset = false;
             } else {
+                if (! $part) {
+                    $part = 'c';
+                }
                 $date = $date->format(self::$zendToPhpFormats[$part]);
             }
         } elseif ($date instanceof \Zend_Date) {
@@ -342,7 +345,7 @@ class MUtil_Date extends \Zend_Date
                 try {
                     if (isset(self::$zendToPhpFormats[$format])) {
                         $phpDate = \DateTime::createFromFormat(self::$zendToPhpFormats[$format], $date);
-                        if ($phpDate) {
+                        if ($phpDate instanceof \DateTime) {
                             return new self($phpDate);
                         }
                     } else {
