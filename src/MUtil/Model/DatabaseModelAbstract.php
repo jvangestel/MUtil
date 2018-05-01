@@ -534,7 +534,7 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
 
             if ($update) {
                 // \MUtil_Echo::r($filter);
-
+                $save = false;
                 // Check for actual changes
                 foreach ($oldValues as $name => $value) {
 
@@ -556,24 +556,26 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
                         }
 
                         // Detect change that is not auto update
-                        if (! $noChange) {
+                        if ($noChange) {
                             // \MUtil_Echo::track($name, $returnValues[$name], $value);
                             // \MUtil_Echo::track($returnValues);
-
-                            // Update the row, if the saveMode allows it
-                            if (($saveMode & self::SAVE_MODE_UPDATE) &&
-                                    $changed = $table->update($returnValues, $filter)) {
-                                $this->addChanged($changed);
-                                // Make sure the copy keys (if any) have the new values as well
-                                $returnValues = $this->_updateCopyKeys($primaryKeys, $returnValues);
-
-                                // Add the old values as we have them and they may be of use later on.
-                                $returnValues = $returnValues + $oldValues;
-
-                                return $returnValues;
-                            }
+                            unset($returnValues[$name]);
+                        } else {
+                            $save = true;
                         }
-                    }
+                    }                    
+                }
+                // Update the row, if the saveMode allows it
+                if ($save == true && ($saveMode & self::SAVE_MODE_UPDATE) &&
+                        $changed = $table->update($returnValues, $filter)) {
+                    $this->addChanged($changed);
+                    // Make sure the copy keys (if any) have the new values as well
+                    $returnValues = $this->_updateCopyKeys($primaryKeys, $returnValues);
+
+                    // Add the old values as we have them and they may be of use later on.
+                    $returnValues = $returnValues + $oldValues;
+
+                    return $returnValues;
                 }
                 // Add the old values as we have them and they may be of use later on.
                 return $returnValues + $oldValues;
