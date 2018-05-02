@@ -569,11 +569,11 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
                 if ($save == true && ($saveMode & self::SAVE_MODE_UPDATE) &&
                         $changed = $table->update($returnValues, $filter)) {
                     $this->addChanged($changed);
-                    // Make sure the copy keys (if any) have the new values as well
-                    $returnValues = $this->_updateCopyKeys($primaryKeys, $returnValues);
-
                     // Add the old values as we have them and they may be of use later on.
                     $returnValues = $returnValues + $oldValues;
+                    
+                    // Make sure the copy keys (if any) have the new values as well
+                    $returnValues = $this->_updateCopyKeys($primaryKeys, $returnValues);                    
 
                     return $returnValues;
                 }
