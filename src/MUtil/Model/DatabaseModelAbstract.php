@@ -837,6 +837,33 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
     }
 
     /**
+     * Calculates the total number of items in a model result with certain filters
+     *
+     * @param array $filter Filter array, num keys contain fixed expresions, text keys are equal or one of filters
+     * @param array $sort Sort array field name => sort type
+     * @return integer number of total items in model result
+     * @throws Zend_Db_Select_Exception
+     */
+    public function getItemCount($filter = true, $sort = true)
+    {
+        $select = $this->_createSelect(
+            $this->_checkFilterUsed($filter),
+            [] //$this->_checkSortUsed($sort)
+        );
+
+        $select
+            ->reset(\Zend_Db_Select::COLUMNS)
+            ->reset(\Zend_Db_Select::LEFT_JOIN)
+            ->reset(\Zend_Db_Select::LIMIT_COUNT)
+            ->reset(\Zend_Db_Select::LIMIT_OFFSET)
+            ->reset(\Zend_Db_Select::ORDER)
+            ->columns(['count(*)']);
+        $adapter = $this->getAdapter();
+
+        return $adapter->fetchOne($select);
+    }
+
+    /**
      * Returns the key copy name for a field.
      *
      * @param string $name
