@@ -46,6 +46,13 @@ class SequenceSnippet extends \MUtil_Snippets_SnippetAbstract
     protected $request;
 
     /**
+     * A parameter that if true resets the queue
+     *
+     * @var string
+     */
+    protected $resetParam;
+
+    /**
      *
      * @var array
      */
@@ -112,7 +119,13 @@ class SequenceSnippet extends \MUtil_Snippets_SnippetAbstract
 
         $this->_session = new \Zend_Session_Namespace($sessionId);
 
-        if (! isset($this->_session->list)) {
+        if ($this->resetParam) {
+            $reset = (boolean) $this->request->getParam($this->resetParam, false);
+            $this->request->setParam($this->resetParam, null);
+        } else  {
+            $reset = false;
+        }
+        if ($reset || (! isset($this->_session->list))) {
             $this->_session->list = $this->snippetList;
         }
 
