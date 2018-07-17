@@ -47,6 +47,13 @@
 class MUtil_Model_Transform_NestedTransformer extends \MUtil_Model_SubmodelTransformerAbstract
 {
     /**
+     * Set to true when a submodel should not be saved
+     *
+     * @var boolean
+     */
+    public $skipSave = false;
+
+    /**
      * If the transformer add's fields, these should be returned here.
      * Called in $model->AddTransformer(), so the transformer MUST
      * know which fields to add by then (optionally using the model
@@ -128,9 +135,13 @@ class MUtil_Model_Transform_NestedTransformer extends \MUtil_Model_SubmodelTrans
      * @param array $join
      * @param string $name
      */
-    protected function transformSaveSubModel
-            (\MUtil_Model_ModelAbstract $model, \MUtil_Model_ModelAbstract $sub, array &$row, array $join, $name)
+    protected function transformSaveSubModel(
+            \MUtil_Model_ModelAbstract $model, \MUtil_Model_ModelAbstract $sub, array &$row, array $join, $name)
     {
+        if ($this->skipSave) {
+            return;
+        }
+
         if (! isset($row[$name])) {
             return;
         }
