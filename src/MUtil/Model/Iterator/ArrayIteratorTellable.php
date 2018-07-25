@@ -65,6 +65,9 @@ class ArrayIteratorTellable extends \ArrayIterator implements TellableInterface
             $this->next();
         } elseif ($this->position > 0) {
             $this->seek($this->position);
+        } else {
+            // For zero a rewind will do
+            $this->rewind();
         }
 
         return $result;
