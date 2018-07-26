@@ -1,37 +1,12 @@
 <?php
 
 /**
- * Copyright (c) 2011, Erasmus MC
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    * Redistributions of source code must retain the above copyright
- *      notice, this list of conditions and the following disclaimer.
- *    * Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *    * Neither the name of Erasmus MC nor the
- *      names of its contributors may be used to endorse or promote products
- *      derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    MUtil
  * @subpackage Form
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @version    $Id$
  */
 
 /**
@@ -116,6 +91,15 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
      * @var mixed
      */
     protected $_Lazy = false;
+    
+    /**
+     * The id of the element that keeps track of the focus
+     * 
+     * Set to false to disable
+     * 
+     * @var string
+     */
+    public $focusTrackerElementId = 'auto_form_focus_tracker';
 
     /**
      * Constructor
@@ -130,27 +114,29 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
     {
         $this->addElementPrefixPath('MUtil_Form_Decorator', 'MUtil/Form/Decorator',  \Zend_Form_Element::DECORATOR);
         $this->addElementPrefixPath('MUtil_Validate',       'MUtil/Validate/',       \Zend_Form_Element::VALIDATE);
-
+        
         parent::__construct($options);
-    }
+        
+        if ($this->focusTrackerElementId) {
+            $this->activateJQuery();
 
-    /**
-     * Activate Bootstrap for this form
-     *
-     * @return \MUtil_Form (continuation pattern)
-     */
-    public function activateBootstrap()
-    {
-        if ($this->_no_bootstrap) {
-
-            $this->addPrefixPath('MUtil_Bootstrap_Form_Element', 'MUtil/Bootstrap/Form/Element/', \Zend_Form::ELEMENT);
-            $this->_no_bootstrap = false;
-            $this->_defaultDisplayGroupClass = 'MUtil_Bootstrap_Form_DisplayGroup';
+            $this->addElement('Hidden', $this->_focusTrackerElementId);
+                        
+            $elementId = $this->focusTrackerElementId;
+            $script    = "                
+                jQuery('form input, form select, form textarea').focus(
+                function () {
+                    var input = jQuery(this);
+                    var tracker = input.closest('form').find('input[name=$elementId]');
+                    tracker.val(input.attr('id'));
+                }
+                );
+                ";
+            
+            $jquery = $this->getView()->jQuery();  
+            $jquery->addOnLoad($script);
         }
-
-        return $this;
     }
-
 
     /**
      * Activate JQuery for the view
@@ -176,6 +162,23 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
         if (false === $view->getPluginLoader('helper')->getPaths('MUtil_JQuery_View_Helper')) {
             $view->addHelperPath('MUtil/JQuery/View/Helper', 'MUtil_JQuery_View_Helper');
         }
+    }
+
+    /**
+     * Activate Bootstrap for this form
+     *
+     * @return \MUtil_Form (continuation pattern)
+     */
+    public function activateBootstrap()
+    {
+        if ($this->_no_bootstrap) {
+
+            $this->addPrefixPath('MUtil_Bootstrap_Form_Element', 'MUtil/Bootstrap/Form/Element/', \Zend_Form::ELEMENT);
+            $this->_no_bootstrap = false;
+            $this->_defaultDisplayGroupClass = 'MUtil_Bootstrap_Form_DisplayGroup';
+        }
+
+        return $this;
     }
 
     /**
@@ -456,7 +459,7 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
         return array_filter(array_keys(get_object_vars($this)), array($this, 'filterRequestNames'));
     }
 
-   /**
+    /**
      * Return true when the form is lazy
      *
      * @return boolean
@@ -510,7 +513,7 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
 
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
-            $this->addDecorator('AutoFocus')
+            $this->addDecorator('AutoFocus', ['form' => $this])
                  ->addDecorator('FormElements');
             if (!\MUtil_Bootstrap::enabled()) {
                 $this->addDecorator('HtmlTag', array('tag' => 'dl', 'class' => 'zend_form'));
@@ -688,5 +691,23 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
         }
 
         return parent::setView($view);
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function usesBootstrap()
+    {
+        return ! $this->_no_bootstrap;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function usesJQuery()
+    {
+        return ! $this->_no_jquery;
     }
 }
