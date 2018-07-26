@@ -120,7 +120,7 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
         if ($this->focusTrackerElementId) {
             $this->activateJQuery();
 
-            $this->addElement('Hidden', $this->_focusTrackerElementId);
+            $this->addElement('Hidden', $this->focusTrackerElementId);
                         
             $elementId = $this->focusTrackerElementId;
             $script    = "                
