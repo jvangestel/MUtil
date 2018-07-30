@@ -120,18 +120,25 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
         if ($this->focusTrackerElementId) {
             $this->activateJQuery();
 
-            $this->addElement('Hidden', $this->focusTrackerElementId);
-                        
             $elementId = $this->focusTrackerElementId;
-            $script    = "                
+            
+            if (\MUtil_Bootstrap::enabled()) {
+                $element = new \MUtil\Form\Element\Hidden($elementId);
+            } else {
+                $element = new \MUtil\Bootstrap\Form\Element\Hidden($elementId);
+            }
+
+            $this->addElement($element);                        
+            
+            $script    = spritnf("                
                 jQuery('form input, form select, form textarea').focus(
                 function () {
                     var input = jQuery(this);
-                    var tracker = input.closest('form').find('input[name=$elementId]');
+                    var tracker = input.closest('form').find('input[name=%s]');
                     tracker.val(input.attr('id'));
                 }
                 );
-                ";
+                ", $elementId);
             
             $jquery = $this->getView()->jQuery();  
             $jquery->addOnLoad($script);
