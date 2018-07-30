@@ -130,7 +130,7 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
 
             $this->addElement($element);                        
             
-            $script    = spritnf("                
+            $script    = sprintf("                
                 jQuery('form input, form select, form textarea').focus(
                 function () {
                     var input = jQuery(this);
