@@ -12,7 +12,6 @@
 use MUtil\Bootstrap\Form\Element\Hidden as BootstrapHidden;
 use MUtil\Form\Element\Hidden as BaseHidden;
 
-
 /**
  * Form decorator that sets the focus on the first suitable element.
  *
@@ -26,14 +25,8 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
 {
     /**
      *
-     * @var \MUtil\Form\Element\Hidden
-     */
-    private $_focusTrackerElement;
-
-    /**
-     *
-     * @param type $element
-     * @return type
+     * @param mixed $element
+     * @return string Element ID
      */
     private function _getFocus($element)
     {
@@ -78,9 +71,8 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
         $form  = $this->getElement();
         $view  = $form->getView();
         $request = \Zend_Controller_Front::getInstance()->getRequest();
-        // \MUtil_Echo::track($this->_focusTrackerElementId, $form->getValue($this->_focusTrackerElementId), $request->getParam($this->_focusTrackerElementId));
 
-        $focus = $request->getParam($form->focusTrackerElementId) ? $request->getParam($form->focusTrackerElementId) : $this->_getFocus($form);
+        $focus = $request->getParam($form->focusTrackerElementId) ?: $this->_getFocus($form);
 
         if ($form->focusTrackerElementId) {
             $form->getElement($form->focusTrackerElementId)->setValue($focus);
@@ -98,7 +90,7 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
                         }
                     } catch (ex) {}
                 }";
-            
+
             $view->inlineScript()->appendScript($script);
         }
 
