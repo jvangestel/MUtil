@@ -280,7 +280,7 @@ abstract class MUtil_Model_ModelTranslatorAbstract extends \MUtil_Translate_Tran
         if ($this->_mapRequired) {
             // This does keep the original values. That is intentional.
             foreach ($rowMap as $source) {
-                if (isset($row[$source])) {
+                if (array_key_exists($source, $row)) {
                     $row[$this->_fieldMap[$source]] = $row[$source];
                 }
             }

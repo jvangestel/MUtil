@@ -1,39 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2011, Erasmus MC
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    * Redistributions of source code must retain the above copyright
- *      notice, this list of conditions and the following disclaimer.
- *    * Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *    * Neither the name of Erasmus MC nor the
- *      names of its contributors may be used to endorse or promote products
- *      derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  * @package    MUtil
  * @subpackage Form
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @version    $Id$
  */
+
+use MUtil\Bootstrap\Form\Element\Hidden as BootstrapHidden;
+use MUtil\Form\Element\Hidden as BaseHidden;
 
 /**
  * Form decorator that sets the focus on the first suitable element.
@@ -47,12 +24,10 @@
 class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
 {
     /**
-     * When true the code attempts to select the text
      *
-     * @var boolean
+     * @param mixed $element
+     * @return string Element ID
      */
-    protected $selectAll = true;
-
     private function _getFocus($element)
     {
         // \MUtil_Echo::r(get_class($element));
@@ -95,13 +70,18 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
     {
         $form  = $this->getElement();
         $view  = $form->getView();
-        $focus = $this->_getFocus($form);
+        $request = \Zend_Controller_Front::getInstance()->getRequest();
+
+        $focus = $request->getParam($form->focusTrackerElementId) ?: $this->_getFocus($form);
+
+        if ($form->focusTrackerElementId) {
+            $form->getElement($form->focusTrackerElementId)->setValue($focus);
+        }
 
         if (($view !== null) && ($focus !== null)) {
             // Use try {} around e.select as nog all elements have a select() function
             $script = "e = document.getElementById('$focus');";
-            if ($this->selectAll) {
-                $script .= "
+            $script .= "
                 if (e) {
                     e.focus();
                     try {
@@ -110,33 +90,10 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
                         }
                     } catch (ex) {}
                 }";
-            } else {
-                $script .= "
-                if (e) {
-                    e.focus();
-                    if (e.setSelectionRange && e.value) {
-                        var len = e.value.length * 2;
-                        e.setSelectionRange(len, len);
-                    } else {
-                        e.value = e.value
-                    }
-                }";
-            }
+
             $view->inlineScript()->appendScript($script);
         }
 
         return $content;
-    }
-
-    /**
-     * Set the selectAll value
-     *
-     * @param type $value
-     * @return \MUtil_Form_Decorator_AutoFocus (continuation pattern)
-     */
-    public function setSelectAll($value = true)
-    {
-        $this->selectAll = $value;
-        return $this;
     }
 }
