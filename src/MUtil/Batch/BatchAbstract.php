@@ -97,6 +97,13 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
      * @var string Unique id
      */
     private $_id;
+    
+    /**
+     * Stack to keep existing id's.
+     *
+     * @var array
+     */
+    private static $_idStack = array();
 
     /**
      * Holds the last message set by the batch job
@@ -130,11 +137,18 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
     private $_messageLogWhenSetting = false;
 
     /**
-     * Stack to keep existing id's.
-     *
-     * @var array
+     * Progress template
+     * 
+     * Available placeholders:
+     * {total}      Total time
+     * {elapsed}    Elapsed time
+     * {remaining}  Remaining time
+     * {percent}    Progress percent without the % sign
+     * {msg}        Message reveiced
+     * 
+     * @var string 
      */
-    private static $_idStack = array();
+    private $_progressTemplate = "{percent}% {msg}";
 
     /**
      * Session for storage of output results
@@ -637,6 +651,7 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
         $js->setDefault('__AUTOSTART__', $this->autoStart ? 'true' : 'false');
         $js->setDefault('{PANEL_ID}', '#' . $this->_id);
         $js->setDefault('{FORM_ID}', $this->_formId);
+        $js->setDefault('{TEMPLATE}', $this->_progressTemplate);
         $js->setDefault('{TEXT_ID}', $panel->getDefaultChildTag() . '.' . $panel->progressTextClass);
         $js->setDefault('{URL_FINISH}', addcslashes($urlFinish, "/"));
         $js->setDefault('{URL_START_RUN}', addcslashes($urlRun, "/"));
@@ -1206,6 +1221,23 @@ abstract class MUtil_Batch_BatchAbstract extends \MUtil_Registry_TargetAbstract 
 
         $this->progressBarAdapter = $adapter;
         return $this;
+    }
+    
+    /**
+     * Set the progress template
+     * 
+     * Available placeholders:
+     * {total}      Total time
+     * {elapsed}    Elapsed time
+     * {remaining}  Remaining time
+     * {percent}    Progress percent without the % sign
+     * {msg}        Message reveiced
+     * 
+     * @var string 
+     */
+    public function setProgressTemplate($template)
+    {
+        $this->_progressTemplate = $template;
     }
 
     /**

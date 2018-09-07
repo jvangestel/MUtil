@@ -11,7 +11,18 @@ jQuery.widget("ui.pullProgressPanel", {
         // panelId: text id:,
         // runUrl: the request url
         // targetId: search for the element whose content is replaced
+        /**
+         * Template for progress message available replacement vars: 
+         * {total}      Total time
+         * {elapsed}    Elapsed time
+         * {remaining}  Remaining time
+         * {percent}    Progress percent without the % sign
+         * {msg}        Message reveiced
+         */
+        template: "{percent}% {msg}",
         timeout: 60000
+
+        
     },
 
     _init: function () {
@@ -55,6 +66,26 @@ jQuery.widget("ui.pullProgressPanel", {
         // console.log(request, status, error);
     },
 
+    /** 
+     * Convert seconds to hh:mm:ss format.
+     * @param {number} totalSeconds - the total seconds to convert
+     **/
+    formatTime: function (totalSeconds) {
+        var hours   = Math.floor(totalSeconds / 3600);
+        var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+        var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+        // round seconds
+        seconds = Math.round(seconds * 100) / 100
+
+        var result = (hours < 10 ? "0" + hours : hours);
+        result    += ":" + (minutes < 10 ? "0" + minutes : minutes);
+        result    += ":" + (seconds < 10 ? "0" + seconds : seconds);
+        return result;
+    },
+
+    percent: 0,
+
     progressTarget: null,
 
     start: function () {
@@ -64,6 +95,11 @@ jQuery.widget("ui.pullProgressPanel", {
 
         if (null === this.request) {
             if (this.options.runUrl) {
+                this.percent       = 0;
+                this.text          = 0;
+                this.timeElapsed   = 0;
+                this.timeRemaining = 0;
+                
                 fd   = null;
                 self = this;
                 verb = "GET";
@@ -95,30 +131,29 @@ jQuery.widget("ui.pullProgressPanel", {
     success: function (data, status, request) {
         "use strict";
 
-        var form, text;
+        var form;
 
-        if (! data) {
+        if (!data) {
             data.finished = false;
-            data.percent = 'xx';
-            data.text = 'An error occured, no data was returned, check the error logs.';
+            this.percent = 'xx';
+            this.text    = 'An error occured, no data was returned, check the error logs.';
+        } else {
+            this.percent       = data.percent;
+            this.text          = data.text;
+            this.timeElapsed   = data.timeTaken;
+            this.timeRemaining = data.timeRemaining;
+
+
         }
 
         // console.log(data);
         if (data.finished) {
-            data.percent = 100;
-            data.text = false;
+            this.percent       = 100;
+            this.text          = "";
+            this.timeRemaining = 0;            
         }
-
-        // For some reason the next two lines are both needed for the code to work
-        //this.progressTarget.progressbar("option", "value", data.percent);
-        this.progressTarget.progressbar({value: data.percent});
-
-        text = data.percent + '%';
-        if (data.text) {
-            text = text + ' ' + data.text;
-        }
-
-        this.textTarget.html(text);
+        
+        this.update();
 
         if (data.finished) {
             if (this.options.formId) {
@@ -140,6 +175,32 @@ jQuery.widget("ui.pullProgressPanel", {
         }
     },
 
+    text: "",
+
+    timeElapsed: 0,
+
+    timeRemaining: 0,
+
+    update: function () {
+        "use strict";
+
+        // For some reason the next two lines are both needed for the code to work
+        // this.progressTarget.progressbar("option", "value", data.percent);
+        this.progressTarget.progressbar({value: this.percent});
+
+        var txt       = this.options.template;
+        var remaining = this.formatTime(this.timeRemaining);
+        var elapsed   = this.formatTime(this.timeElapsed);
+        var total     = this.formatTime(this.timeElapsed + this.timeRemaining);
+        txt = txt.replace(/{elapsed}/g,   elapsed);
+        txt = txt.replace(/{remaining}/g, remaining);
+        txt = txt.replace(/{total}/g,     total);
+        txt = txt.replace(/{percent}/g,   this.percent);
+        txt = txt.replace(/{msg}/g,       this.text);
+
+        this.textTarget.html(txt);
+    },
+
     textTarget: null,
 
     request: null
@@ -153,7 +214,8 @@ function FUNCTION_PREFIX_Start() {
         "formId":           "{FORM_ID}",
         "panelId":          "{PANEL_ID}",
         "runUrl":           "{URL_START_RUN}",
-        "targetId":         "{TEXT_ID}"
+        "targetId":         "{TEXT_ID}",
+        "template":         "{TEMPLATE}"
     });
 }
 
