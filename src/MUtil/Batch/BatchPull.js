@@ -96,7 +96,7 @@ jQuery.widget("ui.pullProgressPanel", {
         if (null === this.request) {
             if (this.options.runUrl) {
                 this.percent       = 0;
-                this.text          = 0;
+                this.text          = "";
                 this.timeElapsed   = 0;
                 this.timeRemaining = 0;
                 
