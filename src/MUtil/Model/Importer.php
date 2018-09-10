@@ -96,6 +96,45 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
      * @var \MUtil_Model_ModelAbstract
      */
     protected $targetModel;
+    
+    protected function addVariablesToBatch( \MUtil_Task_TaskBatch $batch)
+    {
+        $batch->getStack()->registerAllowedClass('MUtil_Date');
+
+        $targetModel = $this->getTargetModel();
+        $batch->setVariable('targetModel', $targetModel);
+
+        $importTranslator = $this->getImportTranslator();
+        $importTranslator->setTargetModel($targetModel);
+        $importTranslator->startImport();
+        $batch->setVariable('modelTranslator', $importTranslator);
+
+        // Load the iterator when it is not loaded OR
+        // the iterator itself is no lnger valid!
+        if ($batch->hasSessionVariable('iterator')) {
+            $iter = $batch->getSessionVariable('iterator');
+            if ($iter instanceof \Iterator) {
+                $loadIter = ! $iter->valid();
+            }
+        } else {
+            $loadIter = true;
+        }
+
+        if ($loadIter) {
+            $iter = $this->getSourceModel()->loadIterator();
+
+            if (($iter instanceof \Iterator) && ($iter instanceof \Serializable)) {
+                $batch->setSessionVariable('iterator', $iter);
+            } else {
+                $batch->setVariable('iterator', $iter);
+
+                if ($batch->isPull()) {
+                    // Cannot pull when iterator is not serializable
+                    $batch->setMethodPush();
+                }
+            }
+        }        
+    }
 
     /**
      * Clear the final directory for when the data could not be imported.
@@ -146,41 +185,7 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
             $batch->setSource($this->registrySource);
         }
 
-        $batch->getStack()->registerAllowedClass('MUtil_Date');
-
-        $targetModel = $this->getTargetModel();
-        $batch->setVariable('targetModel', $targetModel);
-
-        $importTranslator = $this->getImportTranslator();
-        $importTranslator->setTargetModel($targetModel);
-        $importTranslator->startImport();
-        $batch->setVariable('modelTranslator', $importTranslator);
-
-        // Load the iterator when it is not loaded OR
-        // the iterator itself is no lnger valid!
-        if ($batch->hasSessionVariable('iterator')) {
-            $iter = $batch->getSessionVariable('iterator');
-            if ($iter instanceof \Iterator) {
-                $loadIter = ! $iter->valid();
-            }
-        } else {
-            $loadIter = true;
-        }
-
-        if ($loadIter) {
-            $iter = $this->getSourceModel()->loadIterator();
-
-            if (($iter instanceof \Iterator) && ($iter instanceof \Serializable)) {
-                $batch->setSessionVariable('iterator', $iter);
-            } else {
-                $batch->setVariable('iterator', $iter);
-
-                if ($batch->isPull()) {
-                    // Cannot pull when iterator is not serializable
-                    $batch->setMethodPush();
-                }
-            }
-        }
+        $this->addVariablesToBatch($batch);
 
         return $batch;
     }
@@ -276,14 +281,13 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
 
             $this->registrySource->applySource($batch);
             $batch->setSource($this->registrySource);
-            $batch->setVariable('targetModel', $this->getTargetModel());
-
+            
             $this->_importBatch = $batch;
         } else {
             $batch = $this->_importBatch;
         }
-        $this->_importBatch->getStack()->registerAllowedClass('MUtil_Date');
-        // \MUtil_Echo::track($this->_importBatch->count());
+        
+        $this->addVariablesToBatch($batch);        
 
         if (! $batch->isLoaded()) {
             if ($this->_filename) {
@@ -299,7 +303,7 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
             }
             // Rest of loading is done by getCheckOnlyBatch, but when started, the above task must be added.
         }
-        return $this->_importBatch;
+        return $batch;
     }
 
     /**
