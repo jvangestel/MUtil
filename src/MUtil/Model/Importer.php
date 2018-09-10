@@ -111,13 +111,12 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
 
         // Load the iterator when it is not loaded OR
         // the iterator itself is no lnger valid!
+        $loadIter = true;
         if ($batch->hasSessionVariable('iterator')) {
             $iter = $batch->getSessionVariable('iterator');
             if ($iter instanceof \Iterator) {
                 $loadIter = ! $iter->valid();
             }
-        } else {
-            $loadIter = true;
         }
 
         if ($loadIter) {
@@ -166,7 +165,7 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
      *
      * @return \MUtil_Model_Importer (continuation pattern)
      */
-    public function clearSuccessDirectory($directory = null)
+    public function clearSuccessDirectory()
     {
         return $this->setSuccessDirectory();
     }
@@ -206,8 +205,7 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
                 $batch->addTask(
                         'File_CopyFileWhenTask',
                         $this->_filename,
-                        $this->getFailureDirectory() . DIRECTORY_SEPARATOR .
-                            $this->getLongtermFilename() . '.' . $this->_extension,
+                        $this->getFailureDirectory() . DIRECTORY_SEPARATOR . $this->getLongtermFilename() . '.' . $this->_extension,
                         'import_errors',
                         1);
             }
@@ -217,8 +215,7 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
                         'AddTask', // AddTask task as when all is OK this task should be added
                         'File_CopyFileWhenTask',
                         $this->_filename,
-                        $this->getSuccessDirectory() . DIRECTORY_SEPARATOR .
-                            $this->getLongtermFilename() . '.' . $this->_extension,
+                        $this->getSuccessDirectory() . DIRECTORY_SEPARATOR . $this->getLongtermFilename() . '.' . $this->_extension,
                         'import_errors',
                         0,
                         0);
@@ -276,17 +273,16 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
     public function getImportOnlyBatch(\MUtil_Task_TaskBatch $batch = null)
     {
         if (! $this->_importBatch instanceof \MUtil_Task_TaskBatch) {
-            $batch = new \MUtil_Task_TaskBatch(__CLASS__ . '_import_' .
-                    basename($this->sourceModel->getName()) . '_' . __FUNCTION__);
+            $batch = new \MUtil_Task_TaskBatch(__CLASS__ . '_import_' . basename($this->sourceModel->getName()) . '_' . __FUNCTION__);
 
             $this->registrySource->applySource($batch);
             $batch->setSource($this->registrySource);
             
             $this->_importBatch = $batch;
-        } else {
-            $batch = $this->_importBatch;
         }
         
+        $batch = $this->_importBatch;
+                
         $this->addVariablesToBatch($batch);        
 
         if (! $batch->isLoaded()) {
@@ -295,8 +291,7 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
                         'AddTask', // AddTask task as when all is OK this task should be added
                         'File_CopyFileWhenTask',
                         $this->_filename,
-                        $this->getSuccessDirectory() . DIRECTORY_SEPARATOR .
-                            $this->getLongtermFilename() . '.' . $this->_extension,
+                        $this->getSuccessDirectory() . DIRECTORY_SEPARATOR . $this->getLongtermFilename() . '.' . $this->_extension,
                         'import_errors',
                         0,
                         0);
@@ -408,12 +403,12 @@ class MUtil_Model_Importer extends \MUtil_Translate_TranslateableAbstract
      *
      * If empty the file is not renamed and may overwrite an existing file.
      *
-     * $param string $filenameWithoutExtension String or null when the file is not renamed
+     * @param string $noExtensionFilename String or null when the file is not renamed
      * @return \MUtil_Model_Importer (continuation pattern)
      */
-    public function setLongtermFilename($filenameWithoutExtension = null)
+    public function setLongtermFilename($noExtensionFilename = null)
     {
-        $this->longtermFilename = $filenameWithoutExtension;
+        $this->longtermFilename = $noExtensionFilename;
         return $this;
     }
 
