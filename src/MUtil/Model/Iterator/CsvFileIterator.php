@@ -51,6 +51,8 @@ class MUtil_Model_Iterator_CsvFileIterator implements \Iterator, \Serializable
     protected $escape;
     protected $filename;
     
+    protected $_autoSenseDelim = true;
+    
     /**
      * @var int
      */
@@ -143,6 +145,11 @@ class MUtil_Model_Iterator_CsvFileIterator implements \Iterator, \Serializable
             $firstline   = \MUtil_Encoding::removeBOM($this->_file->current());
 
             if ($firstline) {
+                if ($this->_autoSenseDelim) {
+                    $colon     = str_getcsv($firstline, ',', $this->enclosure, $this->escape);
+                    $semicolon = str_getcsv($firstline, ';', $this->enclosure, $this->escape);
+                    $this->delimiter = (count($semicolon) > count($colon)) ? ';' : ',';
+                }
                 $this->_fieldMap = str_getcsv($firstline, $this->delimiter, $this->enclosure, $this->escape);
                 $this->_fieldMapCount = count($this->_fieldMap);
 
@@ -339,6 +346,18 @@ class MUtil_Model_Iterator_CsvFileIterator implements \Iterator, \Serializable
         );
 
         return serialize($data);
+    }
+    
+    /**
+     * Switch autosense for delimiter on/off
+     * 
+     * Auto choose between colon and semicolon as delimiter
+     * 
+     * @param bool $enabled
+     */
+    public function setAutoSenseDelimiter($enabled)
+    {
+        $this->_autoSenseDelim = (bool) $enabled;
     }
 
     /**
