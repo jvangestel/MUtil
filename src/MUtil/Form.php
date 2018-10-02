@@ -313,6 +313,26 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
     {
         return true;
     }
+    
+    /**
+     * When an element is created this way, the element will have translation which can not
+     * be undone in the addElement method. To fix this we add the current translation status
+     * of the form to the options
+     * 
+     * @param type $type
+     * @param type $name
+     * @param type $options
+     */
+    public function createElement($type, $name, $options = null)
+    {
+        if ($options instanceof Zend_Config) {
+            $options = $options->toArray();
+        }
+        $options = (array) $options + [
+            'disableTranslator' => $this->translatorIsDisabled()
+            ];
+        return parent::createElement($type, $name, $options);
+    }
 
     /**
      * Filters the names that should not be requested.
