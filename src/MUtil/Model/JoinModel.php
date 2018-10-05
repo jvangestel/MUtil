@@ -415,6 +415,16 @@ class MUtil_Model_JoinModel extends \MUtil_Model_DatabaseModelAbstract
     }
 
     /**
+     * Get the tables that should be saved
+     * 
+     * @return array
+     */
+    public function getSaveTables()
+    {
+        return $this->_saveTables;
+    }
+
+    /**
      * The select object where we get the query from.
      *
      * @return \Zend_Db_Select
