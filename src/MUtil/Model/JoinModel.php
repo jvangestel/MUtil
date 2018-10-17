@@ -237,7 +237,7 @@ class MUtil_Model_JoinModel extends \MUtil_Model_DatabaseModelAbstract
 
                     } elseif ((strlen($newValues[$target]) > 0) &&
                             (strlen($newValues[$source]) > 0) &&
-                            $newValues[$target] != $newValues[$source]) {
+                            $newValues[$target] !== $newValues[$source]) {
                         // Join key values changed.
                         //
                         // Set the old values as the filter
