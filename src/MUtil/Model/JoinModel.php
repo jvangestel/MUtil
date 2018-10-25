@@ -415,6 +415,16 @@ class MUtil_Model_JoinModel extends \MUtil_Model_DatabaseModelAbstract
     }
 
     /**
+     * Get the joinfields used for the join in this model
+     *
+     * @return array
+     */
+    public function getJoinFields()
+    {
+        return $this->_joinFields;
+    }
+
+    /**
      * Get the tables that should be saved
      * 
      * @return array
