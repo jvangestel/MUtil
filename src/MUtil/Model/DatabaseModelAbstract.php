@@ -563,7 +563,7 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
                         } else {
                             $save = true;
                         }
-                    }                    
+                    }
                 }
                 // Update the row, if the saveMode allows it
                 if ($save == true && ($saveMode & self::SAVE_MODE_UPDATE) &&
@@ -571,9 +571,9 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
                     $this->addChanged($changed);
                     // Add the old values as we have them and they may be of use later on.
                     $returnValues = $returnValues + $oldValues;
-                    
+
                     // Make sure the copy keys (if any) have the new values as well
-                    $returnValues = $this->_updateCopyKeys($primaryKeys, $returnValues);                    
+                    $returnValues = $this->_updateCopyKeys($primaryKeys, $returnValues);
 
                     return $returnValues;
                 }
