@@ -285,7 +285,7 @@ class MUtil_Html_Renderer
                     $output[$key] = $view->escape($value->__toString());
                 } else {
                     // $output[$key] = 'WARNING: Object of type ' . get_class($value) . ' cannot be converted to string.';
-                    throw new \MUtil_Html_HtmlException('WARNING: Object of type ' . get_class($value) . ' cannot be converted to string.');
+                    //throw new \MUtil_Html_HtmlException('WARNING: Object of type ' . get_class($value) . ' cannot be converted to string.');
                 }
 
             } elseif ($value instanceof \__PHP_Incomplete_Class) {

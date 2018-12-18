@@ -472,8 +472,8 @@ class MUtil_Html_PagePanel extends \MUtil_Html_Sequence implements \MUtil_Lazy_P
     public function getRequest()
     {
         if (! $this->_request) {
-            $front = \Zend_Controller_Front::getInstance();
-            $this->setRequest($front->getRequest());
+            //$front = \Zend_Controller_Front::getInstance();
+            $this->setRequest(\MUtil\Controller\Front::getRequest());
         }
 
         return $this->_request;
@@ -672,7 +672,7 @@ class MUtil_Html_PagePanel extends \MUtil_Html_Sequence implements \MUtil_Lazy_P
      * @param \Zend_Controller_Request_Abstract $request
      * @return \MUtil_Html_PagePanel (continuation pattern)
      */
-    public function setRequest(\Zend_Controller_Request_Abstract $request)
+    public function setRequest(\MUtil\Controller\Request\ExpressiveRequestWrapper $request)
     {
         $this->_request = $request;
         $this->_checkVariables();

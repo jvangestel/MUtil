@@ -29,7 +29,7 @@
  * @license    New BSD License
  * @since      Class available since version 1.0
  */
-abstract class MUtil_Controller_Action extends \Zend_Controller_Action
+abstract class MUtil_Controller_Action extends \MUtil\Controller\ActionAbstract
 {
     /**
      * A session based message store.
@@ -379,15 +379,15 @@ abstract class MUtil_Controller_Action extends \Zend_Controller_Action
      */
     public function init()
     {
-        if (! ($this->translate && $this->translateAdapter)) {
+        /*if (! ($this->translate && $this->translateAdapter)) {
             $this->getTranslate();
-        }
+        }*/
 
-        if ($this->useHtmlView) {
+        /*if ($this->useHtmlView) {
             $this->initHtml();
         } elseif ($this->useRawOutput) {
             $this->initRawOutput();
-        }
+        }*/
     }
 
     /**

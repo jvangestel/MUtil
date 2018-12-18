@@ -83,7 +83,7 @@ class MUtil_Html_UrlArrayAttribute extends \MUtil_Html_ArrayAttribute
      * @param string $name
      * @param array $options
      */
-    private static function _rerouteUrlOption(\Zend_Controller_Request_Abstract $request, $name, &$options)
+    private static function _rerouteUrlOption(\MUtil\Controller\Request\ExpressiveRequestWrapper $request, $name, &$options)
     {
         if (! array_key_exists($name, $options)) {
             if ($value = $request->getParam($name)) {
@@ -187,8 +187,8 @@ class MUtil_Html_UrlArrayAttribute extends \MUtil_Html_ArrayAttribute
     public function getRouter()
     {
         if (! $this->router) {
-            $front = \Zend_Controller_Front::getInstance();
-            $this->router = $front->getRouter();
+            //$front = \Zend_Controller_Front::getInstance();
+            $this->router = \MUtil\Controller\Front::getRouter();
         }
 
         return $this->router;
@@ -231,7 +231,7 @@ class MUtil_Html_UrlArrayAttribute extends \MUtil_Html_ArrayAttribute
      * @param boolean $addRouteReset Deprecated: add the 'RouteReset' parameter that is used by objects of this type to set RouteReset
      * @return array Url array with adapted utl's
      */
-    public static function rerouteUrl(\Zend_Controller_Request_Abstract $request, $options, $addRouteReset = false)
+    public static function rerouteUrl(\MUtil\Controller\Request\ExpressiveRequestWrapper $request, $options, $addRouteReset = false)
     {
         self::_rerouteUrlOption($request, $request->getModuleKey(),     $options);
         self::_rerouteUrlOption($request, $request->getControllerKey(), $options);

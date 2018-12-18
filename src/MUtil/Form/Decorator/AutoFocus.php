@@ -70,7 +70,7 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
     {
         $form  = $this->getElement();
         $view  = $form->getView();
-        $request = \Zend_Controller_Front::getInstance()->getRequest();
+        $request = \MUtil\Controller\Front::getRequest();
 
         $focus = $request->getParam($form->focusTrackerElementId) ?: $this->_getFocus($form);
 
