@@ -672,7 +672,7 @@ class MUtil_Html_PagePanel extends \MUtil_Html_Sequence implements \MUtil_Lazy_P
      * @param \Zend_Controller_Request_Abstract $request
      * @return \MUtil_Html_PagePanel (continuation pattern)
      */
-    public function setRequest(\MUtil\Controller\Request\ExpressiveRequestWrapper $request)
+    public function setRequest($request)
     {
         $this->_request = $request;
         $this->_checkVariables();

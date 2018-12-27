@@ -707,7 +707,7 @@ abstract class MUtil_Model_ModelAbstract extends \MUtil_Registry_TargetAbstract
      * @param boolean $includeNumericFilters When true numeric filter keys (0, 1, 2...) are added to the filter as well
      * @return \MUtil_Model_ModelAbstract
      */
-    public function applyRequest(\MUtil\Controller\Request\ExpressiveRequestWrapper $request, $removePost = true, $includeNumericFilters = false)
+    public function applyRequest($request, $removePost = true, $includeNumericFilters = false)
     {
         $parameters = $request->getParams();
 

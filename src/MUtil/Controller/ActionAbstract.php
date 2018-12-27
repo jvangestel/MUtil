@@ -62,7 +62,7 @@ class ActionAbstract
         return $this->request;
     }
 
-    public function dispatch($action): void
+    public function dispatch($action)
     {
         // Notify helpers of action preDispatch state
         $this->_helper->notifyPreDispatch();

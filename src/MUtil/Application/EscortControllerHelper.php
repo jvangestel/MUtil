@@ -118,12 +118,12 @@ class MUtil_Application_EscortControllerHelper extends \Zend_Controller_Action_H
      * @param  \Zend_Controller_Action $actionController
      * @return \Zend_Controller_ActionHelper_Abstract Provides a fluent interface
      */
-    public function setActionController($actionController = null)
+    public function setActionController(\Zend_Controller_Action $actionController = null)
     {
         $this->_actionController = $actionController;
         $this->_escort->setActionController($actionController);
 
-        return $result;
+        return $this;
     }
 
     /**
