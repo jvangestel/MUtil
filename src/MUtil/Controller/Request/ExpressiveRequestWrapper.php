@@ -94,6 +94,7 @@ class ExpressiveRequestWrapper
     public function getRoute()
     {
         $routeResult = $this->getRouteResult();
+        if (is_null($routeResult)) { return false; }
         return $routeResult->getMatchedRoute();
     }
 
@@ -106,6 +107,9 @@ class ExpressiveRequestWrapper
     {
         if (!$this->routeOptions) {
             $route = $this->getRoute();
+            if (!$route) {
+                return null;
+            }
             $this->routeOptions = $route->getOptions();
         }
 

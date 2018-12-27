@@ -133,7 +133,7 @@ abstract class MUtil_Application_Escort extends \Zend_Application_Bootstrap_Boot
      * @param \Zend_Controller_Action $actionController
      * @return void
      */
-    public function controllerAfterAction(\Zend_Controller_Action $actionController = null)
+    public function controllerAfterAction($actionController = null)
     { }
 
 
@@ -152,7 +152,7 @@ abstract class MUtil_Application_Escort extends \Zend_Application_Bootstrap_Boot
      * @param \Zend_Controller_Action $actionController
      * @return void
      */
-    public function controllerBeforeAction(\Zend_Controller_Action $actionController = null)
+    public function controllerBeforeAction($actionController = null)
     { }
 
     /**
@@ -170,7 +170,7 @@ abstract class MUtil_Application_Escort extends \Zend_Application_Bootstrap_Boot
      * @param \Zend_Controller_Action $actionController
      * @return void
      */
-    public function controllerInit(\Zend_Controller_Action $actionController = null)
+    public function controllerInit($actionController = null)
     { }
 
 
@@ -419,7 +419,7 @@ abstract class MUtil_Application_Escort extends \Zend_Application_Bootstrap_Boot
      * @param  \Zend_Controller_Action $actionController
      * @return \Zend_Controller_ActionHelper_Abstract Provides a fluent interface
      */
-    public final function setActionController(\Zend_Controller_Action $actionController = null)
+    public final function setActionController($actionController = null)
     {
         $this->controller = $actionController;
 

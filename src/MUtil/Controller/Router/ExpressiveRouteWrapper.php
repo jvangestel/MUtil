@@ -31,6 +31,9 @@ class ExpressiveRouteWrapper
     public function getRoute()
     {
         $routeResult = $this->request->getAttribute('Zend\Expressive\Router\RouteResult');
+        if (is_null($routeResult)) {
+            return null; // Probably needs to be some default route
+        }
         return $routeResult->getMatchedRoute();
     }
 }
