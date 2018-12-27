@@ -108,6 +108,18 @@ abstract class MUtil_Controller_Action extends \Zend_Controller_Action
      * @var boolean $useRawOutput
      */
     public $useRawOutput = false;
+    
+    public function __construct(\Zend_Controller_Request_Abstract $request, \Zend_Controller_Response_Abstract $response, array $invokeArgs = array(), $init = true)
+    {
+        $this->setRequest($request)
+             ->setResponse($response)
+             ->_setInvokeArgs($invokeArgs);
+        $this->_helper = new Zend_Controller_Action_HelperBroker($this);
+        
+        if ($init) {
+            $this->init();
+        }
+    }
 
     /**
      * Copy from \Zend_Translate_Adapter
@@ -357,8 +369,7 @@ abstract class MUtil_Controller_Action extends \Zend_Controller_Action
                 $translate = \Zend_Registry::get('Zend_Translate');
             } else {
                 // Make sure there always is a translator
-                $translate = new \MUtil_Translate_Adapter_Potemkin();
-                \Zend_Registry::set('Zend_Translate', $translate);
+                $translate = \MUtil_Translate_Adapter_Potemkin::create();
             }
 
             $this->setTranslate($translate);
