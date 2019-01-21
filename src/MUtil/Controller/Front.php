@@ -18,6 +18,11 @@ class Front
     {
         self::$request = $request;
     }
+    
+    public static function setLegacyRequest(\Zend_Controller_Request_Http $request)
+    {
+        self::$request = $request;
+    }
 
     public static function getRequest()
     {
