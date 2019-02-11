@@ -80,6 +80,9 @@ class MUtil_Model_NestedModelTest extends MUtil_Model_AbstractModelTest
             $main->addTransformer($transformer);
             
             $rows = $main->load();        
+            $this->assertCount(3, $rows);             // No duplicate records
+            $this->assertEquals(2, $rows[0]['cid']);  //last matching record found will be returned
+            $this->assertNull($rows[1]['cid']);       // When no match we get null
     }
             
 
