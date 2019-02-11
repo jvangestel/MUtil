@@ -139,7 +139,7 @@ jQuery.widget("ui.pullProgressPanel", {
             this.text    = 'An error occured, no data was returned, check the error logs.';
         } else {
             this.percent       = data.percent;
-            this.text          = data.text;
+            this.text          = data.text || '';
             this.timeElapsed   = data.timeTaken;
             this.timeRemaining = data.timeRemaining;
 

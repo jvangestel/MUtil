@@ -44,7 +44,7 @@
  * @license    New BSD License
  * @since      Class available since MUtil version 1.3
  */
-class MUtil_Model_Iterator_CsvFileIterator implements \Iterator, \Serializable
+class MUtil_Model_Iterator_CsvFileIterator implements \Iterator, \Serializable, \Countable
 {
     protected $delimiter;
     protected $enclosure;

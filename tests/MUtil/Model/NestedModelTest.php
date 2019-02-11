@@ -69,6 +69,19 @@ class MUtil_Model_NestedModelTest extends MUtil_Model_AbstractModelTest
 
         return $this->_nestedModel;
     }
+    
+    public function testJoinTransformer()
+    {
+            $main = new MUtil_Model_TableModel('n1');
+            $sub = new MUtil_Model_TableModel('n2');
+            $transformer = new MUtil_Model_Transform_JoinTransformer();
+            $transformer->addModel($sub, array('id' => 'pid'));
+            
+            $main->addTransformer($transformer);
+            
+            $rows = $main->load();        
+    }
+            
 
     /**
      * The template file name to create the sql create and xml load names from.
