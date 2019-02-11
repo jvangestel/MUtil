@@ -6,6 +6,7 @@ jQuery.widget("ui.pullProgressPanel", {
 
     // default options
     options: {
+        // animationDelay: time to wait at the end of the job before a redirect, to allow the progressbar animation to complete
         // finishUrl: the request url
         // formId: an optional form id for post parameters
         // panelId: text id:,
@@ -19,8 +20,9 @@ jQuery.widget("ui.pullProgressPanel", {
          * {percent}    Progress percent without the % sign
          * {msg}        Message reveiced
          */
+        animationDelay: 600,
         template: "{percent}% {msg}",
-        timeout: 60000
+        timeout: 60000       
 
         
     },
@@ -82,6 +84,10 @@ jQuery.widget("ui.pullProgressPanel", {
         result    += ":" + (minutes < 10 ? "0" + minutes : minutes);
         result    += ":" + (seconds < 10 ? "0" + seconds : seconds);
         return result;
+    },
+    
+    forward: function(url) {
+        location.href = url;
     },
 
     percent: 0,
@@ -162,12 +168,12 @@ jQuery.widget("ui.pullProgressPanel", {
                     if (this.options.finishUrl.length) {
                         form.attr('action', this.options.finishUrl);
                     }
-                    form.submit();
+                    setTimeout(form.submit, this.options.animationDelay);
                     return;
                 }
             }
             if (this.options.finishUrl.length) {
-                location.href = this.options.finishUrl;
+                setTimeout(this.forward, this.options.animationDelay, this.options.finishUrl)
             }
         } else {
             this.request = null;
