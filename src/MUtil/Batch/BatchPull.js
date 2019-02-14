@@ -168,7 +168,7 @@ jQuery.widget("ui.pullProgressPanel", {
                     if (this.options.finishUrl.length) {
                         form.attr('action', this.options.finishUrl);
                     }
-                    setTimeout(form.submit, this.options.animationDelay);
+                    form.submit();
                     return;
                 }
             }
