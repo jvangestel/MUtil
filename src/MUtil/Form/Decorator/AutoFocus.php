@@ -74,6 +74,16 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
 
         $focus = $request->getParam($form->focusTrackerElementId) ?: $this->_getFocus($form);
 
+        $elements = $form->getElements();
+        $allowedElements = [];
+        foreach($elements as $element) {
+            $id = $element->getId();
+            if ($id === null) {
+                $id = $element->getName();
+            }
+            $allowedElements[] = $id;
+        }
+
         if ($form->focusTrackerElementId) {
             $form->getElement($form->focusTrackerElementId)->setValue($focus);
         }
