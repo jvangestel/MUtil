@@ -82,7 +82,7 @@ class MUtil_Validate_NotEqualTo extends \Zend_Validate_Abstract
 
         if ($message) {
             foreach ((array) $message as $key => $msg) {
-                if (in_array($key, $this->fields)) {
+                if (in_array($key, $this->fields, true)) {
                     $this->fieldMessages[$key] = $msg;
                 } else {
                     $this->setMessage($msg, self::NOT_EQUAL_TO);
