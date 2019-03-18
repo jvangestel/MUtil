@@ -84,26 +84,28 @@ class MUtil_Form_Decorator_AutoFocus extends \Zend_Form_Decorator_Abstract
             $allowedElements[] = $id;
         }
 
-        if ($form->focusTrackerElementId) {
-            $form->getElement($form->focusTrackerElementId)->setValue($focus);
+        if (in_array($focus, $allowedElements)) {
+            if ($form->focusTrackerElementId) {
+                $form->getElement($form->focusTrackerElementId)->setValue($focus);
+            }
+
+            if (($view !== null) && ($focus !== null)) {
+                // Use try {} around e.select as nog all elements have a select() function
+                $script = "e = document.getElementById('$focus');";
+                $script .= "
+                    if (e) {
+                        e.focus();
+                        try {
+                            if (e.select) {
+                                e.select();
+                            }
+                        } catch (ex) {}
+                    }";
+
+                $view->inlineScript()->appendScript($script);
+            }
         }
-
-        if (($view !== null) && ($focus !== null)) {
-            // Use try {} around e.select as nog all elements have a select() function
-            $script = "e = document.getElementById('$focus');";
-            $script .= "
-                if (e) {
-                    e.focus();
-                    try {
-                        if (e.select) {
-                            e.select();
-                        }
-                    } catch (ex) {}
-                }";
-
-            $view->inlineScript()->appendScript($script);
-        }
-
+        
         return $content;
     }
 }
