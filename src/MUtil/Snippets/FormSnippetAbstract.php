@@ -404,7 +404,9 @@ abstract class FormSnippetAbstract extends \MUtil_Snippets_SnippetAbstract
      */
     protected function loadFormData()
     {
-        if ($this->request->isPost()) {
+        if ($this->request instanceof \MUtil_Controller_Request_Cli) {
+            $this->formData = $this->request->getParams();
+        } elseif ($this->request->isPost()) {
             $this->formData = $this->request->getPost();
         } else {
             $this->formData = $this->getDefaultFormValues();
