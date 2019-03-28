@@ -19,7 +19,7 @@
  */
 class MUtil_Validate_NoTags extends \MUtil_Validate_Regexclude
 {
-    const NOTAGS_REGEX = '/[<&][a-zA-Z\\:]/';
+    const NOTAGS_REGEX = '/&(?:[a-z\d]+|#\d+|#x[a-f\d]+);|[<][a-z\\\\\/:]/i';
 
     /**
      * Regular expression pattern
