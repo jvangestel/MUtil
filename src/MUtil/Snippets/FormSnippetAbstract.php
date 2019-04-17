@@ -379,6 +379,24 @@ abstract class FormSnippetAbstract extends \MUtil_Snippets_SnippetAbstract
     }
 
     /**
+     * Should this be treated as a post (allows override of default behaviour)
+     *
+     * @return boolean
+     */
+    protected function isPost()
+    {
+        if ($this->request instanceof \Zend_Controller_Request_Http) {
+            return $this->request->isPost();
+        }
+        if ($this->request instanceof \MUtil_Controller_Request_Cli && (!array_key_exists($this->saveButtonId, $this->formData))) {
+            // Set save label for Cli unless parameter was passed empty
+            $this->formData[$this->saveButtonId] = $this->saveLabel;
+        }
+
+        return true;
+    }
+
+    /**
      * Makes sure there is a form.
      */
     protected function loadForm()
@@ -404,12 +422,12 @@ abstract class FormSnippetAbstract extends \MUtil_Snippets_SnippetAbstract
      */
     protected function loadFormData()
     {
-        if ($this->request instanceof \MUtil_Controller_Request_Cli) {
-            $this->formData = $this->request->getParams();
-        } elseif ($this->request->isPost()) {
+        if ($this->request instanceof \Zend_Controller_Request_Http && $this->request->isPost()) {
             $this->formData = $this->request->getPost();
+        } elseif ($this->request instanceof \MUtil_Controller_Request_Cli) {
+            $this->formData = $this->request->getParams();
         } else {
-            $this->formData = $this->getDefaultFormValues();
+            $this->formData = $this->getDefaultFormValues() + $this->request->getParams();
         }
     }
 
@@ -469,7 +487,7 @@ abstract class FormSnippetAbstract extends \MUtil_Snippets_SnippetAbstract
             $this->addCsrf();
         }
 
-        if ($this->request->isPost()) {
+        if ($this->isPost()) {
             //First populate the form, otherwise the saveButton will never be 'checked'!
             $this->populateForm();
 
