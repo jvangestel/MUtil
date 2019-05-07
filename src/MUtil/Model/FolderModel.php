@@ -43,12 +43,19 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
     protected $recursive;
 
     /**
+     * When true also follows symlinks. Only works when recursive is true
+     *
+     * @var boolean
+     */
+    protected $followSymlinks;
+
+    /**
      *
      * @param string $dir
      * @param string $pregMask An optional regex file mask, use of / for directory seperator required
      * @param boolean $recursive When true the directory is searched recursively
      */
-    public function __construct($dir, $mask = null, $recursive = false)
+    public function __construct($dir, $mask = null, $recursive = false, $followSymlinks = false)
     {
         parent::__construct($dir);
 
@@ -57,6 +64,8 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
         $this->mask = $mask;
 
         $this->recursive = $recursive;
+
+        $this->followSymlinks = $followSymlinks;
 
         $this->set('fullpath',     'type', \MUtil_Model::TYPE_STRING);
         $this->set('path',         'type', \MUtil_Model::TYPE_STRING);
@@ -84,8 +93,13 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
         }
 
         if ($this->recursive) {
+            $directoryIteratorFlags = \FilesystemIterator::CURRENT_AS_FILEINFO;
+            if ($this->followSymlinks) {
+                $directoryIteratorFlags = \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::FOLLOW_SYMLINKS;
+            }
+
             $dirIter = new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator($this->dir, \FilesystemIterator::CURRENT_AS_FILEINFO),
+                    new \RecursiveDirectoryIterator($this->dir, $directoryIteratorFlags),
                     \RecursiveIteratorIterator::SELF_FIRST,
                     \RecursiveIteratorIterator::CATCH_GET_CHILD
                     );
