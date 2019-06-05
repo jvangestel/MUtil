@@ -113,13 +113,15 @@ abstract class MUtil_Snippets_ModelTableSnippetAbstract extends \MUtil_Snippets_
             }
         } elseif ($this->sortableLinks) {
             foreach($model->getItemsOrdered() as $name) {
-                if ($label = $model->get($name, 'label')) {
+                if ($model->has($name, 'label')) {
+                    $label = $model->get($name, 'label');
                     $bridge->addSortable($name, $label);
                 }
             }
         } else {
             foreach($model->getItemsOrdered() as $name) {
-                if ($label = $model->get($name, 'label')) {
+                if ($model->has($name, 'label')) {
+                    $label = $model->get($name, 'label');
                     $bridge->add($name, $label);
                 }
             }
