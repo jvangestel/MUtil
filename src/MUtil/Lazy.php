@@ -108,7 +108,9 @@ class MUtil_Lazy
      */
     public static function comp($opLeft, $oper, $opRight)
     {
-        $lambda = create_function('$a, $b', 'return $a ' . $oper . ' $b;');
+        $lambda = function ($a, $b) use ($oper) {
+            return $a . $oper . $b;
+        };
         return new \MUtil_Lazy_Call($lambda, array($opLeft, $opRight));
     }
 
