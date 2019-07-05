@@ -26,9 +26,10 @@ class ExpressiveRouteWrapper
     {
         $route = $this->getRoute();
         //$params = $this->request->getAttributes();
-        $queryParams = $this->request->getQueryParams();
+        $queryParams = [];
         //$params = $data + $params;
         if ($reset !== true) {
+            //$this->request->getQueryParams();
             $requestParams = $this->extractRequestParams($data);
             $queryParams = $requestParams + $queryParams;
         }
