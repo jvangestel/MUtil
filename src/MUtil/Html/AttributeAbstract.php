@@ -114,8 +114,7 @@ abstract class MUtil_Html_AttributeAbstract implements \MUtil_Html_AttributeInte
     public function getRequest()
     {
         if (! $this->request) {
-            $front = \Zend_Controller_Front::getInstance();
-            $this->request = $front->getRequest();
+            $this->request = \MUtil\Controller\Front::getRequest();
         }
 
         return $this->request;
