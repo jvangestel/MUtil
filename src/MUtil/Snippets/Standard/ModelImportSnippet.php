@@ -245,7 +245,7 @@ class MUtil_Snippets_Standard_ModelImportSnippet extends \MUtil_Snippets_WizardF
             if (isset($this->formData['content']) && $this->formData['content']) {
                 file_put_contents($this->_session->localfile, $this->formData['content']);
             } else {
-                if (filesize($this->_session->localfile) && ('txt' === $this->formData['extension'])) {
+                if (filesize($this->_session->localfile)) {
                     $content = file_get_contents($this->_session->localfile);
                 } else {
                     $content = '';
