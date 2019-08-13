@@ -59,6 +59,12 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
      * Do nothing
      */
     const SAVE_MODE_NONE   = 0;
+
+    /**
+     * SQL Nothing statement
+     */
+    const WHERE_NONE = '1=0';
+
     /**
      * Name for query filter transformers
      */
@@ -134,7 +140,25 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
 
         $adapter = $this->getAdapter();
 
-        // Filter
+        // Filter limit out
+        foreach ($filter as $name => $value) {
+            if ('limit' === strtolower($name)) {
+                if (is_array($value)) {
+                    $count  = array_shift($value);
+                    $offset = reset($value);
+                } else {
+                    $count  = $value;
+                    $offset = null;
+                }
+                $select->limit($count, $offset);
+                unset($filter[$name]);
+            }
+        }
+        $where = $this->_createWhere($filter, $adapter);
+        if ($where) {
+            $select->where($where);
+        }
+        /*
         foreach ($filter as $name => $value) {
             if (is_int($name)) {
                 $select->where($value);
@@ -169,7 +193,7 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
                     $select->where($name . ' = ?', $value);
                 }
             }
-        }
+        } // */
 
         // Sort
         foreach ($sort as $key => $order) {
@@ -214,6 +238,61 @@ abstract class MUtil_Model_DatabaseModelAbstract extends \MUtil_Model_ModelAbstr
         }
 
         return $select;
+    }
+
+    /**
+     * Combine nested filter statements into a single where statements
+     *
+     * @param array $filter The filter statements
+     * @param \Zend_Db_Adapter_Abstract $adapter
+     * @param boolean $and Parts joined by AND or OR
+     * @return string SQL Where statement or null
+     */
+    protected function _createWhere($filter, \Zend_Db_Adapter_Abstract $adapter, $and = true)
+    {
+        $output = [];
+        foreach ($filter as $name => $value) {
+            if (is_int($name)) {
+                if (is_array($value)) {
+                    $where = $this->_createWhere($value, $adapter, ! $and);
+                    if ($where) {
+                        if (self::WHERE_NONE == $where) {
+                            if ($and) {
+                                return self::WHERE_NONE;
+                            }
+                        } else {
+                            $output[] = $where;
+                        }
+                    }
+                } else {
+                    $output[] = $value;
+                }
+            } else {
+                if ($expression = $this->get($name, 'column_expression')) {
+                    //The brackets tell \Zend_Db_Select that this is an epression in a sort.
+                    $name = '(' . $expression . ')';
+                } else {
+                    $name = $adapter->quoteIdentifier($name);
+                }
+                if (null === $value) {
+                    $output[] = $name . ' IS NULL';
+                } elseif (is_array($value)) {
+                    if ($value) {
+                        $output[] = $name . ' IN (' . $adapter->quote($value) . ')';
+                    } elseif ($and) {
+                        // Never a result when a value should be one of an empty set.
+                        return self::WHERE_NONE;
+                    }
+                } else {
+                    $output[] = $adapter->quoteInto($name . ' = ?', $value);
+                }
+            }
+        }
+        if (! $output) {
+            return null;
+        }
+        // \MUtil_Echo::track($and, $output);
+        return '(' . implode($and ? ') AND (' : ') OR (', $output) . ')';
     }
 
     /**
