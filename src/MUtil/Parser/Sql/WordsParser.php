@@ -86,12 +86,12 @@ class MUtil_Parser_Sql_WordsParser
      */
     public function __construct($statements, $makeWordFunction = null)
     {
-        $this->_statement = $statements;
-        $this->_len = strlen($statements);
+        $this->_statement   = $statements;
+        $this->_len         = strlen($statements);
         $this->_lenMinusOne = $this->_len - 1;
-        $this->_line = 1;
-        $this->_pos = 1;
-        $this->_start = 0;
+        $this->_line        = 1;
+        $this->_pos         = 1;
+        $this->_start       = 0;
         if ($makeWordFunction) {
             $this->_makeWordFunction = $makeWordFunction;
         } else {
@@ -131,7 +131,6 @@ class MUtil_Parser_Sql_WordsParser
 
     private function findCharsEnd($pos, $chars, $startLine = 0, $startPos = 0)
     {
-        $start = $pos++;
         $char1 = $chars[0];
         $char2 = $chars[1];
 
@@ -188,42 +187,42 @@ class MUtil_Parser_Sql_WordsParser
     private function mode($pos)
     {
         switch ($this->_statement[$pos]) {
-        case ' ':
-        case "\n":
-        case "\t":
-        case "\r":
-            return self::MODE_WHITESPACE;
-        case '\'':
-            return self::MODE_QUOTED_STRING;
-        case '"':
-            return self::MODE_DOUBLE_QUOTED_STRING;
-        case ',':
-            return self::MODE_COMMA;
-        case ';':
-            return self::MODE_SEMI_COLON;
-        case '(':
-        case ')':
-            return self::MODE_BRACKET;
-        case '#':
-            return self::MODE_LINE_COMMENT;
-        case '[':
-            return self::MODE_ACCESS_NAME;
-        case '-':
-            if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == '-')) {
-                return self::MODE_LINE_COMMENT;
-            }
-        case '/':
-            if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == '*') && ($this->_statement[$pos] != '-')) {
-                return self::MODE_MULTI_LINE_COMMENT;
-            }
-
-        default:
-            // Last ditch check
-            if (ctype_space($this->_statement[$pos])) {
+            case ' ':
+            case "\n":
+            case "\t":
+            case "\r":
                 return self::MODE_WHITESPACE;
-            }
+            case '\'':
+                return self::MODE_QUOTED_STRING;
+            case '"':
+                return self::MODE_DOUBLE_QUOTED_STRING;
+            case ',':
+                return self::MODE_COMMA;
+            case ';':
+                return self::MODE_SEMI_COLON;
+            case '(':
+            case ')':
+                return self::MODE_BRACKET;
+            case '#':
+                return self::MODE_LINE_COMMENT;
+            case '[':
+                return self::MODE_ACCESS_NAME;
+            case '-':
+                if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == '-')) {
+                    return self::MODE_LINE_COMMENT;
+                }
+            case '/':
+                if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == '*') && ($this->_statement[$pos] != '-')) {
+                    return self::MODE_MULTI_LINE_COMMENT;
+                }
 
-            return self::MODE_WORD;
+            default:
+                // Last ditch check
+                if (ctype_space($this->_statement[$pos])) {
+                    return self::MODE_WHITESPACE;
+                }
+
+                return self::MODE_WORD;
         }
     }
 
@@ -299,10 +298,9 @@ class MUtil_Parser_Sql_WordsParser
                 $pos = $this->findCharEnd($pos, ']');
                 break;
             case self::MODE_MULTI_LINE_COMMENT:
-                $pos = $this->findCharsEnd($pos, '*/') + 1;
+                 $pos = $this->findCharsEnd($pos, '*/') + 1;
                 break;
         }
-        $last = null;
         $modeStart = $pos;
         $modeStartLine = $this->_line;
         $modeStartChar = $this->_pos;
