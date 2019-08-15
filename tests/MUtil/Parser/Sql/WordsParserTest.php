@@ -109,4 +109,37 @@ UPDATE Nothing SET Something = '\" /* -- bla' WHERE SomethingElse = \"'quoted'\"
         $this->assertCount(2, $result);
         $this->assertEquals($result, $this->_sqlOutputString);
     }
+    
+    /**
+     * @dataProvider splitEndingsProvider
+     */
+    public function testSplitEndings($statements)
+    {
+        $result = MUtil_Parser_Sql_WordsParser::splitStatements($statements, false);
+        $this->assertCount(2, $result);
+    }
+    
+    public function splitEndingsProvider()
+    {
+        return [
+            'Unix' => [
+                "INSERT INTO `sometable` (`id`, `Age`) VALUES\n(1, 1);\nINSERT INTO `sometable` (`id`, `Age`) VALUES\n(1, 1);\n"
+            ],
+            'Windows' => [
+                "INSERT INTO `sometable` (`id`, `Age`) VALUES\r\n(1, 1);\nINSERT INTO `sometable` (`id`, `Age`) VALUES\r\n(1, 1);\r\n"
+            ],
+            'Mac' => [
+                "INSERT INTO `sometable` (`id`, `Age`) VALUES\r(1, 1);\nINSERT INTO `sometable` (`id`, `Age`) VALUES\n(1, 1);\r"
+            ],
+            'UnixComment' => [
+                "/*!40101 */;INSERT INTO `sometable` (`id`, `Age`) VALUES\n(1, 1);\nINSERT INTO `sometable` (`id`, `Age`) VALUES\n(1, 1);\n"
+            ],
+            'WindowsComment' => [
+                "/*!40101 */;INSERT INTO `sometable` (`id`, `Age`) VALUES\r\n(1, 1);\nINSERT INTO `sometable` (`id`, `Age`) VALUES\r\n(1, 1);\r\n"
+            ],
+            'MacComment' => [
+                "/*!40101 */;INSERT INTO `sometable` (`id`, `Age`) VALUES\r(1, 1);\nINSERT INTO `sometable` (`id`, `Age`) VALUES\n(1, 1);\r"
+            ]
+        ];
+    }
 }
