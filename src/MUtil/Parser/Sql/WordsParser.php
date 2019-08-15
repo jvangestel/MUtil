@@ -283,25 +283,25 @@ class MUtil_Parser_Sql_WordsParser
         $i = $this->_start;
 
         if ($i >= $this->_len) {
-            return;
+            return false;
         }
 
-        switch ($next_mode = $this->mode(0)) {
-        case self::MODE_QUOTED_STRING:
-            $i = $this->findCharEnd($i, '\'');
-            break;
-        case self::MODE_DOUBLE_QUOTED_STRING:
-            $i = $this->findCharEnd($i, '"');
-            break;
-        case self::MODE_LINE_COMMENT:
-            $i = $this->findLineEnd($i) + 1;
-            break;
-        case self::MODE_ACCESS_NAME:
-            $i = $this->findCharEnd($i, ']');
-            break;
-        case self::MODE_MULTI_LINE_COMMENT:
-            $i = $this->findCharsEnd($i, '*/') + 1;
-            break;
+        switch ($next_mode = $this->mode($i)) {
+            case self::MODE_QUOTED_STRING:
+                $i = $this->findCharEnd($i, '\'');
+                break;
+            case self::MODE_DOUBLE_QUOTED_STRING:
+                $i = $this->findCharEnd($i, '"');
+                break;
+            case self::MODE_LINE_COMMENT:
+                $i = $this->findLineEnd($i) + 1;
+                break;
+            case self::MODE_ACCESS_NAME:
+                $i = $this->findCharEnd($i, ']');
+                break;
+            case self::MODE_MULTI_LINE_COMMENT:
+                $i = $this->findCharsEnd($i, '*/') + 1;
+                break;
         }
         $last = null;
         $mode_start = $i;
@@ -327,24 +327,24 @@ class MUtil_Parser_Sql_WordsParser
                 $mode_start_char = $this->_pos;
 
                 switch ($next_mode) {
-                case self::MODE_QUOTED_STRING:
-                    $i = $this->findCharEnd($i, '\'');
-                    break;
-                case self::MODE_DOUBLE_QUOTED_STRING:
-                    $i = $this->findCharEnd($i, '"');
-                    break;
-                case self::MODE_LINE_COMMENT:
-                    $i = $this->findLineEnd($i);
-                    break;
-                case self::MODE_ACCESS_NAME:
-                    $i = $this->findCharEnd($i, ']');
-                    break;
-                case self::MODE_MULTI_LINE_COMMENT:
-                    $i = $this->findCharsEnd($i, '*/');
-                    break;
-                case self::MODE_SEMI_COLON:
-                    $this->_start = $i + 1;
-                    return $sql;
+                    case self::MODE_QUOTED_STRING:
+                        $i = $this->findCharEnd($i, '\'');
+                        break;
+                    case self::MODE_DOUBLE_QUOTED_STRING:
+                        $i = $this->findCharEnd($i, '"');
+                        break;
+                    case self::MODE_LINE_COMMENT:
+                        $i = $this->findLineEnd($i);
+                        break;
+                    case self::MODE_ACCESS_NAME:
+                        $i = $this->findCharEnd($i, ']');
+                        break;
+                    case self::MODE_MULTI_LINE_COMMENT:
+                        $i = $this->findCharsEnd($i, '*/');
+                        break;
+                    case self::MODE_SEMI_COLON:
+                        $this->_start = $i + 1;
+                        return $sql;
                 }
             }
 
@@ -375,8 +375,13 @@ class MUtil_Parser_Sql_WordsParser
         $parser = new self($statements, $makeWordFunction);
 
         $stmts = array();
-
-        while ($stmt = $parser->splitStatement($keepComments)) {
+    
+        do {
+            $stmt = $parser->splitStatement($keepComments);
+            if ($stmt === false) {
+                // We reached end of string
+                break;
+            }
             if ($makeStrings) {
                 $sql = implode('', $stmt);
 
@@ -386,8 +391,8 @@ class MUtil_Parser_Sql_WordsParser
             } else {
                 $stmts[] = $stmt;
             }
-        }
-
+        } while (1);
+        
         return $stmts;
     }
 }
