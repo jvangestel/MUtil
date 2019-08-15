@@ -99,96 +99,95 @@ class MUtil_Parser_Sql_WordsParser
         }
     }
 
-    private function findCharEnd($i, $char, $start_line = 0, $start_pos = 0)
+    private function findCharEnd($pos, $char, $startLine = 0, $startPos = 0)
     {
-        if ($start_line == 0) {
-            $start_line = $this->_line;
-            $start_pos = $this->_pos;
+        if ($startLine == 0) {
+            $startLine = $this->_line;
+            $startPos = $this->_pos;
         }
 
-        while ((++$i < $this->_len) && ($this->_statement[$i] != $char)) {
-            $this->setLine($i);
+        while ((++$pos < $this->_len) && ($this->_statement[$pos] != $char)) {
+            $this->setLine($pos);
 
             // Check for escape
-            if ($this->_statement[$i] == '\\') {
-                $i++;
+            if ($this->_statement[$pos] == '\\') {
+                $pos++;
                 $this->_pos++;
             }
         }
 
-        if ($i >= $this->_len) {
-            throw new \MUtil_Parser_Sql_WordsParserException('Opening '.$char.' does not close', $start_line, $start_pos);
+        if ($pos >= $this->_len) {
+            throw new \MUtil_Parser_Sql_WordsParserException('Opening '.$char.' does not close', $startLine, $startPos);
         }
 
         // Check for character repeat
-        if (($i < $this->_lenMinusOne) && ($this->_statement[$i + 1] == $char)) {
+        if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == $char)) {
             $this->_pos += 2;
-            return $this->findCharEnd($i + 1, $char, $start_line, $start_pos);
+            return $this->findCharEnd($pos + 1, $char, $startLine, $startPos);
         }
 
-        return $i;
+        return $pos;
     }
 
-    private function findCharsEnd($i, $chars, $start_line = 0, $start_pos = 0)
+    private function findCharsEnd($pos, $chars, $startLine = 0, $startPos = 0)
     {
-        $start = $i++;
+        $start = $pos++;
         $char1 = $chars[0];
         $char2 = $chars[1];
 
-        if ($start_line == 0) {
-            $start_line = $this->_line;
-            $start_pos = $this->_pos;
+        if ($startLine == 0) {
+            $startLine = $this->_line;
+            $startPos = $this->_pos;
         }
 
-        while ((++$i < $this->_lenMinusOne) && (! (($this->_statement[$i] == $char1) && ($this->_statement[$i + 1] == $char2)))) {
-            $this->setLine($i);
+        while ((++$pos < $this->_lenMinusOne) && (! (($this->_statement[$pos] == $char1) && ($this->_statement[$pos + 1] == $char2)))) {
+            $this->setLine($pos);
         }
 
-        if ($i >= $this->_len) {
-            throw new \MUtil_Parser_Sql_WordsParserException('Opening '.$chars.' does not close', $start_line, $start_pos);
+        if ($pos >= $this->_len) {
+            throw new \MUtil_Parser_Sql_WordsParserException('Opening '.$chars.' does not close', $startLine, $startPos);
         }
 
-        $this->setLine(++$i);
+        $this->setLine(++$pos);
 
-        return $i;
+        return $pos;
     }
 
-    private function findLineEnd($i)
+    private function findLineEnd($pos)
     {
-        $epos = strpos($this->_statement, "\n", $i + 1);
+        $endPos = strpos($this->_statement, "\n", $pos + 1);
 
-        if ($epos === false) {
+        if ($endPos === false) {
             return $this->_len;
         }
 
         // One less on Windows line end
-        if ($this->_statement[$epos - 1] == "\r") {
-            return $epos - 2;
+        if ($this->_statement[$endPos - 1] == "\r") {
+            return $endPos - 2;
         }
-        return $epos - 1;
+        return $endPos - 1;
     }
 
     /**
-     * Default implementation for returning tokens from
-     * splitStatement.
-     *
-     * $word       The new word.
-     * $is_word    This is a word, not a comment or whitespace.
-     * $start_line The (start) line of the current word.
-     * $start_char The (start) character of the current word.
-     *
-     * Not that all this implementation do is return the $word. If
+     * Default implementation for returning tokens from splitStatement.
+     * 
+     * Note that all this implementation do is return the $word. If
      * you want to use the rest than make your own function that
      * keeps the information at hand.
+     *
+     * @param $word       The new word.
+     * @param $isWord    This is a word, not a comment or whitespace.
+     * @param $startLine The (start) line of the current word.
+     * @param $startChar The (start) character of the current word.
      */
-    public static function makeWord($word, $is_word, $start_line, $start_char)
+    public static function makeWord($word, $isWord, $startLine, $startChar)
     {
         return $word;
     }
 
-    private function mode($i)
+    private function mode($pos)
     {
-        switch ($this->_statement[$i]) {
+        switch ($this->_statement[$pos]) {
         case ' ':
         case "\n":
         case "\t":
@@ -210,17 +209,17 @@ class MUtil_Parser_Sql_WordsParser
         case '[':
             return self::MODE_ACCESS_NAME;
         case '-':
-            if (($i < $this->_lenMinusOne) && ($this->_statement[$i + 1] == '-')) {
+            if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == '-')) {
                 return self::MODE_LINE_COMMENT;
             }
         case '/':
-            if (($i < $this->_lenMinusOne) && ($this->_statement[$i + 1] == '*') && ($this->_statement[$i] != '-')) {
+            if (($pos < $this->_lenMinusOne) && ($this->_statement[$pos + 1] == '*') && ($this->_statement[$pos] != '-')) {
                 return self::MODE_MULTI_LINE_COMMENT;
             }
 
         default:
             // Last ditch check
-            if (ctype_space($this->_statement[$i])) {
+            if (ctype_space($this->_statement[$pos])) {
                 return self::MODE_WHITESPACE;
             }
 
@@ -231,10 +230,10 @@ class MUtil_Parser_Sql_WordsParser
     private static function modeIsOneChar($mode)
     {
         switch ($mode) {
-        case self::MODE_COMMA;
-        case self::MODE_SEMI_COLON;
-        case self::MODE_BRACKET;
-            return true;
+            case self::MODE_COMMA;
+            case self::MODE_SEMI_COLON;
+            case self::MODE_BRACKET;
+                return true;
         }
 
         return false;
@@ -243,9 +242,9 @@ class MUtil_Parser_Sql_WordsParser
     private static function modeIsWord($mode)
     {
         switch ($mode) {
-        case self::MODE_WHITESPACE:
-        case self::MODE_LINE_COMMENT:
-            return false;
+            case self::MODE_WHITESPACE:
+            case self::MODE_LINE_COMMENT:
+                return false;
         }
 
         return true;
@@ -254,17 +253,17 @@ class MUtil_Parser_Sql_WordsParser
     private static function modeNotComment($mode)
     {
         switch ($mode) {
-        case self::MODE_LINE_COMMENT:
-        case self::MODE_MULTI_LINE_COMMENT:
-            return false;
+            case self::MODE_LINE_COMMENT:
+            case self::MODE_MULTI_LINE_COMMENT:
+                return false;
         }
 
         return true;
     }
 
-    private function setLine($i)
+    private function setLine($pos)
     {
-        if ($this->_statement[$i] == "\n") {
+        if ($this->_statement[$pos] == "\n") {
             $this->_line++;
             $this->_pos = 0;
         } else {
@@ -280,80 +279,80 @@ class MUtil_Parser_Sql_WordsParser
      */
     public function splitStatement($keepComments = true)
     {
-        $i = $this->_start;
+        $pos = $this->_start;
 
-        if ($i >= $this->_len) {
+        if ($pos >= $this->_len) {
             return false;
         }
 
-        switch ($next_mode = $this->mode($i)) {
+        switch ($nextMode = $this->mode($pos)) {
             case self::MODE_QUOTED_STRING:
-                $i = $this->findCharEnd($i, '\'');
+                $pos = $this->findCharEnd($pos, '\'');
                 break;
             case self::MODE_DOUBLE_QUOTED_STRING:
-                $i = $this->findCharEnd($i, '"');
+                $pos = $this->findCharEnd($pos, '"');
                 break;
             case self::MODE_LINE_COMMENT:
-                $i = $this->findLineEnd($i) + 1;
+                $pos = $this->findLineEnd($pos) + 1;
                 break;
             case self::MODE_ACCESS_NAME:
-                $i = $this->findCharEnd($i, ']');
+                $pos = $this->findCharEnd($pos, ']');
                 break;
             case self::MODE_MULTI_LINE_COMMENT:
-                $i = $this->findCharsEnd($i, '*/') + 1;
+                $pos = $this->findCharsEnd($pos, '*/') + 1;
                 break;
         }
         $last = null;
-        $mode_start = $i;
-        $mode_start_line = $this->_line;
-        $mode_start_char = $this->_pos;
+        $modeStart = $pos;
+        $modeStartLine = $this->_line;
+        $modeStartChar = $this->_pos;
 
         $sql = array();
 
-        while ($i < $this->_len) {
+        while ($pos < $this->_len) {
 
             // Take care of positioning
-            $this->setLine($i);
+            $this->setLine($pos);
 
-            $this_mode = $next_mode;
-            $next_mode = $this->mode($i);
+            $thisMode = $nextMode;
+            $nextMode = $this->mode($pos);
 
-            if (($this_mode != $next_mode) || self::modeIsOneChar($this_mode)) {
-                if ($keepComments || self::modeNotComment($this_mode)) {
-                    $sql[] = call_user_func($this->_makeWordFunction, substr($this->_statement, $mode_start, $i - $mode_start), self::modeIsWord($this_mode), $mode_start_line, $mode_start_char);
+            if (($thisMode != $nextMode) || self::modeIsOneChar($thisMode)) {
+                if ($keepComments || self::modeNotComment($thisMode)) {
+                    $sql[] = call_user_func($this->_makeWordFunction, substr($this->_statement, $modeStart, $pos - $modeStart), self::modeIsWord($thisMode), $modeStartLine, $modeStartChar);
                 }
-                $mode_start = $i;
-                $mode_start_line = $this->_line;
-                $mode_start_char = $this->_pos;
+                $modeStart = $pos;
+                $modeStartLine = $this->_line;
+                $modeStartChar = $this->_pos;
 
-                switch ($next_mode) {
+                switch ($nextMode) {
                     case self::MODE_QUOTED_STRING:
-                        $i = $this->findCharEnd($i, '\'');
+                        $pos = $this->findCharEnd($pos, '\'');
                         break;
                     case self::MODE_DOUBLE_QUOTED_STRING:
-                        $i = $this->findCharEnd($i, '"');
+                        $pos = $this->findCharEnd($pos, '"');
                         break;
                     case self::MODE_LINE_COMMENT:
-                        $i = $this->findLineEnd($i);
+                        $pos = $this->findLineEnd($pos);
                         break;
                     case self::MODE_ACCESS_NAME:
-                        $i = $this->findCharEnd($i, ']');
+                        $pos = $this->findCharEnd($pos, ']');
                         break;
                     case self::MODE_MULTI_LINE_COMMENT:
-                        $i = $this->findCharsEnd($i, '*/');
+                        $pos = $this->findCharsEnd($pos, '*/');
                         break;
                     case self::MODE_SEMI_COLON:
-                        $this->_start = $i + 1;
+                        $this->_start = $pos + 1;
                         return $sql;
                 }
             }
 
-            $i++;
+            $pos++;
         }
         // BUG WARNING: Use $next_mode in this line because the while loop has just
         // exited, so the current mode is the next mode.
-        if ($sql && ($keepComments || self::modeNotComment($next_mode))) {
-            $sql[] = call_user_func($this->_makeWordFunction, substr($this->_statement, $mode_start, $i - $mode_start), self::modeIsWord($this_mode), $mode_start_line, $mode_start_char);
+        if ($sql && ($keepComments || self::modeNotComment($nextMode))) {
+            $sql[] = call_user_func($this->_makeWordFunction, substr($this->_statement, $modeStart, $pos - $modeStart), self::modeIsWord($thisMode), $modeStartLine, $modeStartChar);
         }
         $this->_start = $this->_len;
 
