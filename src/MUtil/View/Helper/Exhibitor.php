@@ -55,7 +55,7 @@ class MUtil_View_Helper_Exhibitor extends \Zend_View_Helper_FormElement
                  */
                 if (is_array($result)) {
                     foreach($result as $key => $arrayValue) {
-                        if (array_key_exists($arrayValue, $multiOptions)) {
+                        if (is_scalar($arrayValue) && array_key_exists($arrayValue, $multiOptions)) {
                             $result[$key] = $multiOptions[$arrayValue];
                         }
                     }
