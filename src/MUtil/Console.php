@@ -32,7 +32,6 @@
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2012 Erasmus MC
  * @license    New BSD License
- * @version    $Id: Console.php 203 2012-01-01t 12:51:32Z matijs $
  */
 
 /**
@@ -67,11 +66,12 @@ class MUtil_Console
     public static function removeHtml($s)
     {
         $newLinesAfter = 'h1|h2|h3|h4|h5|h6|h7|h8';
-        $newLineAfter = 'div|li|p';
+        $newLineAfter  = 'caption|div|li|p|tr';
         $removeContent = 'script|style|noframes|select|option|link';
+        $spaceAfter    = 'td|th';
 
         /**///prep the string
-        $s = ' ' . $s;
+        $s = ' ' . preg_replace("/[\\r\\n]+/", '', $s);
 
         //begin removal
         /**///remove comment blocks
@@ -104,6 +104,9 @@ class MUtil_Console
         foreach (explode('|', $newLineAfter) as $endTag) {
             $s = str_replace("</$endTag>", "\n", $s);
         }
+        foreach (explode('|', $spaceAfter) as $endTag) {
+            $s = str_replace("</$endTag>", " ", $s);
+        }
 
         /**///remove remaining tags
         $start = 0;
@@ -120,6 +123,9 @@ class MUtil_Console
             }
         }
 
+        if (PHP_EOL != "\n") {
+            $s = str_replace("\n", PHP_EOL, $s);
+        }
         return html_entity_decode(trim($s), ENT_QUOTES, 'cp1252');
     }
 }
