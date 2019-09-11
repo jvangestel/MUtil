@@ -157,6 +157,9 @@ class JsonData
      */
     public function saveValue($value, $isNew = false, $name = null, array $context = array())
     {
+        if ($value === null) {
+            return null;
+        }
         return json_encode($value);
     }
 }
