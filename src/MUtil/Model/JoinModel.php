@@ -32,7 +32,6 @@
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2011 Erasmus MC
  * @license    New BSD License
- * @version    $Id$
  */
 
 /**
@@ -348,6 +347,7 @@ class MUtil_Model_JoinModel extends \MUtil_Model_DatabaseModelAbstract
      * to actually delete an item.
      *
      * @param mixed $filter True to use the stored filter, array to specify a different filter
+     * @param array $saveTables Array of table names => save mode
      * @return int The number of items deleted
      */
     public function delete($filter = true, array $saveTables = null)
@@ -426,7 +426,7 @@ class MUtil_Model_JoinModel extends \MUtil_Model_DatabaseModelAbstract
 
     /**
      * Get the tables that should be saved
-     * 
+     *
      * @return array
      */
     public function getSaveTables()

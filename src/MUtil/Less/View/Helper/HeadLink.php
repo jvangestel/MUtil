@@ -18,7 +18,7 @@
  * @license    New BSD License
  * @since      Class available since version 1.5
  */
-class MUtil_Less_View_Helper_HeadLink extends \Zend_View_Helper_HeadLink
+class MUtil_Less_View_Helper_HeadLink extends \MUtil_View_Helper_HeadLink
 {
     /**
      * Absolute file path to the webroot

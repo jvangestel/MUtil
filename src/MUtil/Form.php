@@ -6,7 +6,6 @@
  * @subpackage Form
  * @author     Matijs de Jong <mjong@magnafacta.nl>
  * @copyright  Copyright (c) 2011 Erasmus MC
- * @license    New BSD License
  */
 
 /**
@@ -91,12 +90,12 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
      * @var mixed
      */
     protected $_Lazy = false;
-    
+
     /**
      * The id of the element that keeps track of the focus
-     * 
+     *
      * Set to false to disable
-     * 
+     *
      * @var string
      */
     public $focusTrackerElementId = 'auto_form_focus_tracker';
@@ -114,23 +113,23 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
     {
         $this->addElementPrefixPath('MUtil_Form_Decorator', 'MUtil/Form/Decorator',  \Zend_Form_Element::DECORATOR);
         $this->addElementPrefixPath('MUtil_Validate',       'MUtil/Validate/',       \Zend_Form_Element::VALIDATE);
-        
+
         parent::__construct($options);
-        
+
         if ($this->focusTrackerElementId) {
             $this->activateJQuery();
 
             $elementId = $this->focusTrackerElementId;
-            
+
             if (\MUtil_Bootstrap::enabled()) {
                 $element = new \MUtil\Form\Element\Hidden($elementId);
             } else {
                 $element = new \MUtil\Bootstrap\Form\Element\Hidden($elementId);
             }
 
-            $this->addElement($element);                        
-            
-            $script    = sprintf("                
+            $this->addElement($element);
+
+            $script    = sprintf("
                 jQuery('form input, form select, form textarea').focus(
                 function () {
                     var input = jQuery(this);
@@ -139,8 +138,8 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
                 }
                 );
                 ", $elementId);
-            
-            $jquery = $this->getView()->jQuery();  
+
+            $jquery = $this->getView()->jQuery();
             $jquery->addOnLoad($script);
         }
     }
@@ -313,12 +312,12 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
     {
         return true;
     }
-    
+
     /**
      * When an element is created this way, the element will have translation which can not
      * be undone in the addElement method. To fix this we add the current translation status
      * of the form to the options
-     * 
+     *
      * @param type $type
      * @param type $name
      * @param type $options
