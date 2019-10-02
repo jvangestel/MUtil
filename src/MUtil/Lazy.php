@@ -86,7 +86,7 @@ class MUtil_Lazy
             case '==':
                 $lambda = function ($a, $b) {return $a == $b;};
                 break;
-            
+
             case '===':
                 $lambda = function ($a, $b) {return $a === $b;};
                 break;
@@ -116,9 +116,9 @@ class MUtil_Lazy
                 $lambda = function ($a, $b) {return $a >= $b;};
                 break;
 
-            case '<=>':
-                $lambda = function ($a, $b) {return $a <=> $b;};
-                break;
+//            case '<=>':
+//                $lambda = function ($a, $b) {return $a <=> $b;};
+//                break;
 
             default:
                 $lambda = function ($a, $b) use ($oper) {
