@@ -43,9 +43,9 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.3.9",
-        "zendframework/zendframework1": "^1.12",
         "zendframework/zf1-extras": "^1.12",
-        "oyejorge/less.php": "~1.7.0.9"
+        "oyejorge/less.php": "~1.7.0.9",
+        "shardj/zf1-future": "^1.14"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
