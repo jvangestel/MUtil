@@ -25,7 +25,8 @@ class MUtil_Bootstrap
      *
      * @const string
      */
-    const DEFAULT_BOOTSTRAP_VERSION = "4.2.1";
+    // const DEFAULT_BOOTSTRAP_VERSION = "4.2.1"; // This version breaks working of code
+    const DEFAULT_BOOTSTRAP_VERSION = "3.4.1";
 
     const DEFAULT_FONTAWESOME_VERSION = '4.2.0';
 

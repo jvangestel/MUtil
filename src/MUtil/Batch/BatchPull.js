@@ -112,7 +112,7 @@ jQuery.widget("ui.pullProgressPanel", {
 
                 if (this.options.formId) {
                     form = jQuery("form#" + this.options.formId);
-                    if (form.size()) {
+                    if (form.length) {
                         fd   = form.serialize();
                         verb = "POST";
                     }
@@ -164,7 +164,7 @@ jQuery.widget("ui.pullProgressPanel", {
         if (data.finished) {
             if (this.options.formId) {
                 form = jQuery("form#" + this.options.formId);
-                if (form.size()) {
+                if (form.length) {
                     if (this.options.finishUrl.length) {
                         form.attr('action', this.options.finishUrl);
                     }
