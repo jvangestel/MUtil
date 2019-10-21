@@ -47,6 +47,13 @@
 class MUtil_View_Helper_FormSelectHtml extends \Zend_View_Helper_FormSelect
 {
     /**
+     * Variable containing the id of the select element
+     *
+     * @var string Contains the id of the select element
+     */
+    public $id;
+    
+    /**
      * Builds the actual <option> tag
      *
      * @param string $value Options Value
@@ -61,15 +68,21 @@ class MUtil_View_Helper_FormSelectHtml extends \Zend_View_Helper_FormSelect
         if (is_bool($disable)) {
             $disable = array();
         }
+        
+        $selectmenu = true;
 
         $opt = '<option'
              . ' value="' . $this->view->escape($value) . '"';
 
         if ($label instanceof \MUtil_Html_HtmlElement) {
             // Element not allowed, get parts that are allowed
-            foreach (array('class', 'dir', 'id', 'label', 'lang', 'style', 'title') as $attr) {
+            foreach (array('class', 'dir', 'id', 'label', 'lang', 'style', 'title', 'data-class', 'data-style') as $attr) {
                 if (isset($label->$attr)) {
                     $opt .= ' ' . $attr . '="' . $this->view->escape($label->$attr) . '"';
+                    if (('data-style' == $attr or 'data-class' == $attr) and true == $selectmenu) {
+                        $this->enableSelectmenu();
+                        $selectmenu = false;
+                    }
                 }
             }
 
@@ -79,7 +92,7 @@ class MUtil_View_Helper_FormSelectHtml extends \Zend_View_Helper_FormSelect
             foreach ($label->getIterator() as $part) {
                 $content .= $renderer->renderAny($this->view, $part);
             }
-
+            
         } elseif ($label instanceof \MUtil_Html_HtmlInterface) {
             $content = $label->render($this->view);
         } else {
@@ -99,7 +112,7 @@ class MUtil_View_Helper_FormSelectHtml extends \Zend_View_Helper_FormSelect
         }
 
         $opt .= '>' . $content . "</option>";
-
+        
         return $opt;
     }
     /**
@@ -128,6 +141,27 @@ class MUtil_View_Helper_FormSelectHtml extends \Zend_View_Helper_FormSelect
     public function formSelectHtml($name, $value = null, $attribs = null,
         $options = null, $listsep = "<br />\n")
     {
+        $this->id = $name;
+        
         return parent::formSelect($name, $value, $attribs, $options, $listsep);
+    }
+    
+    /**
+     * Add necessary files and javascript for jQuery UI selectmenu
+     */
+    public function enableSelectmenu ()
+    {
+        $baseUrl = \Zend_Controller_Front::getInstance()->getBaseUrl();
+        $this->view->headScript()->prependFile($baseUrl . '/gems/js/jquery-ui-selectmenu.js');
+        $this->view->headLink()->appendStylesheet($baseUrl . '/gems/css/jquery-ui.css');
+        $this->view->headLink()->appendStylesheet($baseUrl . '/gems/css/jquery-ui-selectmenu.css');
+        
+        $js = sprintf("jQuery(document).ready(function($) {
+                $('#%s').iconselectmenu({width: null}).iconselectmenu('menuWidget').addClass('ui-menu-icons avatar overflow');
+            });",
+            $this->id
+        );
+        
+        $this->view->headScript()->appendScript($js);
     }
 }
