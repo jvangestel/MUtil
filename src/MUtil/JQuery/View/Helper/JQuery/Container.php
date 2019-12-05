@@ -101,4 +101,99 @@ class MUtil_JQuery_View_Helper_JQuery_Container extends \ZendX_JQuery_View_Helpe
                . $this->_renderExtras();
         return $html;
     }
+
+    /**
+     * Renders all javascript code related stuff of the jQuery enviroment.
+     *
+     * @return string
+     */
+    protected function _renderExtras()
+    {
+        $onLoadActions = array();
+        if( ($this->getRenderMode() & ZendX_JQuery::RENDER_JQUERY_ON_LOAD) > 0) {
+            foreach ($this->getOnLoadActions() as $callback) {
+                $onLoadActions[] = $callback;
+            }
+        }
+
+        $javascript = '';
+        if( ($this->getRenderMode() & ZendX_JQuery::RENDER_JAVASCRIPT) > 0) {
+            $javascript = implode("\n    ", $this->getJavascript());
+        }
+
+        $content = '';
+
+        if (!empty($onLoadActions)) {
+            if(true === ZendX_JQuery_View_Helper_JQuery::getNoConflictMode()) {
+                $content .= '$j(document).ready(function() {'."\n    ";
+            } else {
+                $content .= '$(document).ready(function() {'."\n    ";
+            }
+            $content .= implode("\n    ", $onLoadActions) . "\n";
+            $content .= '});'."\n";
+        }
+
+        if (!empty($javascript)) {
+            $content .= $javascript . "\n";
+        }
+
+        if (preg_match('/^\s*$/s', $content)) {
+            return '';
+        }
+
+        $nonceAttribute = $this->getNonceAttribute();
+
+        $html = '<script type="text/javascript"'.$nonceAttribute.'>' . PHP_EOL
+            . (($this->_isXhtml) ? '//<![CDATA[' : '//<!--') . PHP_EOL
+            . $content
+            . (($this->_isXhtml) ? '//]]>' : '//-->') . PHP_EOL
+            . PHP_EOL . '</script>';
+        return $html;
+    }
+
+    /**
+     * Renders all javascript file related stuff of the jQuery enviroment.
+     *
+     * @return string
+     */
+    protected function _renderScriptTags()
+    {
+        $scriptTags = '';
+        if( ($this->getRenderMode() & ZendX_JQuery::RENDER_LIBRARY) > 0) {
+            $source = $this->_getJQueryLibraryPath();
+
+            $nonceAttribute = $this->getNonceAttribute();
+
+            $scriptTags .= '<script type="text/javascript" src="' . $source . '"'.$nonceAttribute.'></script>' . PHP_EOL;
+
+            if($this->uiIsEnabled()) {
+                $uiPath = $this->_getJQueryUiLibraryPath();
+                $scriptTags .= '<script type="text/javascript" src="'.$uiPath.'"'.$nonceAttribute.'></script>' . PHP_EOL;
+            }
+
+            if(ZendX_JQuery_View_Helper_JQuery::getNoConflictMode() == true) {
+                $scriptTags .= '<script type="text/javascript"'.$nonceAttribute.'>var $j = jQuery.noConflict();</script>' . PHP_EOL;
+            }
+        }
+
+        if( ($this->getRenderMode() & ZendX_JQuery::RENDER_SOURCES) > 0) {
+            foreach($this->getJavascriptFiles() AS $javascriptFile) {
+                $scriptTags .= '<script type="text/javascript" src="' . $javascriptFile . '"'.$nonceAttribute.'></script>' . PHP_EOL;
+            }
+        }
+
+        return $scriptTags;
+    }
+
+    /**
+     * @return string html attribute value of script nonce set in Escort
+     */
+    protected function getNonceAttribute()
+    {
+        $nonce = '';
+        if (\MUtil\Javascript::$scriptNonce) {
+            $nonce = ' nonce="'.\MUtil\Javascript::$scriptNonce.'"';
+        }
+        return $nonce;
+    }
 }

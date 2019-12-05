@@ -164,6 +164,18 @@ class MUtil_Bootstrap_View_Helper_Bootstrapper
         $this->_fontawesomeStylePath = $path;
     }
 
+    /**
+     * @return string html attribute value of script nonce set in Escort
+     */
+    protected function getNonceAttribute()
+    {
+        $nonce = '';
+        if (\MUtil\Javascript::$scriptNonce) {
+            $nonce = ' nonce="'.\MUtil\Javascript::$scriptNonce.'"';
+        }
+        return $nonce;
+    }
+
     public function getVersion()
     {
         return $this->_version;
@@ -181,9 +193,10 @@ class MUtil_Bootstrap_View_Helper_Bootstrapper
      */
     public function renderJavascript()
     {
+        $nonceAttribute = $this->getNonceAttribute();
 
         $source = $this->_getBootstrapScriptPath();
-        $scriptTags = '<script type="text/javascript" src="' . $source . '"></script>' . PHP_EOL;
+        $scriptTags = '<script type="text/javascript" src="' . $source . '"'.$nonceAttribute.'></script>' . PHP_EOL;
 
         return $scriptTags;
     }
