@@ -28,5 +28,7 @@ class MUtil_View_Helper_InlineScript extends \Zend_View_Helper_InlineScript
             $data->nonce = Javascript::$scriptNonce;
             $data->attributes['nonce'] = Javascript::$scriptNonce;
         }
+
+        return $data;
     }
 }
