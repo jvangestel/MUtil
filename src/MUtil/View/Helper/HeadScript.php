@@ -28,5 +28,7 @@ class MUtil_View_Helper_HeadScript extends \Zend_View_Helper_HeadScript
             $data->nonce = Javascript::$scriptNonce;
             $data->attributes['nonce'] = Javascript::$scriptNonce;
         }
+
+        return $data;
     }
 }
