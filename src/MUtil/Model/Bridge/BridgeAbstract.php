@@ -165,7 +165,12 @@ abstract class MUtil_Model_Bridge_BridgeAbstract extends \MUtil_Translate_Transl
 
         $raw = $value;
         foreach ($this->_compilations[$name] as $function) {
-            $value = call_user_func($function, $value, $raw);
+            if (is_string($function)) {
+                // Do not add raw for simple functions
+                $value = call_user_func($function, $value);
+            } else {
+                $value = call_user_func($function, $value, $raw);
+            }
         }
 
         return $value;
