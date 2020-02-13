@@ -146,6 +146,9 @@ abstract class MUtil_Model_Bridge_BridgeAbstract extends \MUtil_Translate_Transl
      * This is the workhouse function for the foematter and can
      * also be used with data not loaded from the model.
      *
+     * To add the raw value to the called function as raw parameter, use an array callback for function,
+     * and add a temporary third value of true.
+     *
      * @param string $name The real name and not e.g. the key id
      * @param mixed $value
      * @return mixed
@@ -165,12 +168,17 @@ abstract class MUtil_Model_Bridge_BridgeAbstract extends \MUtil_Translate_Transl
 
         $raw = $value;
         foreach ($this->_compilations[$name] as $function) {
-            if (is_string($function)) {
-                // Do not add raw for simple functions
-                $value = call_user_func($function, $value);
-            } else {
-                $value = call_user_func($function, $value, $raw);
+            if (is_array($function) && isset($function[2])) {
+                // Check if raw should be added to the current callback
+                $rawMode = array_pop($function);
+                if ($rawMode) {
+                    $value = call_user_func($function, $value, $raw);
+                    continue;
+                }
             }
+
+            $value = call_user_func($function, $value);
+
         }
 
         return $value;
