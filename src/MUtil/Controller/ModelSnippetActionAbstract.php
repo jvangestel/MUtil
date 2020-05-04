@@ -669,18 +669,19 @@ abstract class MUtil_Controller_ModelSnippetActionAbstract extends \MUtil_Contro
         $defaults = $this->getSearchDefaults();
 
         if ($useRequest) {
-            $data = $this->request->getParams();
+            $request = $this->getRequest();
+            $data = $request->getParams();
 
             // remove controler/action/module
-            unset($data[$this->request->getModuleKey()],
-                    $data[$this->request->getControllerKey()],
-                    $data[$this->request->getActionKey()]);
+            unset($data[$request->getModuleKey()],
+                    $data[$request->getControllerKey()],
+                    $data[$request->getActionKey()]);
 
             if (isset($data[\MUtil_Model::AUTOSEARCH_RESET]) && $data[\MUtil_Model::AUTOSEARCH_RESET]) {
                 // Clean up values
                 $sessionData = array();
 
-                $this->request->setParam(\MUtil_Model::AUTOSEARCH_RESET, null);
+                $request->setParam(\MUtil_Model::AUTOSEARCH_RESET, null);
             } else {
                 $data = $data + $sessionData;
             }

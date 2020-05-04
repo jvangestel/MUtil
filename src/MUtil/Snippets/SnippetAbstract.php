@@ -50,6 +50,11 @@ abstract class MUtil_Snippets_SnippetAbstract extends \MUtil_Translate_Translate
     protected $class;
 
     /**
+     * @var MUtil_Controller_Action_Helper_Redirector
+     */
+    protected $redirector;
+
+    /**
      * Variable to either keep or throw away the request data
      * not specified in the route.
      *
@@ -132,6 +137,17 @@ abstract class MUtil_Snippets_SnippetAbstract extends \MUtil_Translate_Translate
     }
 
     /**
+     * @return MUtil_Controller_Action_Helper_Redirector
+     */
+    protected function getRedirector()
+    {
+        if (!$this->redirector) {
+            $this->redirector = new MUtil_Controller_Action_Helper_Redirector();
+        }
+        return $this->redirector;
+    }
+
+    /**
      * When hasHtmlOutput() is false a snippet code user should check
      * for a redirectRoute. Otherwise the redirect calling render() will
      * execute the redirect.
@@ -176,7 +192,8 @@ abstract class MUtil_Snippets_SnippetAbstract extends \MUtil_Translate_Translate
     {
         if ($url = $this->getRedirectRoute()) {
             //\MUtil_Echo::track($url);
-            $router = \Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+
+            $router = $this->getRedirector();
             $router->gotoRoute($url, null, $this->resetRoute);
         }
     }

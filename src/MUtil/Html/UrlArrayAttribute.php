@@ -187,8 +187,7 @@ class MUtil_Html_UrlArrayAttribute extends \MUtil_Html_ArrayAttribute
     public function getRouter()
     {
         if (! $this->router) {
-            $front = \Zend_Controller_Front::getInstance();
-            $this->router = $front->getRouter();
+            $this->router = \MUtil\Controller\Front::getRouter();
         }
 
         return $this->router;
