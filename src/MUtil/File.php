@@ -80,7 +80,7 @@ class MUtil_File
         // Cascade to ensure parent dir creation (not all operating systems allow cascaded creation)
         $parent = dirname($dir);
         if (strlen($parent) > 1 && (! is_dir($parent))) {
-            self::ensureDir($parent);
+            self::ensureDir($parent, $mode);
         }
         if (! is_dir($dir)) {
             if (! @mkdir($dir, $mode, true)) {
@@ -207,7 +207,7 @@ class MUtil_File
     }
 
     /**
-     * Removes the c: part from the filename 
+     * Removes the c: part from the filename
      *
      * @param string $path
      * @return string
