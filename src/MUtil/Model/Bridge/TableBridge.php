@@ -49,6 +49,36 @@ class MUtil_Model_Bridge_TableBridge extends \MUtil_Model_Bridge_TableBridgeAbst
     }
 
     /**
+     * Add columns to the table
+     *
+     * @param array|null $addItems list of column names to add to the table. if null, all labeled items will be added
+     * @param bool $showLabels show labels in the table header
+     */
+    public function addColumns($addItems=null, $showLabels=true)
+    {
+        if ($addItems === null) {
+            $addItems = $this->model->getColNames('label');
+        }
+
+        foreach($addItems as $item) {
+            $td = $this->_getLazyName($name);
+            $th = $this->_checkLabel($label, $name);
+
+            if ($tdClass || ($tdClass = $this->model->get($name, 'tdClass'))) {
+                $td = array($td, 'class' => $tdClass);
+            }
+            if ($thClass || ($thClass = $this->model->get($name, 'thClass'))) {
+                $th = array($th, 'class' => $thClass);
+            }
+            if ($showLabels) {
+                $this->table->addColumn($td, $th);
+            } else {
+                $this->table->addColumn($td, null);
+            }
+        }
+    }
+
+    /**
      *
      * @param \MUtil_Html_HtmlElement $link Or anything else to put a the column
      * @return \MUtil_MultiWrapper containing the column, header and footer cell
@@ -200,6 +230,32 @@ class MUtil_Model_Bridge_TableBridge extends \MUtil_Model_Bridge_TableBridgeAbst
         $sortUrl = $sortUrl + $this->baseUrl;
 
         return \MUtil_Html::create()->a($sortUrl, array('class' => $class, 'title' => $this->model->get($name, 'description')), $label);
+    }
+
+    /**
+     *
+     * @param array $data
+     * @return \MUtil_Html_TableElement
+     */
+    public function displayListTable($data)
+    {
+        $table = $this->displaySubTable($data);
+        $table->setPivot(true, 0);
+
+        return $table;
+    }
+
+    /**
+     *
+     * @param array $data
+     * @return \MUtil_Html_TableElement
+     */
+    public function displaySubTable($data)
+    {
+        $table = $this->getTable();
+        $table->setRepeater($data);
+
+        return $table;
     }
 
     /**
