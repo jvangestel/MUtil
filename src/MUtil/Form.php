@@ -255,6 +255,10 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
         }
         $element->setDisableTranslator($this->translatorIsDisabled());
 
+        if (isset($options['addDecorators'])) {
+            $element->addDecorators($options['addDecorators']);
+        }
+
         return $this;
     }
 
