@@ -1,6 +1,6 @@
 <?php
 
-namespace MUtil\Model\Transformer;
+namespace MUtil\Model\Transform;
 
 class ToManyTransformer extends \MUtil_Model_Transform_NestedTransformer
 {

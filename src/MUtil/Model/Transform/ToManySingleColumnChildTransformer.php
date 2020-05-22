@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MUtil\Model\Transformer;
+namespace MUtil\Model\Transform;
 
 
 class ToManySingleColumnChildTransformer extends ToManyTransformer
