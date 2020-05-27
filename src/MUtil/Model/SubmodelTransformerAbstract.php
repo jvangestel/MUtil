@@ -139,6 +139,25 @@ abstract class MUtil_Model_SubmodelTransformerAbstract implements \MUtil_Model_M
             }
         }
 
+        foreach ($this->_subModels as $name => $sub) {
+            $filter = $this->transformFilterSubModel($model, $sub, $filter, $this->_joins[$name]);
+        }
+
+        return $filter;
+    }
+
+    /**
+     * Filter
+     *
+     * @param MUtil_Model_ModelAbstract $model
+     * @param MUtil_Model_ModelAbstract $sub
+     * @param array $filter
+     * @param array $joins
+     * @return array
+     */
+    public function transformFilterSubModel(
+        \MUtil_Model_ModelAbstract $model, \MUtil_Model_ModelAbstract $sub, array $filter, array $joins)
+    {
         return $filter;
     }
 

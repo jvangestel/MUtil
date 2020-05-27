@@ -11,6 +11,36 @@ class ToManyTransformer extends \MUtil_Model_Transform_NestedTransformer
         $this->savable = $savable;
     }
 
+    public function transformFilterSubModel(\MUtil_Model_ModelAbstract $model, \MUtil_Model_ModelAbstract $sub,
+                                            array $filter, array $join)
+    {
+        $itemNames = $sub->getItemNames();
+        $subFilter = array_intersect(array_keys($filter), $itemNames);
+
+        $child = reset($join);
+        $parent = key($join);
+
+        if (isset($filter[\MUtil_Model::TEXT_FILTER])) {
+            $subFilter += $sub->getTextSearchFilter($filter[\MUtil_Model::TEXT_FILTER]);
+            $mainFilter = $model->getTextSearchFilter($filter[\Mutil_model::TEXT_FILTER]);
+            unset($filter[\MUtil_Model::TEXT_FILTER]);
+        }
+
+        if (count($subFilter)) {
+            $results = $sub->load($subFilter);
+            if ($results) {
+                $subFilterValues = array_column($results, $child);
+                $addFilter = ' OR ' . $parent . ' IN ('.join(',', $subFilterValues).')';
+                foreach($mainFilter as $mainFilterSub) {
+                    $filter[] = $mainFilterSub . $addFilter;
+                }
+            }
+        }
+
+
+        return $filter;
+    }
+
     /**
      * Function to allow overruling of transform for certain models
      *
