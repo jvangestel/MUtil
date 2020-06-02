@@ -125,7 +125,9 @@ class ToManySingleColumnChildTransformer extends ToManyTransformer
 
         $deleteIds = array_column($deletedResults, $key);
         if (!empty($deleteIds)) {
-            $sub->delete([$key => $deleteIds]);
+            foreach($deleteIds as $deleteId) {
+                $sub->delete([$key => $deleteId]);
+            }
         }
 
         $row[$name] = $newResults;
