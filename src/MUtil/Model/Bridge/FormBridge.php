@@ -69,7 +69,7 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
         self::JQUERY_OPTIONS     => array('jQueryParams'),
         self::MULTI_OPTIONS      => array('disable', 'multiOptions', 'onchange', 'separator', 'size'),
         self::PASSWORD_OPTIONS   => array('renderPassword', 'repeatLabel'),
-        self::SUBFORM_OPTIONS    => array('class', 'escape', 'form', 'tabindex'),
+        self::SUBFORM_OPTIONS    => array('class', 'decorators', 'escape', 'form', 'label', 'tabindex'),
         self::TAB_OPTIONS        => array('value'),
         self::TEXT_OPTIONS       => array('maxlength', 'minlength', 'onblur', 'onchange', 'onfocus', 'onselect', 'size'),
         self::TEXTAREA_OPTIONS   => array('cols', 'rows', 'wrap', 'decorators'),
@@ -567,6 +567,9 @@ class MUtil_Model_Bridge_FormBridge implements \MUtil_Model_Bridge_FormBridgeInt
                 }
             }
         }
+
+        $prefixPaths['decorator'] = $this->form->getPluginLoader('decorator')->getPaths();
+        $options['prefixPath'] = $prefixPaths;
 
         $element = new \MUtil_Form_Element_Table($form, $name, $options);
 
