@@ -82,11 +82,14 @@ abstract class MUtil_Model_SubmodelTransformerAbstract implements \MUtil_Model_M
      * @param array $joinFields
      * @return \MUtil_Model_Transform_NestedTransformer (continuation pattern)
      */
-    public function addModel(\MUtil_Model_ModelAbstract $subModel, array $joinFields)
+    public function addModel(\MUtil_Model_ModelAbstract $subModel, array $joinFields, $name = null)
     {
         // \MUtil_Model::$verbose = true;
 
-        $name = $subModel->getName();
+        if (null === $name) {
+            $name = $subModel->getName();
+        }
+
         $this->_subModels[$name] = $subModel;
         $this->_joins[$name]     = $joinFields;
 
