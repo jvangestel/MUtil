@@ -130,7 +130,7 @@ abstract class ModelConfirmDataChangeSnippetAbstract extends \MUtil_Snippets_Mod
     public $resetRoute = false;
 
     /**
-     * Required: teh data to save to the model when saving
+     * Required: the data to save to the model when saving
      *
      * @var array
      */
