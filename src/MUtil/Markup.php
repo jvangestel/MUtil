@@ -45,6 +45,13 @@ class MUtil_Markup extends \Zend_Markup
                     'callback' => new \MUtil_Markup_Renderer_Html_Email(),
                     'group' => 'block',)
             );
+            $rendererObject->addMarkup(
+                'url',
+                \Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
+                array(
+                    'callback' => new \MUtil_Markup_Renderer_Html_Url(),
+                    'group' => 'block',)
+            );
         } else {
             $rendererObject->addMarkup(
                 'email',
@@ -82,9 +89,49 @@ class MUtil_Markup extends \Zend_Markup
         return self::$_rendererLoader;
     }
 
+    /**
+     * Check if the URI is valid
+     *
+     * @param string $uri
+     *
+     * @return bool
+     */
+    public static function isValidUri($uri)
+    {
+        if (!preg_match('/^([a-z][a-z+\-.]*):/i', $uri, $matches)) {
+            return '/' == $uri[0];
+        }
+
+        $scheme = strtolower($matches[1]);
+
+        switch ($scheme) {
+            case 'javascript':
+                // JavaScript scheme is not allowed for security reason
+                return false;
+
+            case 'http':
+            case 'https':
+            case 'ftp':
+                $components = @parse_url($uri);
+
+                if ($components === false) {
+                    return false;
+                }
+
+                if (!isset($components['host'])) {
+                    return false;
+                }
+
+                return true;
+
+            default:
+                return true;
+        }
+    }
+
     public static function render($content, $parser, $renderer = 'Html', array $options = array())
     {
         $renderer = \MUtil_Markup::factory($parser, $renderer, $options);
-        return $renderer->render($content);
+        return $renderer->render($content ? $content : '');
     }
 }

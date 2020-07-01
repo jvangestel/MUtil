@@ -74,6 +74,17 @@ class MUtil_Html
     }
 
     /**
+     * Render a BB string to Html
+     *
+     * @param string $content
+     * @return \MUtil_Html_Raw
+     */
+    public static function bbcode($content)
+    {
+        return self::getCreator()->create('raw', [\MUtil_Lazy::call('\MUtil_Markup::render', $content, 'Bbcode', 'Html')]);
+    }
+
+    /**
      * A br element
      *
      * @return \MUtil_Html_HtmlElement

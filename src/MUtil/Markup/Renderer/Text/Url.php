@@ -46,7 +46,7 @@ class MUtil_Markup_Renderer_Text_Url implements \Zend_Markup_Renderer_TokenConve
         }
 
         // check if the URL is valid
-        if (! \Zend_Markup_Renderer_Html::isValidUri($uri)) {
+        if (! \MUtil_Markup::isValidUri($uri)) {
             return $text;
         }
 

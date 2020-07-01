@@ -79,6 +79,7 @@ class MUtil_Html_Creator
     protected $_initalElementFunctions = array(
         'a'                 => 'MUtil_Html_AElement::a',
         'array'             => 'MUtil_Html_Sequence::createSequence',
+        'bbcode'            => 'MUtil_Html::bbcode',
         'call'              => 'MUtil_Lazy::call',
         'col'               => 'MUtil_Html_ColElement::col',
         'colgroup'          => 'MUtil_Html_ColGroupElement::colgroup',
