@@ -43,14 +43,14 @@ class MUtil_Markup extends \Zend_Markup
                 \Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
                 array(
                     'callback' => new \MUtil_Markup_Renderer_Html_Email(),
-                    'group' => 'block',)
+                    'group' => 'inline',)
             );
             $rendererObject->addMarkup(
                 'url',
                 \Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
                 array(
                     'callback' => new \MUtil_Markup_Renderer_Html_Url(),
-                    'group' => 'block',)
+                    'group' => 'inline',)
             );
         } else {
             $rendererObject->addMarkup(
@@ -58,14 +58,14 @@ class MUtil_Markup extends \Zend_Markup
                 \Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
                 array(
                     'callback' => new \MUtil_Markup_Renderer_Text_Email(),
-                    'group' => 'block',)
+                    'group' => 'inline',)
             );
             $rendererObject->addMarkup(
                 'url',
                 \Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
                 array(
                     'callback' => new \MUtil_Markup_Renderer_Text_Url(),
-                    'group' => 'block',)
+                    'group' => 'inline',)
             );
         }
 
