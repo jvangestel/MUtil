@@ -200,7 +200,7 @@ class MUtil_DateTest extends \PHPUnit_Framework_TestCase
             try {
                 $this->assertEquals($this->object->toString('yyyy-MM-dd HH:mm:ss'), $expectedResult);
             } catch (\PHPUnit_Framework_ExpectationFailedException $exc) {
-                $this->markTestSkipped('Dates before 1902 can be inaccurate on this system:\n' . $exc->getComparisonFailure()->toString());
+                $this->markTestSkipped('Allowed error: Dates before 1902 can be inaccurate on this system:\n' . $exc->getComparisonFailure()->toString());
             }
         } else {
             $this->assertEquals($this->object->toString('yyyy-MM-dd HH:mm:ss'), $expectedResult);
