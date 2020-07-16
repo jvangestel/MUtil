@@ -494,7 +494,7 @@ abstract class FormSnippetAbstract extends \MUtil_Snippets_SnippetAbstract
             // If there is a save button it should be checked, otherwise just validate
             if ((! $this->_saveButton) || $this->_saveButton->isChecked()) {
 
-                if ($this->_form->isValid($this->formData)) {
+                if ($this->validateForm($this->formData)) {
                     // Remove all unwanted data
                     $this->cleanFormData();
 
