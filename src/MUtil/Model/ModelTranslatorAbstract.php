@@ -290,6 +290,33 @@ abstract class MUtil_Model_ModelTranslatorAbstract extends \MUtil_Translate_Tran
     }
 
     /**
+     * @param string $elementName
+     * @param mixed $index
+     * @param mixed $value
+     */
+    public function addMultiOption($elementName, $index, $value)
+    {
+        if ($this->_targetModel) {
+            if ($this->_targetModel->has($elementName, 'multiOptions')) {
+                $options = $this->_targetModel->get($elementName, 'multiOptions');
+                $options[$index] = $value;
+                $this->_targetModel->set($elementName, 'multiOptions', $options);
+            }
+        }
+        $element = $this->targetForm->getElement('grb_condition');
+        if ($element instanceof \Zend_Form_Element_Multi) {
+            $element->addMultiOption($index, $value);
+
+            $validator = $element->getValidator('InArray');
+            if ($validator instanceof \Zend_Validate_InArray) {
+                $haystack   = $validator->getHaystack();
+                $haystack[] = $index; // Validator contains only keus
+                $validator->setHaystack($haystack);
+            }
+        }
+    }
+
+    /**
      * Add the current row to a (possibly separate) batch that does the importing.
      *
      * @param \MUtil_Task_TaskBatch $importBatch The import batch to impor this row into
