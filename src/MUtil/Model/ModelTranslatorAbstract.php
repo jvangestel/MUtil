@@ -303,7 +303,7 @@ abstract class MUtil_Model_ModelTranslatorAbstract extends \MUtil_Translate_Tran
                 $this->_targetModel->set($elementName, 'multiOptions', $options);
             }
         }
-        $element = $this->targetForm->getElement('grb_condition');
+        $element = $this->targetForm->getElement($elementName);
         if ($element instanceof \Zend_Form_Element_Multi) {
             $element->addMultiOption($index, $value);
 
