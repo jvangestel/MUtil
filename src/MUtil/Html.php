@@ -34,7 +34,7 @@ class MUtil_Html
 
     /**
      *
-     * @var type \MUtil_Snippets_SnippetLoader
+     * @var \MUtil_Snippets_SnippetLoader
      */
     private static $_snippetLoader;
 
@@ -247,7 +247,8 @@ class MUtil_Html
      * @param string $removeContent Pipe | separated tags from which contect will be stripped
      * @return string
      */
-    public static function removeMarkup($s, $keepTags = '' , $removeContent = 'script|style|noframes|select|option|link'){
+    public static function removeMarkup($s, $keepTags = '' , $removeContent = 'script|style|noframes|select|option|link')
+    {
         /**///prep the string
         $s = ' ' . $s;
 
