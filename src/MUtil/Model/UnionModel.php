@@ -394,6 +394,26 @@ class MUtil_Model_UnionModel extends \MUtil_Model_ModelAbstract
     }
 
     /**
+     * Calculates the total number of items in a model result with certain filters
+     *
+     * @param array $filter Filter array, num keys contain fixed expresions, text keys are equal or one of filters
+     * @param array $sort Sort array field name => sort type
+     * @return integer number of total items in model result
+     * @throws \Zend_Db_Select_Exception
+     */
+    public function getItemCount($filter = true, $sort = true)
+    {
+        $count = 0;
+        foreach ($this->_getFilterModels($filter) as $name => $model) {
+            if (method_exists($model, 'getItemCount')) {
+                $count += $model->getItemCount($filter);
+            }
+        }
+
+        return $count;
+    }
+
+    /**
      * Get the name of the union model that should be used for this row.
      *
      * Not overruling this role means that the content of the row can never
