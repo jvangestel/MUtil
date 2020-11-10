@@ -142,11 +142,15 @@ abstract class DependencyAbstract extends \MUtil_Translate_TranslateableAbstract
      */
     public function addEffected($effectedField, $effectedSettings)
     {
-        foreach ((array) $effectedSettings as $setting) {
-            if (is_array($setting)) {
-                \MUtil_Echo::track($setting);
+        if ($effectedSettings) {
+            foreach ((array) $effectedSettings as $setting) {
+                if (is_array($setting)) {
+                    \MUtil_Echo::track($setting);
+                }
+                $this->_effecteds[$effectedField][$setting] = $setting;
             }
-            $this->_effecteds[$effectedField][$setting] = $setting;
+        } else {
+            $this->_effecteds[$effectedField] = [];
         }
 
         return $this;
