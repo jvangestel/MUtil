@@ -51,9 +51,10 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
 
     /**
      *
-     * @param string $dir
-     * @param string $pregMask An optional regex file mask, use of / for directory seperator required
+     * @param string  $dir The (start) directory
+     * @param string  $mask An optional regex file mask, use of / for directory seperator required
      * @param boolean $recursive When true the directory is searched recursively
+     * @param boolean $followSymlinks When true symlinks are folloed
      */
     public function __construct($dir, $mask = null, $recursive = false, $followSymlinks = false)
     {
