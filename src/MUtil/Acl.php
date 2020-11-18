@@ -1,30 +1,6 @@
 <?php
 
 /**
- * Copyright (c) 2011, Erasmus MC
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    * Redistributions of source code must retain the above copyright
- *      notice, this list of conditions and the following disclaimer.
- *    * Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in the
- *      documentation and/or other materials provided with the distribution.
- *    * Neither the name of Erasmus MC nor the
- *      names of its contributors may be used to endorse or promote products
- *      derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    MUtil
  * @subpackage Acl
@@ -99,6 +75,66 @@ class MUtil_Acl extends \Zend_Acl
     }
 
     /**
+     * @param string|array $parents One or more role names
+     * @return array roleId => roleId
+     */
+    public function getChildRoles($parents)
+    {
+        $registry = $this->_getRoleRegistry()->getRoles();
+        
+        $output = [];
+        foreach ((array) $parents as $parent) {
+            if (isset($registry[$parent]['children']) && $registry[$parent]['children']) {
+                foreach ($registry[$parent]['children'] as $child => $data) {
+                    $output[$child] = $child;
+                }
+            }
+        }
+        
+        return $output;
+    }
+
+    /**
+     * Retrieve an array of the current role and all parents
+     *
+     * @param string $role
+     * @return array With identical keys and values roleId => roleId
+     */
+    public function getParentRoles($role)
+    {
+        $results = $this->getRoleAndParents($role);
+        unset($results[$role]);
+        return $results;
+    }
+
+    /**
+     * Get the privileges for these parents
+     *
+     * @param array $parents
+     * @return array privilege => setting
+     */
+    public function getPrivilegesForRoles(array $parents)
+    {
+        if (! $parents) {
+            return array();
+        }
+
+        $rolePrivileges = $this->getRolePrivileges();
+        $inherited      = array();
+        foreach ($parents as $parent) {
+            if (isset($rolePrivileges[$parent])) {
+                $inherited = $inherited + array_flip($rolePrivileges[$parent][\Zend_Acl::TYPE_ALLOW]);
+                $inherited = $inherited +
+                    array_flip($rolePrivileges[$parent][\MUtil_Acl::INHERITED][\Zend_Acl::TYPE_ALLOW]);
+            }
+        }
+        // Sneaks in:
+        unset($inherited[""]);
+
+        return array_combine(array_keys($inherited), array_keys($inherited));
+    }
+
+    /**
      * Retrieve an array of the current role and all parents
      *
      * @param string $role
@@ -164,6 +200,21 @@ class MUtil_Acl extends \Zend_Acl
         return $results;
     }
 
+    /**
+     * @param string $privilege
+     * @return array roleId => roleId
+     */
+    public function getRolesForPrivilege($privilege)
+    {
+        $output = [];
+        foreach ($this->getRoles() as $role) {
+            if ($this->isAllowed($role, null, $privilege)) {
+                $output[$role] = $role;
+            }
+        }
+        return $output;
+    }
+    
     /**
      * Returns all allow and deny rules for a given role
      *
