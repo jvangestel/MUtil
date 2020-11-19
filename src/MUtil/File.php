@@ -21,6 +21,26 @@
 class MUtil_File
 {
     /**
+     * @var string[] Extensions for office and adobe documents 
+     */
+    static public $documentExtensions = ['doc', 'docx', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'ps', 'rtf', 'xls', 'xslx'];
+
+    /**
+     * @var string[] Extensions for image files
+     */
+    static public $imageExtensions = ['bmp', 'eps', 'gif', 'img', 'jpg', 'jpeg', 'png', 'svg', 'swf', 'tif', 'tiff'];
+
+    /**
+     * @var string[] Extensions for text documents
+     */
+    static public $textExtensions = ['ini', 'log', 'txt'];
+
+    /**
+     * @var string[] Extensions for videos
+     */
+    static public $videoExtensions = ['avi', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'ogg', 'qt', 'swf', 'webm', 'wmv'];
+    
+    /**
      * Make sure the filename is actually allowd by underlying file systems
      *
      * @param string $filename
@@ -40,6 +60,22 @@ class MUtil_File
     public static function cleanupSlashes($filename)
     {
         return str_replace('\\' === DIRECTORY_SEPARATOR ? '/' : '\\', DIRECTORY_SEPARATOR, $filename);
+    }
+
+    /**
+     * @param array $extensions An [optionally nested] array of file extensions
+     * @param string $startName A start path / regular expression
+     * @return string A preg expression for the extensions
+     */
+    public static function createMask($extensions, $startName = '')
+    {
+        $masks = \MUtil_Ra::flatten((array) $extensions);
+        
+        if ($startName) {
+            return '/' . $startName . '.*\\.(' . implode('|', $masks) . ')$/';
+        }
+        
+        return '/.+\\.(' . implode('|', $masks) . ')$/'; 
     }
 
     /**
