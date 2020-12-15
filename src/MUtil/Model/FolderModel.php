@@ -27,7 +27,11 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
      */
     protected $dir;
 
-
+    /**
+     * @var array The extensions allowed
+     */
+    protected $extensions;
+    
     /**
      * Regex filename mask, use of / slashes for directory seperator required
      *
@@ -52,17 +56,22 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
     /**
      *
      * @param string  $dir The (start) directory
-     * @param string  $mask An optional regex file mask, use of / for directory seperator required
+     * @param mixed   $extensionsOrMask An optional array of extensions or a regex file mask, use of / for directory separator required
      * @param boolean $recursive When true the directory is searched recursively
      * @param boolean $followSymlinks When true symlinks are folloed
      */
-    public function __construct($dir, $mask = null, $recursive = false, $followSymlinks = false)
+    public function __construct($dir, $extensionsOrMask = null, $recursive = false, $followSymlinks = false)
     {
         parent::__construct($dir);
 
         $this->dir = $dir;
 
-        $this->mask = $mask;
+        if (is_array($extensionsOrMask)) {
+            $this->extensions = array_unique(\MUtil_Ra::flatten($extensionsOrMask), SORT_STRING);
+            $this->mask = \MUtil_File::createMask($extensionsOrMask);
+        } else {
+            $this->mask = $extensionsOrMask;
+        }
 
         $this->recursive = $recursive;
 
@@ -140,6 +149,22 @@ class MUtil_Model_FolderModel extends \MUtil_Model_ArrayModelAbstract
                         ));
             }
         }
+    }
+
+    /**
+     * @return string The current directory used by this model
+     */
+    public function getCurrentDir()
+    {
+        return $this->dir;
+    }
+    
+    /**
+     * @return array The extensions allowed in this model
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
     }
 
     /**

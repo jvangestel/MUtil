@@ -23,17 +23,17 @@ class MUtil_File
     /**
      * @var string[] Extensions for office and adobe documents 
      */
-    static public $documentExtensions = ['doc', 'docx', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'ps', 'rtf', 'xls', 'xslx'];
+    static public $documentExtensions = ['csv', 'doc', 'docx', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'ps', 'rtf', 'xml', 'xls', 'xslx'];
 
     /**
      * @var string[] Extensions for image files
      */
-    static public $imageExtensions = ['bmp', 'eps', 'gif', 'img', 'jpg', 'jpeg', 'png', 'svg', 'swf', 'tif', 'tiff'];
+    static public $imageExtensions = ['bmp', 'eps', 'gif', 'ico', 'img', 'jpg', 'jpeg', 'png', 'svg', 'swf', 'tif', 'tiff'];
 
     /**
      * @var string[] Extensions for text documents
      */
-    static public $textExtensions = ['ini', 'log', 'txt'];
+    static public $textExtensions = ['csv', 'ini', 'log', 'txt', 'xml'];
 
     /**
      * @var string[] Extensions for videos
