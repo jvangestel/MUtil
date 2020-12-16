@@ -138,7 +138,7 @@ class MUtil_Model_Iterator_FolderModelIterator extends \FilterIterator
             'fullpath'  => $real,
             'relpath'   => $rel,
             'urlpath'   => str_replace(array('\\', '/'), '|', $rel),
-            'path'      => \MUtil_File::cleanupSlashes($file->getPath()),
+            'path'      => str_replace('.', '%2E', \MUtil_File::cleanupSlashes($file->getPath())),
             'filename'  => $file->getFilename(),
             'extension' => $extension,
             'content'   => \MUtil_Lazy::call('file_get_contents', $real),
