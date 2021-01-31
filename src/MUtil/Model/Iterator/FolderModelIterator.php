@@ -137,7 +137,7 @@ class MUtil_Model_Iterator_FolderModelIterator extends \FilterIterator
         return array(
             'fullpath'  => $real,
             'relpath'   => $rel,
-            'urlpath'   => str_replace(['\\', '/', '.'], ['|', '|', '%2E'], $rel),
+            'urlpath'   => self::fromNameToUrlSave($rel),
             'path'      => \MUtil_File::cleanupSlashes($file->getPath()),
             'filename'  => $file->getFilename(),
             'extension' => $extension,
@@ -145,5 +145,23 @@ class MUtil_Model_Iterator_FolderModelIterator extends \FilterIterator
             'size'      => $file->getSize(),
             'changed'   => new \MUtil_Date($file->getMTime()),
             );
+    }
+
+    /**
+     * @param $filename 
+     * @return string Remove \, / and . from name
+     */
+    public static function fromNameToUrlSave($filename)
+    {
+        return str_replace(['\\', '/', '.'], ['|', '|', '%2E'], $filename);
+    }
+
+    /**
+     * @param $filename
+     * @return string The real name for the Url save name
+     */
+    public static function fromUrlSaveToName($filename)
+    {
+        return str_replace(['|', '%2E'], ['/', '.'], $filename);
     }
 }
