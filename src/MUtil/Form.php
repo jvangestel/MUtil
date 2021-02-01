@@ -122,9 +122,9 @@ class MUtil_Form extends \Zend_Form implements \MUtil_Registry_TargetInterface
             $elementId = $this->focusTrackerElementId;
 
             if (\MUtil_Bootstrap::enabled()) {
-                $element = new \MUtil\Form\Element\Hidden($elementId);
-            } else {
                 $element = new \MUtil\Bootstrap\Form\Element\Hidden($elementId);
+            } else {
+                $element = new \MUtil\Form\Element\Hidden($elementId);
             }
 
             $this->addElement($element);
